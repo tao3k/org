@@ -3,10 +3,10 @@
 :CONTRACT_ID: asp.skill.v1
 :CONTRACT_ALIAS: ../contracts/asp.skill.v1.org#asp.skill.v1 ../contracts/asp.skill.v1.org
 :CONTRACT_KIND: org-elements
-:CONTRACT_SCOPE: document
+:CONTRACT_SCOPE: subtree
 :END:
 ** What This Produces
-This contract validates an ASP Org skill file. It is intentionally a shared
+This contract validates an ASP Org skill subtree. It is intentionally a shared
 skill-package contract: concrete skills describe their domain, while this
 contract checks the common authoring shape that makes a skill usable by agents.
 
@@ -25,7 +25,7 @@ The intended output is an Org document with:
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline
+assert exists headline where at($scope)
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must have a top-level skill heading.
@@ -37,10 +37,10 @@ ASP skill files must have a top-level skill heading.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists keyword where summary(key) = "CONTRACT_ORG"
+assert exists node-property where summary(key) = "CONTRACT_ORG"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill files must declare their governing contract with #+CONTRACT_ORG.
+ASP skill files must declare their governing contract with a CONTRACT_ORG property.
 #+END_SRC
 
 ** skill-states-trigger
