@@ -21,7 +21,8 @@ artifact.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where at($scope)
+(assert exists
+  (headline :at $scope))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must have a root heading.
@@ -33,7 +34,8 @@ Adversarial review receipts must have a root heading.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "REVIEW_SUBJECT"
+(assert exists
+  (node-property :descendant-of $scope :summary (key "REVIEW_SUBJECT")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must declare REVIEW_SUBJECT.
@@ -45,7 +47,11 @@ Adversarial review receipts must declare REVIEW_SUBJECT.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "REVIEW_MODE" and summary(value) contains "adversarial"
+(assert exists
+  (node-property
+    :descendant-of $scope
+    :summary (key "REVIEW_MODE")
+    :summary-contains (value "adversarial")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must declare REVIEW_MODE containing "adversarial".
@@ -57,7 +63,8 @@ Adversarial review receipts must declare REVIEW_MODE containing "adversarial".
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Challenge"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Challenge")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must include the challenge question posed to reflection.
@@ -69,7 +76,8 @@ Adversarial review receipts must include the challenge question posed to reflect
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Criteria"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Criteria")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must include criteria.
@@ -81,7 +89,8 @@ Adversarial review receipts must include criteria.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "redundancy"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "redundancy")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review criteria must check redundancy.
@@ -93,7 +102,8 @@ Adversarial review criteria must check redundancy.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "out of scope"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "out of scope")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review criteria must check out of scope content.
@@ -105,7 +115,8 @@ Adversarial review criteria must check out of scope content.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "command clarity"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "command clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review criteria must check command clarity.
@@ -117,7 +128,8 @@ Adversarial review criteria must check command clarity.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "mechanism clarity"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "mechanism clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review criteria must check mechanism clarity.
@@ -129,7 +141,8 @@ Adversarial review criteria must check mechanism clarity.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "structure"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "structure")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review criteria must check structure.
@@ -141,7 +154,8 @@ Adversarial review criteria must check structure.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Findings"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Findings")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must include findings.
@@ -153,7 +167,8 @@ Adversarial review receipts must include findings.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Evidence"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Evidence")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must include evidence selectors or facts.
@@ -165,7 +180,8 @@ Adversarial review receipts must include evidence selectors or facts.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Verdict"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Verdict")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Adversarial review receipts must include a verdict.

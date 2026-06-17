@@ -27,7 +27,8 @@ The intended output is an Org document with:
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "ExecPlan"
+(assert exists
+  (headline :summary-contains (title "ExecPlan")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -41,7 +42,8 @@ ExecPlan files must have an ExecPlan root heading.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Purpose"
+(assert exists
+  (headline :summary-contains (title "Purpose")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -55,7 +57,8 @@ ExecPlan files must state the purpose or big picture.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Scope"
+(assert exists
+  (headline :summary-contains (title "Scope")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -69,7 +72,8 @@ ExecPlan files must state scope and boundaries.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Self Check"
+(assert exists
+  (headline :summary-contains (title "Self Check")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -83,7 +87,8 @@ ExecPlan files must include a plan self-check section.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Context"
+(assert exists
+  (headline :summary-contains (title "Context")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -97,7 +102,8 @@ ExecPlan files must include context and orientation.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Plan of Work"
+(assert exists
+  (headline :summary-contains (title "Plan of Work")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -111,7 +117,8 @@ ExecPlan files must include a plan of work.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Concrete Steps"
+(assert exists
+  (headline :summary-contains (title "Concrete Steps")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -125,7 +132,8 @@ ExecPlan files must include concrete steps.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Validation"
+(assert exists
+  (headline :summary-contains (title "Validation")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -139,7 +147,8 @@ ExecPlan files must include validation and acceptance.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Audit"
+(assert exists
+  (headline :summary-contains (title "Audit")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -153,7 +162,8 @@ ExecPlan files must include a reflection or quality audit section.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Final"
+(assert exists
+  (headline :summary-contains (title "Final")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message

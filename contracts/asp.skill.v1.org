@@ -31,7 +31,8 @@ The intended output is an Org skill with:
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where at($scope)
+(assert exists
+  (headline :at $scope))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must have a top-level skill heading.
@@ -43,7 +44,8 @@ ASP skill files must have a top-level skill heading.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "CONTRACT_ORG"
+(assert exists
+  (node-property :descendant-of $scope :summary (key "CONTRACT_ORG")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must declare their governing contract with a CONTRACT_ORG property.
@@ -55,7 +57,8 @@ ASP skill files must declare their governing contract with a CONTRACT_ORG proper
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_ID"
+(assert exists
+  (node-property :descendant-of $scope :summary (key "SKILL_ID")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must declare SKILL_ID in their root property drawer.
@@ -67,7 +70,11 @@ ASP skill files must declare SKILL_ID in their root property drawer.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION" and summary(value) contains "Use when"
+(assert exists
+  (node-property
+    :descendant-of $scope
+    :summary (key "SKILL_DESCRIPTION")
+    :summary-contains (value "Use when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 SKILL_DESCRIPTION must include trigger metadata with "Use when ...".
@@ -79,7 +86,8 @@ SKILL_DESCRIPTION must include trigger metadata with "Use when ...".
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Use Boundary"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Use Boundary")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must include a Use Boundary section with positive and negative triggers.
@@ -91,7 +99,8 @@ ASP skill files must include a Use Boundary section with positive and negative t
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill when"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "Use this skill when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must state when to use the skill.
@@ -103,7 +112,8 @@ ASP skill files must state when to use the skill.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "Do not use this skill when"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "Do not use this skill when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must state when not to use the skill.
@@ -115,7 +125,8 @@ ASP skill files must state when not to use the skill.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "State Workflow"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "State Workflow")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must include a State Workflow section driven by provider query output.
@@ -127,7 +138,8 @@ ASP skill files must include a State Workflow section driven by provider query o
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "asp org query"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "asp org query")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose semantic AST queries through asp org query.
@@ -139,7 +151,8 @@ ASP Org skills must expose semantic AST queries through asp org query.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "asp org contract trace"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "asp org contract trace")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose contract validation through asp org contract trace.
@@ -151,7 +164,8 @@ ASP Org skills must expose contract validation through asp org contract trace.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Progressive Disclosure"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Progressive Disclosure")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must describe when to read linked contracts, templates, and indexes.
@@ -163,7 +177,8 @@ ASP Org skills must describe when to read linked contracts, templates, and index
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists link where descendant_of($scope) and summary(path) contains "../contracts/"
+(assert exists
+  (link :descendant-of $scope :summary-contains (path "../contracts/")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill contract references must use sibling-relative paths such as ../contracts/name.org.
@@ -175,7 +190,8 @@ ASP skill contract references must use sibling-relative paths such as ../contrac
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists link where descendant_of($scope) and summary(path) contains "../templates/"
+(assert exists
+  (link :descendant-of $scope :summary-contains (path "../templates/")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill template references must use sibling-relative paths such as ../templates/name.org.
@@ -187,7 +203,8 @@ ASP skill template references must use sibling-relative paths such as ../templat
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Rules"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Rules")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must include rules that state provider boundaries and forbidden shortcuts.
@@ -199,7 +216,8 @@ ASP skill files must include rules that state provider boundaries and forbidden 
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "semantic AST"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "semantic AST")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skill rules must explicitly preserve the semantic AST provider boundary.
@@ -211,7 +229,8 @@ ASP Org skill rules must explicitly preserve the semantic AST provider boundary.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Validation"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Validation")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must include validation checks for the skill and its referenced contracts.
@@ -223,7 +242,8 @@ ASP skill files must include validation checks for the skill and its referenced 
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Adversarial Review"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Adversarial Review")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must include an Adversarial Review section for reflection-based content checks.
@@ -235,7 +255,8 @@ ASP skill files must include an Adversarial Review section for reflection-based 
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists link where descendant_of($scope) and summary(path) contains "../contracts/agent.adversarial-review.v1.org"
+(assert exists
+  (link :descendant-of $scope :summary-contains (path "../contracts/agent.adversarial-review.v1.org")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must link the adversarial review receipt contract.
@@ -247,7 +268,8 @@ ASP skill files must link the adversarial review receipt contract.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists link where descendant_of($scope) and summary(path) contains "../contracts/agent.reflection-answers.v1.org"
+(assert exists
+  (link :descendant-of $scope :summary-contains (path "../contracts/agent.reflection-answers.v1.org")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must link the reflection answer table contract.
@@ -260,7 +282,8 @@ ASP skill files must link the reflection answer table contract.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists link where descendant_of($scope) and summary(path) contains "../contracts/agent.evidence-loop.v1.org"
+(assert exists
+  (link :descendant-of $scope :summary-contains (path "../contracts/agent.evidence-loop.v1.org")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -273,7 +296,8 @@ ASP skill files must link the evidence loop receipt contract.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "redundancy"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "redundancy")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check redundancy.
@@ -285,7 +309,8 @@ ASP skill adversarial criteria must check redundancy.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "out of scope"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "out of scope")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check out of scope content.
@@ -297,7 +322,8 @@ ASP skill adversarial criteria must check out of scope content.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "command clarity"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "command clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check command clarity.
@@ -309,7 +335,8 @@ ASP skill adversarial criteria must check command clarity.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "mechanism clarity"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "mechanism clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check mechanism clarity.
@@ -321,7 +348,8 @@ ASP skill adversarial criteria must check mechanism clarity.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "structure"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "structure")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check structure.
@@ -334,7 +362,8 @@ ASP skill adversarial criteria must check structure.
 :END:
 
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "evidence loop"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "evidence loop")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -347,7 +376,8 @@ ASP skill adversarial criteria must require an evidence loop for evidence-backed
 :SEVERITY: warning
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "pressure scenario"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "pressure scenario")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files should include a pressure scenario that catches fallback to prose or legacy labels.
@@ -359,7 +389,8 @@ ASP skill files should include a pressure scenario that catches fallback to pros
 :SEVERITY: warning
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Recovery"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Recovery")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files should include recovery instructions for later agents.
@@ -371,7 +402,8 @@ ASP skill files should include recovery instructions for later agents.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists src-block where descendant_of($scope) and summary(language) = "shell"
+(assert exists
+  (src-block :descendant-of $scope :language "shell"))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must preserve runnable provider commands in shell source blocks.

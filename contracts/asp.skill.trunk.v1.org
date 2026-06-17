@@ -35,7 +35,8 @@ The shared trunk requires:
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where at($scope)
+(assert exists
+  (headline :at $scope))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must have a root heading.
@@ -47,7 +48,8 @@ ASP skill subtrees must have a root heading.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_ID"
+(assert exists
+  (node-property :descendant-of $scope :summary (key "SKILL_ID")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must declare SKILL_ID in their root property drawer.
@@ -59,7 +61,11 @@ ASP skill subtrees must declare SKILL_ID in their root property drawer.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION" and summary(value) contains "Use when"
+(assert exists
+  (node-property
+    :descendant-of $scope
+    :summary (key "SKILL_DESCRIPTION")
+    :summary-contains (value "Use when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 SKILL_DESCRIPTION must carry trigger metadata with "Use when ..."; body-only trigger prose is too late for discovery.
@@ -71,7 +77,8 @@ SKILL_DESCRIPTION must carry trigger metadata with "Use when ..."; body-only tri
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Use Boundary"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Use Boundary")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must include a Use Boundary section that states when to use and when not to use the skill.
@@ -83,7 +90,8 @@ ASP skill subtrees must include a Use Boundary section that states when to use a
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill when"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "Use this skill when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must state a positive trigger with "Use this skill when ...".
@@ -95,7 +103,8 @@ ASP skill subtrees must state a positive trigger with "Use this skill when ...".
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "Do not use this skill when"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "Do not use this skill when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must state a negative trigger with "Do not use this skill when ...".
@@ -107,7 +116,8 @@ ASP skill subtrees must state a negative trigger with "Do not use this skill whe
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "State Workflow"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "State Workflow")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must include a State Workflow section that maps query results to next actions.
@@ -119,7 +129,8 @@ ASP skill subtrees must include a State Workflow section that maps query results
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Rules"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Rules")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must include rules that state boundaries and forbidden shortcuts.
@@ -131,7 +142,8 @@ ASP skill subtrees must include rules that state boundaries and forbidden shortc
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Progressive Disclosure"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Progressive Disclosure")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must include Progressive Disclosure guidance for linked contracts, templates, references, or assets.
@@ -143,7 +155,8 @@ ASP skill subtrees must include Progressive Disclosure guidance for linked contr
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists link where descendant_of($scope) and summary(path) contains "../"
+(assert exists
+  (link :descendant-of $scope :summary-contains (path "../")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must link package-relative resources instead of embedding every detail inline.
@@ -155,7 +168,8 @@ ASP skill subtrees must link package-relative resources instead of embedding eve
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Validation"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Validation")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must include a Validation section with replayable checks or pressure scenarios.
@@ -167,7 +181,8 @@ ASP skill subtrees must include a Validation section with replayable checks or p
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Adversarial Review"
+(assert exists
+  (headline :descendant-of $scope :summary-contains (title "Adversarial Review")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must include an Adversarial Review section for model-audited content quality.
@@ -179,7 +194,8 @@ ASP skill subtrees must include an Adversarial Review section for model-audited 
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "redundancy"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "redundancy")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check redundancy.
@@ -191,7 +207,8 @@ ASP skill adversarial criteria must check redundancy.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "out of scope"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "out of scope")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check out of scope content.
@@ -203,7 +220,8 @@ ASP skill adversarial criteria must check out of scope content.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "command clarity"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "command clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check command clarity.
@@ -215,7 +233,8 @@ ASP skill adversarial criteria must check command clarity.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "mechanism clarity"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "mechanism clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check mechanism clarity.
@@ -227,7 +246,8 @@ ASP skill adversarial criteria must check mechanism clarity.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "structure"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "structure")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill adversarial criteria must check structure.
@@ -239,7 +259,8 @@ ASP skill adversarial criteria must check structure.
 :SEVERITY: warning
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "pressure scenario"
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "pressure scenario")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees should name at least one pressure scenario so future agents can verify the skill changes behavior under stress.
@@ -251,7 +272,8 @@ ASP skill subtrees should name at least one pressure scenario so future agents c
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists src-block where descendant_of($scope) and summary(language) = "shell"
+(assert exists
+  (src-block :descendant-of $scope :language "shell"))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must preserve runnable provider commands in shell source blocks.

@@ -24,7 +24,8 @@ At least one non-header =Value= cell must be non-empty.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists table where descendant_of($scope)
+(assert exists
+  (table :descendant-of $scope))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Reflection answer receipts must include an Org table.
@@ -36,7 +37,8 @@ Reflection answer receipts must include an Org table.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists table-cell where descendant_of($scope) and summary(text) = "Question"
+(assert exists
+  (table-cell :descendant-of $scope :text "Question"))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Reflection answer tables must include a Question column.
@@ -48,7 +50,8 @@ Reflection answer tables must include a Question column.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists table-cell where descendant_of($scope) and summary(text) = "Value"
+(assert exists
+  (table-cell :descendant-of $scope :text "Value"))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Reflection answer tables must include a Value column.
@@ -60,7 +63,8 @@ Reflection answer tables must include a Value column.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists table-cell where descendant_of($scope) and summary(columnName) = "Value" and summary(isHeader) = false and summary(hasText) = true
+(assert exists
+  (table-cell :descendant-of $scope :column "Value" :header nil :nonempty t))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Reflection answer tables must contain at least one non-header Value cell with an answer.

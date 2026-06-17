@@ -26,8 +26,12 @@ See =org/contracts/examples/agent.plan.v1.example.org= for the concrete shape.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count headline where at($scope) and property(:todo-type) = "todo" or property(:todo-type) = "done"
+(assert count >= 1
+  (and
+    (headline :at $scope)
+    (or
+      (= (property :todo-type) "todo")
+      (= (property :todo-type) "done"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -41,7 +45,11 @@ Plan `{{ scope.title }}` must be an Org task heading with a TODO/DONE workflow s
 :END:
 
 #+BEGIN_SRC org-contract
-assert count headline where at($scope) and summary(title) contains "[" and summary(title) contains "%"
+(assert count >= 1
+  (and
+    (headline :at $scope)
+    (contains (summary title) "[")
+    (contains (summary title) "%")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -55,8 +63,10 @@ Plan `{{ scope.title }}` must expose native Org progress cookies such as [5/5] a
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "ID"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "ID"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -70,8 +80,10 @@ Plan `{{ scope.title }}` must carry a stable ID property.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "SDD"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "SDD"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -85,8 +97,10 @@ Plan `{{ scope.title }}` must link its SDD property.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "STABLE_REF"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "STABLE_REF"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -100,8 +114,10 @@ Plan `{{ scope.title }}` must name a stable source reference.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "PACKAGE"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "PACKAGE"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -115,8 +131,10 @@ Plan `{{ scope.title }}` must identify the affected package.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "SLICE"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "SLICE"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -130,8 +148,10 @@ Plan `{{ scope.title }}` must identify the active slice.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "NEXT_ACTION"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "NEXT_ACTION"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -145,8 +165,10 @@ Plan `{{ scope.title }}` must declare a NEXT_ACTION recovery hint.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "RESUME_QUERY"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "RESUME_QUERY"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -160,8 +182,10 @@ Plan `{{ scope.title }}` must declare a RESUME_QUERY for agent recovery.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count node-property where descendant_of(plan) and summary(key) = "EVIDENCE"
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "EVIDENCE"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -175,8 +199,15 @@ Plan `{{ scope.title }}` must summarize evidence in the EVIDENCE property.
 :END:
 
 #+BEGIN_SRC org-contract
-let plan = headline where at($scope)
-assert count item where descendant_of(plan) and summary(checkbox) = "on" or summary(checkbox) = "off" or summary(checkbox) = "trans" and >= 5
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 5
+    (and
+      (item :descendant-of plan)
+      (or
+        (= (summary checkbox) "on")
+        (= (summary checkbox) "off")
+        (= (summary checkbox) "trans")))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -190,7 +221,8 @@ Plan `{{ scope.title }}` must expose a lifecycle checklist with at least five ch
 :END:
 
 #+BEGIN_SRC org-contract
-assert count headline where child_of($scope) and summary(title) = "Context"
+(assert count >= 1
+  (headline :child-of $scope :summary (title "Context")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -204,7 +236,8 @@ Plan `{{ scope.title }}` must contain a Context section.
 :END:
 
 #+BEGIN_SRC org-contract
-assert count headline where child_of($scope) and summary(title) = "Checkpoints"
+(assert count >= 1
+  (headline :child-of $scope :summary (title "Checkpoints")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -218,7 +251,8 @@ Plan `{{ scope.title }}` should contain a Checkpoints section for resumable exec
 :END:
 
 #+BEGIN_SRC org-contract
-assert count headline where child_of($scope) and summary(title) = "Validation"
+(assert count >= 1
+  (headline :child-of $scope :summary (title "Validation")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -232,8 +266,10 @@ Plan `{{ scope.title }}` must contain a Validation section.
 :END:
 
 #+BEGIN_SRC org-contract
-let validation = headline where child_of($scope) and summary(title) = "Validation"
-assert count item where descendant_of(validation) and summary(checkbox) = "on"
+(let ((validation
+       (headline :child-of $scope :summary (title "Validation"))))
+  (assert count >= 1
+    (item :descendant-of validation :summary (checkbox "on"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -247,7 +283,8 @@ Plan `{{ scope.title }}` must record at least one checked validation item.
 :END:
 
 #+BEGIN_SRC org-contract
-assert count headline where child_of($scope) and summary(title) = "Evidence"
+(assert count >= 1
+  (headline :child-of $scope :summary (title "Evidence")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -261,8 +298,10 @@ Plan `{{ scope.title }}` must contain an Evidence section.
 :END:
 
 #+BEGIN_SRC org-contract
-let evidence = headline where child_of($scope) and summary(title) = "Evidence"
-assert count item where descendant_of(evidence)
+(let ((evidence
+       (headline :child-of $scope :summary (title "Evidence"))))
+  (assert count >= 1
+    (item :descendant-of evidence)))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -276,7 +315,8 @@ Plan `{{ scope.title }}` must attach concrete evidence entries.
 :END:
 
 #+BEGIN_SRC org-contract
-assert count headline where child_of($scope) and summary(title) = "Recovery"
+(assert count >= 1
+  (headline :child-of $scope :summary (title "Recovery")))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
@@ -290,8 +330,10 @@ Plan `{{ scope.title }}` must contain a Recovery section.
 :END:
 
 #+BEGIN_SRC org-contract
-let recovery = headline where child_of($scope) and summary(title) = "Recovery"
-assert count src-block where descendant_of(recovery)
+(let ((recovery
+       (headline :child-of $scope :summary (title "Recovery"))))
+  (assert count >= 1
+    (src-block :descendant-of recovery)))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
