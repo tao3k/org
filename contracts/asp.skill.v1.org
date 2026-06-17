@@ -2,17 +2,20 @@
 :PROPERTIES:
 :CONTRACT_ID: asp.skill.v1
 :CONTRACT_ALIAS: ../contracts/asp.skill.v1.org#asp.skill.v1 ../contracts/asp.skill.v1.org
+:CONTRACT_BASE: asp.skill.trunk.v1
+:CONTRACT_OVERRIDE: subtree
 :CONTRACT_KIND: org-elements
 :CONTRACT_SCOPE: subtree
 :END:
 ** What This Produces
-This contract validates an ASP Org skill subtree. It is intentionally a shared
-skill-package contract: concrete skills describe their domain, while this
-contract checks the common authoring shape that makes a skill usable by agents.
+This contract validates an ASP Org skill subtree that overrides the shared
+=asp.skill.trunk.v1= default. The trunk contract supplies the package-wide
+minimum shape; this contract repeats that baseline and adds ASP Org-specific
+checks for contract/template references and recovery behavior.
 
 The intended output is an Org document with:
 - a top-level skill heading;
-- a =CONTRACT_ORG= reference to this contract;
+- =SKILL_ID=, =SKILL_DESCRIPTION=, and =CONTRACT_ORG= properties;
 - a trigger sentence that starts with =Use this skill=;
 - explicit contract/template references using sibling-relative package paths;
 - query or workflow commands preserved in source blocks;
@@ -37,10 +40,34 @@ ASP skill files must have a top-level skill heading.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where summary(key) = "CONTRACT_ORG"
+assert exists node-property where descendant_of($scope) and summary(key) = "CONTRACT_ORG"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must declare their governing contract with a CONTRACT_ORG property.
+#+END_SRC
+
+** skill-has-skill-id
+:PROPERTIES:
+:ASSERT_ID: skill-has-skill-id
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_ID"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must declare SKILL_ID in their root property drawer.
+#+END_SRC
+
+** skill-has-skill-description
+:PROPERTIES:
+:ASSERT_ID: skill-has-skill-description
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must declare SKILL_DESCRIPTION in their root property drawer.
 #+END_SRC
 
 ** skill-states-trigger
@@ -49,7 +76,7 @@ ASP skill files must declare their governing contract with a CONTRACT_ORG proper
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where summary(value) contains "Use this skill"
+assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must start with a trigger sentence such as "Use this skill when ...".
@@ -61,7 +88,7 @@ ASP skill files must start with a trigger sentence such as "Use this skill when 
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Contract"
+assert exists headline where descendant_of($scope) and summary(title) contains "Contract"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must expose the contracts or templates they rely on.
@@ -73,7 +100,7 @@ ASP skill files must expose the contracts or templates they rely on.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Workflow"
+assert exists headline where descendant_of($scope) and summary(title) contains "Workflow"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must include a workflow section with provider-owned commands.
@@ -85,7 +112,7 @@ ASP skill files must include a workflow section with provider-owned commands.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Rules"
+assert exists headline where descendant_of($scope) and summary(title) contains "Rules"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must include rules that state provider boundaries and forbidden shortcuts.
@@ -97,7 +124,7 @@ ASP skill files must include rules that state provider boundaries and forbidden 
 :SEVERITY: warning
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where summary(title) contains "Recovery"
+assert exists headline where descendant_of($scope) and summary(title) contains "Recovery"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files should include recovery or validation instructions for later agents.
@@ -109,7 +136,7 @@ ASP skill files should include recovery or validation instructions for later age
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists src-block where summary(language) = "shell"
+assert exists src-block where descendant_of($scope) and summary(language) = "shell"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must preserve runnable provider commands in shell source blocks.
@@ -121,7 +148,7 @@ ASP skill files must preserve runnable provider commands in shell source blocks.
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists link where summary(path) contains "../contracts/"
+assert exists link where descendant_of($scope) and summary(path) contains "../contracts/"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill contract references must use sibling-relative paths such as ../contracts/name.org.
@@ -133,7 +160,7 @@ ASP skill contract references must use sibling-relative paths such as ../contrac
 :SEVERITY: warning
 :END:
 #+BEGIN_SRC org-contract
-assert exists link where summary(path) contains "../templates/"
+assert exists link where descendant_of($scope) and summary(path) contains "../templates/"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill template references should use sibling-relative paths such as ../templates/name.org.
@@ -145,7 +172,7 @@ ASP skill template references should use sibling-relative paths such as ../templ
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert not exists link where summary(path) contains "<ASP_ORG_ROOT>"
+assert not exists link where descendant_of($scope) and summary(path) contains "<ASP_ORG_ROOT>"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must not require install-root placeholders such as <ASP_ORG_ROOT>.
@@ -157,7 +184,7 @@ ASP skill files must not require install-root placeholders such as <ASP_ORG_ROOT
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert not exists link where summary(path) contains "languages/org/"
+assert not exists link where descendant_of($scope) and summary(path) contains "languages/org/"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill files must not use repository-root paths for package-local contracts or templates.

@@ -1,0 +1,125 @@
+* asp-skill-trunk-v1
+:PROPERTIES:
+:CONTRACT_ID: asp.skill.trunk.v1
+:CONTRACT_ALIAS: ../contracts/asp.skill.trunk.v1.org#asp.skill.trunk.v1 ../contracts/asp.skill.trunk.v1.org
+:CONTRACT_KIND: org-elements
+:CONTRACT_SCOPE: subtree
+:END:
+** What This Produces
+This contract validates the shared trunk shape for ASP Org skill subtrees. It
+maps mature Markdown skill conventions such as name, description, trigger,
+workflow, rules, and examples into Org properties, headings, links, and source
+blocks.
+
+Set this contract as a package or file default with =#+PROPERTY: CONTRACT_ORG=.
+Concrete skill contracts may override this trunk from a skill subtree by setting
+their own =CONTRACT_ORG= property. Override contracts must repeat any trunk
+requirements they still want enforced.
+
+** trunk-has-root-heading
+:PROPERTIES:
+:ASSERT_ID: trunk-has-root-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where at($scope)
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must have a root heading.
+#+END_SRC
+
+** trunk-has-skill-id
+:PROPERTIES:
+:ASSERT_ID: trunk-has-skill-id
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_ID"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must declare SKILL_ID in their root property drawer.
+#+END_SRC
+
+** trunk-has-skill-description
+:PROPERTIES:
+:ASSERT_ID: trunk-has-skill-description
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must declare SKILL_DESCRIPTION in their root property drawer.
+#+END_SRC
+
+** trunk-states-trigger
+:PROPERTIES:
+:ASSERT_ID: trunk-states-trigger
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must start with a trigger sentence such as "Use this skill when ...".
+#+END_SRC
+
+** trunk-has-workflow-section
+:PROPERTIES:
+:ASSERT_ID: trunk-has-workflow-section
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Workflow"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must include a workflow section with provider-owned commands.
+#+END_SRC
+
+** trunk-has-rules-section
+:PROPERTIES:
+:ASSERT_ID: trunk-has-rules-section
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Rules"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must include rules that state boundaries and forbidden shortcuts.
+#+END_SRC
+
+** trunk-has-shell-block
+:PROPERTIES:
+:ASSERT_ID: trunk-has-shell-block
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists src-block where descendant_of($scope) and summary(language) = "shell"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must preserve runnable provider commands in shell source blocks.
+#+END_SRC
+
+** trunk-avoids-install-root-placeholder
+:PROPERTIES:
+:ASSERT_ID: trunk-avoids-install-root-placeholder
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert not exists link where descendant_of($scope) and summary(path) contains "<ASP_ORG_ROOT>"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must not require install-root placeholders such as <ASP_ORG_ROOT>.
+#+END_SRC
+
+** trunk-avoids-repo-root-paths
+:PROPERTIES:
+:ASSERT_ID: trunk-avoids-repo-root-paths
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert not exists link where descendant_of($scope) and summary(path) contains "languages/org/"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must not use repository-root paths for package-local contracts or templates.
+#+END_SRC

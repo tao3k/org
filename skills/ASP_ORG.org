@@ -3,8 +3,11 @@
 #+PROPERTY: SKILL_KIND agent-skill
 #+PROPERTY: SKILL_LANGUAGE org
 
+#+PROPERTY: CONTRACT_ORG ../contracts/asp.skill.trunk.v1.org#asp.skill.trunk.v1
 * ASP Org
 :PROPERTIES:
+:SKILL_ID: asp-org
+:SKILL_DESCRIPTION: Inspect, query, and record durable Org planning state through asp org.
 :CONTRACT_ORG: ../contracts/asp.skill.v1.org#asp.skill.v1
 :END:
 Use this skill when an agent needs to inspect, query, or record durable Org
