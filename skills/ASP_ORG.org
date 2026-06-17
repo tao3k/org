@@ -17,14 +17,16 @@ agent plans:
 - Contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 - Template index: [[../templates/README.org][templates README]]
 
-Validate the template from the installed ASP Org package root:
+Validate the template with paths resolved relative to this skill file's
+directory:
 
 #+begin_src shell
-asp org contract trace --org-contract-registry <ASP_ORG_ROOT>/contracts/agent.execplan.v1.org <ASP_ORG_ROOT>/templates/agent.execplan.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org ../templates/agent.execplan.v1.org
 #+end_src
 
-Here =<ASP_ORG_ROOT>= is the installed ASP Org skill/package root that contains
-the sibling =contracts/=, =templates/=, and =skills/= directories.
+When running this command from another current directory, first resolve the
+paths relative to =skills/ASP_ORG.org=. Do not rewrite them as repository-root
+or installation-root paths.
 
 ** Query Workflow
 Start with the provider guide and use the semantic recipes it exposes:
