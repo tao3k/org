@@ -1,0 +1,101 @@
+#+TITLE: ExecPlan Title
+#+CONTRACT_ORG: [[languages/org/contracts/agent.execplan.v1.org][agent.execplan.v1]]
+
+* TODO ExecPlan Title [0/8] [0%] :execplan:
+:PROPERTIES:
+:TEMPLATE_ID: agent.execplan.v1
+:TEMPLATE_KIND: execplan
+:TEMPLATE_CONTRACT: agent.execplan.v1
+:TEMPLATE_CONTRACT_ORG: [[languages/org/contracts/agent.execplan.v1.org][agent.execplan.v1]]
+:CONTRACT_ORG: [[languages/org/contracts/agent.execplan.v1.org][agent.execplan.v1]]
+:PLAN_CONTRACT: agent.execplan.v1
+:PLAN_PROJECT: current-project
+:PLAN_SESSION: current-session
+:PLAN_ID: agent-plan-id
+:PLAN_BRANCH: main
+:PLAN_SHARING: session
+:PLAN_STATUS: draft
+:PLAN_INTERFACE: asp org query
+:MEMORY_SCOPE: project=current-project;session=current-session;plan=agent-plan-id;branch=main
+:MEMORY_RECALL_K1: 20
+:MEMORY_RECALL_K2: 5
+:MEMORY_RECALL_LAMBDA: 0.30
+:MEMORY_MIN_SCORE: 0.12
+:MEMORY_MAX_CONTEXT_CHARS: 1200
+:MEMORY_FEEDBACK_BIAS: 0.0
+:END:
+
+** Purpose / Big Picture
+Describe the user-visible outcome, why this slice exists, and the boundary it
+is meant to improve.
+
+** Scope and Boundaries
+*** Files or Dirs to Read
+- [ ] List only task-local target files and directories.
+
+*** Commands or Tools to Run
+- [ ] List exact validation and inspection commands.
+
+*** Expected Outputs
+- [ ] Define concrete implementation, documentation, and evidence outputs.
+
+*** Stop Conditions
+- [ ] Define conditions that should stop implementation or require replanning.
+
+** TODO Plan Self Check [0/7] [0%]
+- [ ] Scope matches the request and risk level.
+- [ ] Files or dirs to read are complete and minimal.
+- [ ] Commands or tools to run are complete and safe.
+- [ ] Expected outputs are concrete and testable.
+- [ ] Stop conditions are clear.
+- [ ] Dependencies and constraints are recorded.
+- [ ] Validation plan is adequate for risk.
+
+** Context and Orientation
+Record the current state, relevant package boundaries, and why this work needs
+an ExecPlan instead of a short in-message plan.
+
+** Plan of Work
+Summarize the sequence at a level that another agent can execute without chat
+history.
+
+** TODO Concrete Steps [0/4] [0%]
+:PROPERTIES:
+:STEP_STATUS: pending
+:END:
+- [ ] Research complete.
+- [ ] Implementation complete.
+- [ ] Tests or lint checks complete.
+- [ ] Evidence and recovery notes updated.
+
+** TODO Validation and Acceptance [0/3] [0%]
+:PROPERTIES:
+:RECEIPT_STATUS: pending
+:END:
+- [ ] Functional acceptance criteria satisfied.
+- [ ] Regression tests or equivalent focused checks passed.
+- [ ] Documentation or tracking surfaces updated.
+
+** TODO Reflection and Quality Audit [0/3] [0%]
+- [ ] Code audit recorded.
+- [ ] Plan audit recorded.
+- [ ] Verification audit recorded.
+
+** TODO Final Validation Gate [0/3] [0%]
+- [ ] Validation and Acceptance is complete.
+- [ ] Reflection and Quality Audit is complete.
+- [ ] Final go or no-go decision is recorded.
+
+** Progress
+- Initial plan created.
+
+** Decision Log
+- Record decisions and tradeoffs here.
+
+** Recovery Commands
+#+begin_src shell
+asp org query --kind property --field key=PLAN_ID --field value=<PLAN_ID> --workspace . --view metadata
+asp org query --kind property --field key=STEP_STATUS --field value=pending --workspace . --view metadata
+asp org query --kind property --field key=RECEIPT_STATUS --field value=pending --workspace . --view metadata
+asp org contract trace --org-contract-registry languages/org/contracts/agent.execplan.v1.org languages/org/templates/agent.execplan.v1.org
+#+end_src

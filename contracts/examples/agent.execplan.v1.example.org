@@ -1,0 +1,49 @@
+#+TITLE: Agent ExecPlan Contract Example
+#+CONTRACT_ORG: agent.execplan.v1
+
+* TODO ExecPlan: adapt Org memory contracts for ASP [0/4] [0%]
+:PROPERTIES:
+:ID: agent-execplan-example
+:PACKAGE: agent-semantic-protocols
+:SLICE: org-memory-contract-adaptation
+:END:
+
+** Purpose / Big Picture
+Adapt Org-native planning and memory contracts so ASP can consume them through
+language-owned providers and independent memory-engine packages.
+
+** Scope and Boundaries
+- Keep Org syntax and contract semantics in the Org package.
+- Keep memory ranking and persistence in a memory-engine package.
+- Keep graph-turbo as a consumer of packet-level memory facts.
+
+** Plan Self Check
+- [ ] Provider-owned discovery has identified the relevant contract files.
+- [ ] The plan does not introduce client-specific execution requirements.
+
+** Context and Orientation
+The work bridges Org contract records, ASP packet rendering, and memory recall
+without making one layer reimplement another layer's parser or storage model.
+
+** Plan of Work
+- Add the contract surface.
+- Add an example record.
+- Validate the example against the contract registry.
+- Wire consumers through package APIs.
+
+** Concrete Steps
+- [ ] Update Org contracts.
+- [ ] Implement package APIs.
+- [ ] Run contract trace and package tests.
+- [ ] Record validation evidence.
+
+** Validation and Acceptance
+- [ ] =asp org contract trace --org-contract-registry contracts/agent.execplan.v1.org contracts/examples/agent.execplan.v1.example.org= passes.
+
+** Reflection and Quality Audit
+- [ ] Contract names are stable and language-owned.
+- [ ] The plan does not copy client policy files verbatim.
+
+** Final Validation Gate
+- [ ] All contract assertions pass.
+- [ ] The downstream package or binary boundary is explicit.

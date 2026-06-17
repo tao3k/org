@@ -1,0 +1,161 @@
+#+TITLE: Agent ExecPlan Contract v1
+
+* agent-execplan-v1
+:PROPERTIES:
+:CONTRACT_ID: agent.execplan.v1
+:CONTRACT_KIND: org-elements
+:CONTRACT_SCOPE: document
+:END:
+
+** What This Produces
+This contract validates a recoverable execution plan for large, risky, or
+cross-cutting agent work. It is intentionally separate from =agent.plan.v1=:
+=agent.execplan.v1= governs the plan before and during execution, while
+=agent.plan.v1= governs the task ledger an agent leaves after work is done.
+
+The intended output is an Org document with:
+- an ExecPlan root heading;
+- explicit scope and boundaries;
+- a self-check before widening work;
+- context, work plan, concrete steps, validation, audit, and final gate sections;
+- replayable evidence expectations without embedding client-specific behavior.
+
+** execplan-has-root
+:PROPERTIES:
+:ASSERT_ID: execplan-has-root
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "ExecPlan"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must have an ExecPlan root heading.
+#+END_SRC
+
+** execplan-has-purpose
+:PROPERTIES:
+:ASSERT_ID: execplan-has-purpose
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Purpose"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must state the purpose or big picture.
+#+END_SRC
+
+** execplan-has-scope
+:PROPERTIES:
+:ASSERT_ID: execplan-has-scope
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Scope"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must state scope and boundaries.
+#+END_SRC
+
+** execplan-has-self-check
+:PROPERTIES:
+:ASSERT_ID: execplan-has-self-check
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Self Check"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must include a plan self-check section.
+#+END_SRC
+
+** execplan-has-context
+:PROPERTIES:
+:ASSERT_ID: execplan-has-context
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Context"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must include context and orientation.
+#+END_SRC
+
+** execplan-has-work-plan
+:PROPERTIES:
+:ASSERT_ID: execplan-has-work-plan
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Plan of Work"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must include a plan of work.
+#+END_SRC
+
+** execplan-has-steps
+:PROPERTIES:
+:ASSERT_ID: execplan-has-steps
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Concrete Steps"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must include concrete steps.
+#+END_SRC
+
+** execplan-has-validation
+:PROPERTIES:
+:ASSERT_ID: execplan-has-validation
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Validation"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must include validation and acceptance.
+#+END_SRC
+
+** execplan-has-audit
+:PROPERTIES:
+:ASSERT_ID: execplan-has-audit
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Audit"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must include a reflection or quality audit section.
+#+END_SRC
+
+** execplan-has-final-gate
+:PROPERTIES:
+:ASSERT_ID: execplan-has-final-gate
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists headline where summary(title) contains "Final"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must include a final validation gate.
+#+END_SRC
