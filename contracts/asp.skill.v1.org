@@ -7,20 +7,23 @@
 :CONTRACT_KIND: org-elements
 :CONTRACT_SCOPE: subtree
 :END:
+
 ** What This Produces
 This contract validates an ASP Org skill subtree that overrides the shared
-=asp.skill.trunk.v1= default. The trunk contract supplies the package-wide
-minimum shape; this contract repeats that baseline and adds ASP Org-specific
-checks for contract/template references and recovery behavior.
+=asp.skill.trunk.v1= default. The trunk contract defines general skill
+quality. This override keeps those requirements and adds ASP Org-specific
+requirements for semantic-AST query boundaries, contract/template resources,
+and recovery behavior.
 
-The intended output is an Org document with:
-- a top-level skill heading;
-- =SKILL_ID=, =SKILL_DESCRIPTION=, and =CONTRACT_ORG= properties;
-- a trigger sentence that starts with =Use this skill=;
-- explicit contract/template references using sibling-relative package paths;
-- query or workflow commands preserved in source blocks;
-- rules that make the provider boundary explicit;
-- recovery or validation instructions for later agents.
+The intended output is an Org skill with:
+- indexed identity metadata;
+- explicit use and non-use boundaries;
+- state workflow steps driven by =asp org= query/trace output;
+- progressive-disclosure links to contracts and templates;
+- validation checks and pressure-scenario guidance;
+- adversarial review criteria for model-audited quality;
+- provider-boundary rules that prevent SDD, Wendao, or client planning labels
+  from becoming hidden query modes.
 
 ** skill-has-root-heading
 :PROPERTIES:
@@ -58,88 +61,100 @@ assert exists node-property where descendant_of($scope) and summary(key) = "SKIL
 ASP skill files must declare SKILL_ID in their root property drawer.
 #+END_SRC
 
-** skill-has-skill-description
+** skill-has-trigger-description
 :PROPERTIES:
-:ASSERT_ID: skill-has-skill-description
+:ASSERT_ID: skill-has-trigger-description
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION"
+assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION" and summary(value) contains "Use when"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill files must declare SKILL_DESCRIPTION in their root property drawer.
+SKILL_DESCRIPTION must include trigger metadata with "Use when ...".
 #+END_SRC
 
-** skill-states-trigger
+** skill-has-use-boundary
 :PROPERTIES:
-:ASSERT_ID: skill-states-trigger
+:ASSERT_ID: skill-has-use-boundary
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill"
+assert exists headline where descendant_of($scope) and summary(title) contains "Use Boundary"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill files must start with a trigger sentence such as "Use this skill when ...".
+ASP skill files must include a Use Boundary section with positive and negative triggers.
 #+END_SRC
 
-** skill-has-contract-section
+** skill-states-positive-trigger
 :PROPERTIES:
-:ASSERT_ID: skill-has-contract-section
+:ASSERT_ID: skill-states-positive-trigger
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Contract"
+assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill when"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill files must expose the contracts or templates they rely on.
+ASP skill files must state when to use the skill.
 #+END_SRC
 
-** skill-has-workflow-section
+** skill-states-negative-trigger
 :PROPERTIES:
-:ASSERT_ID: skill-has-workflow-section
+:ASSERT_ID: skill-states-negative-trigger
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Workflow"
+assert exists plain-text where descendant_of($scope) and summary(value) contains "Do not use this skill when"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill files must include a workflow section with provider-owned commands.
+ASP skill files must state when not to use the skill.
 #+END_SRC
 
-** skill-has-rules-section
+** skill-has-state-workflow
 :PROPERTIES:
-:ASSERT_ID: skill-has-rules-section
+:ASSERT_ID: skill-has-state-workflow
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Rules"
+assert exists headline where descendant_of($scope) and summary(title) contains "State Workflow"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill files must include rules that state provider boundaries and forbidden shortcuts.
+ASP skill files must include a State Workflow section driven by provider query output.
 #+END_SRC
 
-** skill-has-recovery-section
+** skill-has-query-command
 :PROPERTIES:
-:ASSERT_ID: skill-has-recovery-section
-:SEVERITY: warning
-:END:
-#+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Recovery"
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-ASP skill files should include recovery or validation instructions for later agents.
-#+END_SRC
-
-** skill-has-shell-block
-:PROPERTIES:
-:ASSERT_ID: skill-has-shell-block
+:ASSERT_ID: skill-has-query-command
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists src-block where descendant_of($scope) and summary(language) = "shell"
+assert exists plain-text where descendant_of($scope) and summary(value) contains "asp org query"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill files must preserve runnable provider commands in shell source blocks.
+ASP Org skills must expose semantic AST queries through asp org query.
+#+END_SRC
+
+** skill-has-contract-trace-command
+:PROPERTIES:
+:ASSERT_ID: skill-has-contract-trace-command
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "asp org contract trace"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must expose contract validation through asp org contract trace.
+#+END_SRC
+
+** skill-has-progressive-disclosure
+:PROPERTIES:
+:ASSERT_ID: skill-has-progressive-disclosure
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Progressive Disclosure"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must describe when to read linked contracts, templates, and indexes.
 #+END_SRC
 
 ** skill-uses-relative-contract-reference
@@ -157,13 +172,209 @@ ASP skill contract references must use sibling-relative paths such as ../contrac
 ** skill-uses-relative-template-reference
 :PROPERTIES:
 :ASSERT_ID: skill-uses-relative-template-reference
-:SEVERITY: warning
+:SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
 assert exists link where descendant_of($scope) and summary(path) contains "../templates/"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill template references should use sibling-relative paths such as ../templates/name.org.
+ASP skill template references must use sibling-relative paths such as ../templates/name.org.
+#+END_SRC
+
+** skill-has-rules-section
+:PROPERTIES:
+:ASSERT_ID: skill-has-rules-section
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Rules"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must include rules that state provider boundaries and forbidden shortcuts.
+#+END_SRC
+
+** skill-has-provider-boundary-rule
+:PROPERTIES:
+:ASSERT_ID: skill-has-provider-boundary-rule
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "semantic AST"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skill rules must explicitly preserve the semantic AST provider boundary.
+#+END_SRC
+
+** skill-has-validation-section
+:PROPERTIES:
+:ASSERT_ID: skill-has-validation-section
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Validation"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must include validation checks for the skill and its referenced contracts.
+#+END_SRC
+
+** skill-has-adversarial-review-section
+:PROPERTIES:
+:ASSERT_ID: skill-has-adversarial-review-section
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Adversarial Review"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must include an Adversarial Review section for reflection-based content checks.
+#+END_SRC
+
+** skill-links-adversarial-review-contract
+:PROPERTIES:
+:ASSERT_ID: skill-links-adversarial-review-contract
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists link where descendant_of($scope) and summary(path) contains "../contracts/agent.adversarial-review.v1.org"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must link the adversarial review receipt contract.
+#+END_SRC
+
+** skill-links-reflection-answer-contract
+:PROPERTIES:
+:ASSERT_ID: skill-links-reflection-answer-contract
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists link where descendant_of($scope) and summary(path) contains "../contracts/agent.reflection-answers.v1.org"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must link the reflection answer table contract.
+#+END_SRC
+
+** skill-links-evidence-loop-contract
+:PROPERTIES:
+:ASSERT_ID: skill-links-evidence-loop-contract
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists link where descendant_of($scope) and summary(path) contains "../contracts/agent.evidence-loop.v1.org"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must link the evidence loop receipt contract.
+#+END_SRC
+
+** skill-adversarial-checks-redundancy
+:PROPERTIES:
+:ASSERT_ID: skill-adversarial-checks-redundancy
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "redundancy"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check redundancy.
+#+END_SRC
+
+** skill-adversarial-checks-out-of-scope
+:PROPERTIES:
+:ASSERT_ID: skill-adversarial-checks-out-of-scope
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "out of scope"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check out of scope content.
+#+END_SRC
+
+** skill-adversarial-checks-command-clarity
+:PROPERTIES:
+:ASSERT_ID: skill-adversarial-checks-command-clarity
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "command clarity"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check command clarity.
+#+END_SRC
+
+** skill-adversarial-checks-mechanism-clarity
+:PROPERTIES:
+:ASSERT_ID: skill-adversarial-checks-mechanism-clarity
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "mechanism clarity"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check mechanism clarity.
+#+END_SRC
+
+** skill-adversarial-checks-structure
+:PROPERTIES:
+:ASSERT_ID: skill-adversarial-checks-structure
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "structure"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check structure.
+#+END_SRC
+
+** skill-adversarial-checks-evidence-loop
+:PROPERTIES:
+:ASSERT_ID: skill-adversarial-checks-evidence-loop
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "evidence loop"
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must require an evidence loop for evidence-backed answers.
+#+END_SRC
+
+** skill-has-pressure-scenario
+:PROPERTIES:
+:ASSERT_ID: skill-has-pressure-scenario
+:SEVERITY: warning
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "pressure scenario"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files should include a pressure scenario that catches fallback to prose or legacy labels.
+#+END_SRC
+
+** skill-has-recovery-section
+:PROPERTIES:
+:ASSERT_ID: skill-has-recovery-section
+:SEVERITY: warning
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Recovery"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files should include recovery instructions for later agents.
+#+END_SRC
+
+** skill-has-shell-block
+:PROPERTIES:
+:ASSERT_ID: skill-has-shell-block
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists src-block where descendant_of($scope) and summary(language) = "shell"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill files must preserve runnable provider commands in shell source blocks.
 #+END_SRC
 
 ** skill-avoids-install-root-placeholder

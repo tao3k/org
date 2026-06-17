@@ -1,56 +1,61 @@
 #+TITLE: ASP Org Skill
-#+PROPERTY: SKILL_ID asp-org
-#+PROPERTY: SKILL_KIND agent-skill
-#+PROPERTY: SKILL_LANGUAGE org
-
 #+PROPERTY: CONTRACT_ORG ../contracts/asp.skill.trunk.v1.org#asp.skill.trunk.v1
+
 * ASP Org
 :PROPERTIES:
 :SKILL_ID: asp-org
-:SKILL_DESCRIPTION: Inspect, query, and record durable Org planning state through asp org.
+:SKILL_DESCRIPTION: Use when an agent needs to inspect, query, validate, or record durable Org planning state through asp org semantic AST facts.
 :CONTRACT_ORG: ../contracts/asp.skill.v1.org#asp.skill.v1
 :END:
-Use this skill when an agent needs to inspect, query, or record durable Org
-planning state through =asp org=. The provider boundary is semantic AST first:
-tasks, checklist items, properties, planning timestamps, and source blocks are
-queried as Org facts, not as client-specific task languages.
 
-** Contract Template
-The execution-plan template and its contract are the source of truth for durable
-agent plans:
+** Use Boundary
+Use this skill when the task depends on durable Org planning state, Org
+contracts, Org templates, TODO headlines, checklist items, property drawers,
+planning timestamps, or source blocks that should be queried through =asp org=.
 
-- Template: [[../templates/agent.execplan.v1.org][agent.execplan.v1.org]]
-- Contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
+Do not use this skill when the task is generic Markdown authoring, free-form
+chat planning, or client-local todo management that does not need Org AST facts
+or Org contract validation.
+
+** Progressive Disclosure
+Keep this skill body as the operational index. Read linked resources only when
+the state workflow reaches them:
+- Contract for this skill: [[../contracts/asp.skill.v1.org][asp.skill.v1]]
+- Shared skill trunk: [[../contracts/asp.skill.trunk.v1.org][asp.skill.trunk.v1]]
+- Adversarial review receipt: [[../contracts/agent.adversarial-review.v1.org][agent.adversarial-review.v1]]
+- Reflection answer table: [[../contracts/agent.reflection-answers.v1.org][agent.reflection-answers.v1]]
+- Evidence loop receipt: [[../contracts/agent.evidence-loop.v1.org][agent.evidence-loop.v1]]
+- Exec plan contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
+- Exec plan template: [[../templates/agent.execplan.v1.org][agent.execplan.v1.org]]
 - Template index: [[../templates/README.org][templates README]]
 
-Validate the template with paths resolved relative to this skill file's
-directory:
-
-#+begin_src shell
-asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org ../templates/agent.execplan.v1.org
-#+end_src
-
-When running this command from another current directory, first resolve the
-paths relative to =skills/ASP_ORG.org=. Do not rewrite them as repository-root
-or installation-root paths.
-
-** Query Workflow
-Start with the provider guide and use the semantic recipes it exposes:
+** State Workflow
+Start by asking the provider what Org facts exist, then let the result shape the
+next action. The provider exposes asp org query for semantic AST facts. The provider exposes asp org contract trace for contract validation.
 
 #+begin_src shell
 asp org guide
 asp org query --kind task --field todo=TODO --workspace . --view metadata
-asp org query --kind checklistItem --field checked=true --workspace . --view metadata
+asp org query --kind checklistItem --field checked=false --workspace . --view metadata
 asp org query --kind property --field key=<KEY> --workspace . --view metadata
 #+end_src
 
-Use these canonical recipe mappings when adapting old Wendao or SDD read-model
-surfaces:
+- If the query returns TODO headlines, treat them as =kind=task= and inspect
+  the relevant selector before editing.
+- If the query returns checkbox list items, treat them as =kind=checklistItem=;
+  do not collapse them into task headlines.
+- If the query returns a property drawer match, use the property key/value as
+  the semantic anchor; do not invent SDD, Wendao, or agent-plan search modes.
+- If no query result matches, narrow the AST query or inspect the linked
+  contract/template before creating new structure.
 
-- =sdd-kind-properties= maps to =asp org query --kind property --field key=SDD_KIND=.
-- =org-id-properties= maps to =asp org query --kind property --field key=ID --field value=<ID>=.
-- =tagged-tasks= maps to =asp org query --kind task --term <TEXT> --field tag=<TAG>=.
-- =done-tasks= maps to =asp org query --kind task --field todo=DONE=.
+Validate contract or template state through the contract provider, not by
+reading prose alone:
+
+#+begin_src shell
+asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org ../templates/agent.execplan.v1.org
+asp org contract trace --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
+#+end_src
 
 ** Plan Capture
 Use =capture-plan= only for a non-mutating, reviewable Org entry plan. Capture
@@ -72,6 +77,8 @@ The command renders an Org entry and application preconditions. It does not
 write the target file.
 
 ** Rules
+- Preserve the semantic AST provider boundary: query Org tasks, checklist
+  items, properties, planning timestamps, links, and source blocks as Org facts.
 - Do not use =--kind agent-plan=; =agent-plan= is not a provider-owned capture
   kind.
 - Do not reintroduce legacy guide labels such as =agent-plan-*=,
@@ -79,11 +86,52 @@ write the target file.
 - Do not encode SDD, Wendao, or task archive behavior as hidden search/query
   side effects. Express them as AST queries first, then route mutations through
   an edit-plan or AST-patch contract.
-- Do not treat checklist items as task headlines. Org TODO headlines are
-  =kind=task=; checkbox list items are =kind=checklistItem=.
+- Do not rewrite package-relative links as installation-root placeholders or
+  repository-root paths.
+
+** Validation
+Run these checks after changing this skill, its contract, or a linked template:
+
+#+begin_src shell
+asp org lint --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
+asp org contract trace --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
+asp org lint ../contracts/asp.skill.trunk.v1.org
+asp org lint ../contracts/asp.skill.v1.org
+asp org lint ../contracts/agent.adversarial-review.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.adversarial-review.v1.org ../contracts/examples/agent.adversarial-review.v1.example.org
+asp org lint ../contracts/agent.reflection-answers.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.reflection-answers.v1.org ../contracts/examples/agent.reflection-answers.v1.example.org
+asp org lint ../contracts/agent.evidence-loop.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.evidence-loop.v1.org ../contracts/examples/agent.evidence-loop.v1.example.org
+#+end_src
+evidence loop pressure scenario: if reflection answers a question, it must also leave an evidence loop receipt with a linked evidence cell, replayable shell command, and evaluated result.
+
+pressure scenario: an agent asks for "SDD tasks" or "Wendao task records" in an
+Org file. The correct behavior is to query AST facts such as TODO headlines,
+checkbox list items, and properties first, then explain any legacy mapping as a
+derived interpretation rather than a provider-owned mode.
+
+** Adversarial Review
+Ask reflection to challenge this skill with the receipt contract
+[[../contracts/agent.adversarial-review.v1.org][agent.adversarial-review.v1]].
+Record answered questions with the table contract
+[[../contracts/agent.reflection-answers.v1.org][agent.reflection-answers.v1]]:
+
+Does this skill contain only the instructions needed to operate the ASP Org
+workflow, or did a valid structure hide weak content?
+
+- redundancy: remove repeated or decorative prose that does not change agent
+  behavior.
+- out of scope: reject content outside durable Org planning state, Org
+  contracts, Org templates, or semantic AST queries.
+- command clarity: each command family must have a clear use and expected next
+  action.
+- mechanism clarity: explain how query or trace output changes the workflow.
+- structure: keep trigger metadata, boundaries, resources, workflow, rules,
+  validation, and recovery aligned with the governing contracts.
 
 ** Recovery Queries
-Use property and task queries to recover plan state:
+Use provider queries to recover durable plan state:
 
 #+begin_src shell
 asp org query --kind property --field key=PLAN_ID --field value=<PLAN_ID> --workspace . --view metadata

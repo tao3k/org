@@ -5,16 +5,29 @@
 :CONTRACT_KIND: org-elements
 :CONTRACT_SCOPE: subtree
 :END:
-** What This Produces
-This contract validates the shared trunk shape for ASP Org skill subtrees. It
-maps mature Markdown skill conventions such as name, description, trigger,
-workflow, rules, and examples into Org properties, headings, links, and source
-blocks.
 
-Set this contract as a package or file default with =#+PROPERTY: CONTRACT_ORG=.
-Concrete skill contracts may override this trunk from a skill subtree by setting
-their own =CONTRACT_ORG= property. Override contracts must repeat any trunk
-requirements they still want enforced.
+** What This Produces
+This contract validates the shared trunk shape for ASP Org skill subtrees.
+It treats Org as a stronger skill medium than Markdown: machine-readable
+properties carry activation metadata, headings carry workflow phases, links
+carry progressive-disclosure resources, and source blocks carry replayable
+commands.
+
+Set this contract as a package or file default with =#+PROPERTY:
+CONTRACT_ORG=. Concrete skill contracts may override this trunk from a skill
+subtree by setting their own =CONTRACT_ORG= property. Override contracts must
+repeat any trunk requirements they still want enforced.
+
+The shared trunk requires:
+- identity metadata that can be indexed before loading the full body;
+- explicit use and non-use boundaries;
+- a state-oriented workflow rather than a prose-only description;
+- progressive-disclosure links to resources outside the skill body;
+- validation or pressure-test guidance;
+- adversarial review criteria for content quality that cannot be fully checked
+  by structural assertions;
+- provider-owned commands in shell source blocks;
+- package-relative links, never install-root placeholders or repo-root paths.
 
 ** trunk-has-root-heading
 :PROPERTIES:
@@ -40,40 +53,64 @@ assert exists node-property where descendant_of($scope) and summary(key) = "SKIL
 ASP skill subtrees must declare SKILL_ID in their root property drawer.
 #+END_SRC
 
-** trunk-has-skill-description
+** trunk-has-trigger-description
 :PROPERTIES:
-:ASSERT_ID: trunk-has-skill-description
+:ASSERT_ID: trunk-has-trigger-description
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION"
+assert exists node-property where descendant_of($scope) and summary(key) = "SKILL_DESCRIPTION" and summary(value) contains "Use when"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must declare SKILL_DESCRIPTION in their root property drawer.
+SKILL_DESCRIPTION must carry trigger metadata with "Use when ..."; body-only trigger prose is too late for discovery.
 #+END_SRC
 
-** trunk-states-trigger
+** trunk-states-use-boundary
 :PROPERTIES:
-:ASSERT_ID: trunk-states-trigger
+:ASSERT_ID: trunk-states-use-boundary
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill"
+assert exists headline where descendant_of($scope) and summary(title) contains "Use Boundary"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must start with a trigger sentence such as "Use this skill when ...".
+ASP skill subtrees must include a Use Boundary section that states when to use and when not to use the skill.
 #+END_SRC
 
-** trunk-has-workflow-section
+** trunk-states-positive-trigger
 :PROPERTIES:
-:ASSERT_ID: trunk-has-workflow-section
+:ASSERT_ID: trunk-states-positive-trigger
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
-assert exists headline where descendant_of($scope) and summary(title) contains "Workflow"
+assert exists plain-text where descendant_of($scope) and summary(value) contains "Use this skill when"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must include a workflow section with provider-owned commands.
+ASP skill subtrees must state a positive trigger with "Use this skill when ...".
+#+END_SRC
+
+** trunk-states-negative-trigger
+:PROPERTIES:
+:ASSERT_ID: trunk-states-negative-trigger
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "Do not use this skill when"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must state a negative trigger with "Do not use this skill when ...".
+#+END_SRC
+
+** trunk-has-state-workflow
+:PROPERTIES:
+:ASSERT_ID: trunk-has-state-workflow
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "State Workflow"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must include a State Workflow section that maps query results to next actions.
 #+END_SRC
 
 ** trunk-has-rules-section
@@ -86,6 +123,126 @@ assert exists headline where descendant_of($scope) and summary(title) contains "
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP skill subtrees must include rules that state boundaries and forbidden shortcuts.
+#+END_SRC
+
+** trunk-has-progressive-disclosure
+:PROPERTIES:
+:ASSERT_ID: trunk-has-progressive-disclosure
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Progressive Disclosure"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must include Progressive Disclosure guidance for linked contracts, templates, references, or assets.
+#+END_SRC
+
+** trunk-has-resource-link
+:PROPERTIES:
+:ASSERT_ID: trunk-has-resource-link
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists link where descendant_of($scope) and summary(path) contains "../"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must link package-relative resources instead of embedding every detail inline.
+#+END_SRC
+
+** trunk-has-validation-section
+:PROPERTIES:
+:ASSERT_ID: trunk-has-validation-section
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Validation"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must include a Validation section with replayable checks or pressure scenarios.
+#+END_SRC
+
+** trunk-has-adversarial-review-section
+:PROPERTIES:
+:ASSERT_ID: trunk-has-adversarial-review-section
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists headline where descendant_of($scope) and summary(title) contains "Adversarial Review"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees must include an Adversarial Review section for model-audited content quality.
+#+END_SRC
+
+** trunk-adversarial-checks-redundancy
+:PROPERTIES:
+:ASSERT_ID: trunk-adversarial-checks-redundancy
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "redundancy"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check redundancy.
+#+END_SRC
+
+** trunk-adversarial-checks-out-of-scope
+:PROPERTIES:
+:ASSERT_ID: trunk-adversarial-checks-out-of-scope
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "out of scope"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check out of scope content.
+#+END_SRC
+
+** trunk-adversarial-checks-command-clarity
+:PROPERTIES:
+:ASSERT_ID: trunk-adversarial-checks-command-clarity
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "command clarity"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check command clarity.
+#+END_SRC
+
+** trunk-adversarial-checks-mechanism-clarity
+:PROPERTIES:
+:ASSERT_ID: trunk-adversarial-checks-mechanism-clarity
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "mechanism clarity"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check mechanism clarity.
+#+END_SRC
+
+** trunk-adversarial-checks-structure
+:PROPERTIES:
+:ASSERT_ID: trunk-adversarial-checks-structure
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "structure"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill adversarial criteria must check structure.
+#+END_SRC
+
+** trunk-has-pressure-scenario
+:PROPERTIES:
+:ASSERT_ID: trunk-has-pressure-scenario
+:SEVERITY: warning
+:END:
+#+BEGIN_SRC org-contract
+assert exists plain-text where descendant_of($scope) and summary(value) contains "pressure scenario"
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP skill subtrees should name at least one pressure scenario so future agents can verify the skill changes behavior under stress.
 #+END_SRC
 
 ** trunk-has-shell-block
