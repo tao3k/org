@@ -1,0 +1,82 @@
+#+TITLE: ASP Org Skill
+#+PROPERTY: SKILL_ID asp-org
+#+PROPERTY: SKILL_KIND agent-skill
+#+PROPERTY: SKILL_LANGUAGE org
+
+* ASP Org
+Use this skill when an agent needs to inspect, query, or record durable Org
+planning state through =asp org=. The provider boundary is semantic AST first:
+tasks, checklist items, properties, planning timestamps, and source blocks are
+queried as Org facts, not as client-specific task languages.
+
+** Contract Template
+The execution-plan template and its contract are the source of truth for durable
+agent plans:
+
+- Template: [[../templates/agent.execplan.v1.org][agent.execplan.v1.org]]
+- Contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
+- Template index: [[../templates/README.org][templates README]]
+
+Validate the template from the project root:
+
+#+begin_src shell
+asp org contract trace --org-contract-registry languages/org/contracts/agent.execplan.v1.org languages/org/templates/agent.execplan.v1.org
+#+end_src
+
+** Query Workflow
+Start with the provider guide and use the semantic recipes it exposes:
+
+#+begin_src shell
+asp org guide
+asp org query --kind task --field todo=TODO --workspace . --view metadata
+asp org query --kind checklistItem --field checked=true --workspace . --view metadata
+asp org query --kind property --field key=<KEY> --workspace . --view metadata
+#+end_src
+
+Use these canonical recipe mappings when adapting old Wendao or SDD read-model
+surfaces:
+
+- =sdd-kind-properties= maps to =asp org query --kind property --field key=SDD_KIND=.
+- =org-id-properties= maps to =asp org query --kind property --field key=ID --field value=<ID>=.
+- =tagged-tasks= maps to =asp org query --kind task --term <TEXT> --field tag=<TAG>=.
+- =done-tasks= maps to =asp org query --kind task --field todo=DONE=.
+
+** Plan Capture
+Use =capture-plan= only for a non-mutating, reviewable Org entry plan. Capture
+kinds stay generic; plan contracts are caller-supplied Org properties and body
+content.
+
+#+begin_src shell
+asp org capture-plan \
+  --kind task \
+  --title <TITLE> \
+  --target-file PLANS.org \
+  --outline Plans/Active \
+  --tag plan \
+  --property PLAN_ID=<PLAN_ID> \
+  --body <OBJECTIVE>
+#+end_src
+
+The command renders an Org entry and application preconditions. It does not
+write the target file.
+
+** Rules
+- Do not use =--kind agent-plan=; =agent-plan= is not a provider-owned capture
+  kind.
+- Do not reintroduce legacy guide labels such as =agent-plan-*=,
+  =wendao-task-*=, =wendao-orgid-*=, =sdd-property=, or =plan-record=.
+- Do not encode SDD, Wendao, or task archive behavior as hidden search/query
+  side effects. Express them as AST queries first, then route mutations through
+  an edit-plan or AST-patch contract.
+- Do not treat checklist items as task headlines. Org TODO headlines are
+  =kind=task=; checkbox list items are =kind=checklistItem=.
+
+** Recovery Queries
+Use property and task queries to recover plan state:
+
+#+begin_src shell
+asp org query --kind property --field key=PLAN_ID --field value=<PLAN_ID> --workspace . --view metadata
+asp org query --kind property --field key=STEP_STATUS --field value=pending --workspace . --view metadata
+asp org query --kind property --field key=RECEIPT_STATUS --field value=pending --workspace . --view metadata
+asp org query --selector <path:start-end> --workspace . --content
+#+end_src
