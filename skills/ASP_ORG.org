@@ -3,12 +3,24 @@
 #+PROPERTY: SKILL_KIND agent-skill
 #+PROPERTY: SKILL_LANGUAGE org
 
+#+CONTRACT_ORG: ../contracts/asp.skill.v1.org#asp.skill.v1
 * ASP Org
 Use this skill when an agent needs to inspect, query, or record durable Org
 planning state through =asp org=. The provider boundary is semantic AST first:
 tasks, checklist items, properties, planning timestamps, and source blocks are
 queried as Org facts, not as client-specific task languages.
 
+** Skill Contract
+All Org skill files in this package follow the public ASP skill contract:
+- Skill contract: [[../contracts/asp.skill.v1.org][asp.skill.v1]]
+[[../contracts/asp.skill.v1.org][asp.skill.v1]]
+
+Validate this skill with paths resolved relative to this file's directory:
+#+begin_src shell
+asp org contract trace --org-contract-registry ../contracts/asp.skill.v1.org ASP_ORG.org
+#+end_src
+
+When adding another file under =skills/=, give it its own =#+CONTRACT_ORG:= keyword and keep package-local contract/template links in sibling-relative form.
 ** Contract Template
 The execution-plan template and its contract are the source of truth for durable
 agent plans:
