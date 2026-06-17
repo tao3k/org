@@ -6,25 +6,44 @@ This directory contains language-facing Org authoring templates. Provider
 crates such as =languages/orgize= implement parsing and evaluation; reusable
 agent templates and their public contracts live here.
 
+** Plan
+:PROPERTIES:
+:TEMPLATE_ID: agent.plan.v1
+:TEMPLATE_KIND: plan
+:TEMPLATE_FILE: agent.plan.v1.org
+:TEMPLATE_CONTRACT: agent.plan.v1
+:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
+:END:
+
+- Template: [[agent.plan.v1.org][agent.plan.v1.org]]
+- Contract: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
+- Validation:
+
+#+begin_src shell
+asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org agent.plan.v1.org
+#+end_src
+
+Use this template when an agent needs to leave a recoverable task ledger under
+=.cache/agent-semantic-protocol/org/flow/plans= after work is done. The paired
+contract verifies identity, recovery, lifecycle, validation, evidence, and
+replay sections.
+
 ** ExecPlan
 :PROPERTIES:
 :TEMPLATE_ID: agent.execplan.v1
 :TEMPLATE_KIND: execplan
 :TEMPLATE_FILE: agent.execplan.v1.org
 :TEMPLATE_CONTRACT: agent.execplan.v1
-:TEMPLATE_CONTRACT_ORG: [[languages/org/contracts/agent.execplan.v1.org][agent.execplan.v1]]
+:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 :END:
 
-- Template: [[languages/org/templates/agent.execplan.v1.org][agent.execplan.v1.org]]
-- Contract: [[languages/org/contracts/agent.execplan.v1.org][agent.execplan.v1]]
+- Template: [[agent.execplan.v1.org][agent.execplan.v1.org]]
+- Contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 - Validation:
 
 #+begin_src shell
-asp org contract trace --org-contract-registry languages/org/contracts/agent.execplan.v1.org languages/org/templates/agent.execplan.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org agent.execplan.v1.org
 #+end_src
-
-Run validation from the project root so project-relative contract links resolve
-against the same root as template metadata.
 
 Use this template when an agent needs a durable, contract-checked execution
 plan. The paired contract verifies the required planning, validation,

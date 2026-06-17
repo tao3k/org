@@ -25,20 +25,30 @@ the state workflow reaches them:
 - Adversarial review receipt: [[../contracts/agent.adversarial-review.v1.org][agent.adversarial-review.v1]]
 - Reflection answer table: [[../contracts/agent.reflection-answers.v1.org][agent.reflection-answers.v1]]
 - Evidence loop receipt: [[../contracts/agent.evidence-loop.v1.org][agent.evidence-loop.v1]]
+- Plan contract: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
+- Plan template: [[../templates/agent.plan.v1.org][agent.plan.v1.org]]
 - Exec plan contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 - Exec plan template: [[../templates/agent.execplan.v1.org][agent.execplan.v1.org]]
 - Template index: [[../templates/README.org][templates README]]
 
 ** State Workflow
-Start by asking the provider what Org facts exist, then let the result shape the
-next action. The provider exposes asp org query for semantic AST facts. The provider exposes asp org contract trace for contract validation.
+Start by materializing the ASP Org resource tree into the project state
+directory, then ask the provider what Org facts exist and let the result shape
+the next action. The provider exposes asp org query for semantic AST facts. The
+provider exposes asp org contract trace for contract validation.
 
 #+begin_src shell
+asp org capture init
 asp org guide
 asp org query --kind task --field todo=TODO --workspace . --view metadata
 asp org query --kind checklistItem --field checked=false --workspace . --view metadata
 asp org query --kind property --field key=<KEY> --workspace . --view metadata
 #+end_src
+
+The capture init command materializes =languages/org= resources into
+=.cache/agent-semantic-protocol/org= and creates =flow/sdd=, =flow/BDR=, and
+=flow/plans=. Reference the materialized skill from AGENTS.md with
+=@.cache/agent-semantic-protocol/org/skills/ASP_ORG.org=.
 
 - If the query returns TODO headlines, treat them as =kind=task= and inspect
   the relevant selector before editing.
@@ -53,6 +63,7 @@ Validate contract or template state through the contract provider, not by
 reading prose alone:
 
 #+begin_src shell
+asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org ../templates/agent.plan.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org ../templates/agent.execplan.v1.org
 asp org contract trace --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
 #+end_src
@@ -66,7 +77,7 @@ content.
 asp org capture-plan \
   --kind task \
   --title <TITLE> \
-  --target-file PLANS.org \
+  --target-file .cache/agent-semantic-protocol/org/flow/plans/PLANS.org \
   --outline Plans/Active \
   --tag plan \
   --property PLAN_ID=<PLAN_ID> \
@@ -95,6 +106,8 @@ Run these checks after changing this skill, its contract, or a linked template:
 #+begin_src shell
 asp org lint --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
 asp org contract trace --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
+asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org ../templates/agent.plan.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org ../templates/agent.execplan.v1.org
 asp org lint ../contracts/asp.skill.trunk.v1.org
 asp org lint ../contracts/asp.skill.v1.org
 asp org lint ../contracts/agent.adversarial-review.v1.org

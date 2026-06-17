@@ -1,0 +1,38 @@
+* TODO Plan Title [5/5] [100%] :agent:org:plan:
+:PROPERTIES:
+:TEMPLATE_ID: agent.plan.v1
+:TEMPLATE_KIND: plan
+:TEMPLATE_CONTRACT: agent.plan.v1
+:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
+:CONTRACT_ORG: agent.plan.v1
+:ID: agent-plan-id
+:SDD: sdd-id-or-link
+:STABLE_REF: stable-source-ref
+:PACKAGE: current-package
+:SLICE: current-slice
+:NEXT_ACTION: continue-from-next-checkpoint
+:RESUME_QUERY: asp org query --kind property --field key=PLAN_ID --field value=agent-plan-id --workspace . --view metadata
+:EVIDENCE: validation receipts and recovery commands recorded below
+:END:
+- [X] Scope and recovery anchor confirmed.
+- [X] Task-local research complete.
+- [X] Implementation complete.
+- [X] Validation complete.
+- [X] Evidence and recovery state updated.
+** Context
+Record the current state, relevant package boundaries, and why this plan should be recoverable after the conversation is gone.
+** Checkpoints
+- Initial context captured.
+- Work boundary confirmed.
+- Validation route selected.
+** Validation
+- [X] Replace this item with the first successful validation command receipt.
+** Evidence
+- Record concrete command output, contract traces, file selectors, or review notes that prove the plan state.
+** Recovery
+#+begin_src text
+resume-query: asp org query --kind property --field key=PLAN_ID --field value=agent-plan-id --workspace . --view metadata
+read-first: .cache/agent-semantic-protocol/org/flow/plans/PLANS.org
+contract: agent.plan.v1
+next-action: continue-from-next-checkpoint
+#+end_src
