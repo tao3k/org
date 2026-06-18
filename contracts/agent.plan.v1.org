@@ -19,6 +19,17 @@ The intended output is a single recoverable task heading with:
 - Context, Checkpoints, Validation, Evidence, and Recovery sections;
 - concrete evidence and recovery anchors that can be inspected without a live LLM.
 
+** Definition
+
+A Plan is a durable ledger of work state. It is written after or during work so
+another agent can recover the objective, governing specification, current
+status, evidence, and next action without relying on conversation history.
+
+A Plan is not the governing product, behavior, decision, or architecture
+specification. Those records live under purpose-specific contracts such as
+=agent.prd.v1=, =agent.bdd.v1=, =agent.adr.v1=, or =agent.sdd.v1= and are linked
+through =GOVERNING_CONTRACT= and =GOVERNING_REF=.
+
 ** plan-has-workflow-state
 :PROPERTIES:
 :ASSERT_ID: plan.has-workflow-state

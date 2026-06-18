@@ -44,6 +44,8 @@ reflection, and recovery sections.
 :TEMPLATE_KIND: specification-family
 :END:
 
+- SpecFlow Template: [[agent.spec-flow.v1.org][agent.spec-flow.v1.org]]
+- SpecFlow Contract: [[../contracts/agent.spec-flow.v1.org][agent.spec-flow.v1]]
 - SDD Template: [[agent.sdd.v1.org][agent.sdd.v1.org]]
 - SDD Contract: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
 - ADR Template: [[agent.adr.v1.org][agent.adr.v1.org]]
@@ -54,6 +56,7 @@ reflection, and recovery sections.
 - PRD Contract: [[../contracts/agent.prd.v1.org][agent.prd.v1]]
 
 Use these templates when work needs a governing specification before or
-alongside planning. SDD covers software architecture and design drift, ADR
-covers a specific decision, BDD covers behavior and acceptance scenarios, and
-PRD covers product requirements.
+alongside planning. SpecFlow covers the process of adding a new specification
+family. SDD covers software architecture and design drift, ADR covers a specific
+decision, BDD covers behavior and acceptance scenarios, and PRD covers product
+requirements.

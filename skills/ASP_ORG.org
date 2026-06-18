@@ -29,6 +29,8 @@ the state workflow reaches them:
 - Plan template: [[../templates/agent.plan.v1.org][agent.plan.v1.org]]
 - Exec plan contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 - Exec plan template: [[../templates/agent.execplan.v1.org][agent.execplan.v1.org]]
+- SpecFlow contract: [[../contracts/agent.spec-flow.v1.org][agent.spec-flow.v1]]
+- SpecFlow template: [[../templates/agent.spec-flow.v1.org][agent.spec-flow.v1.org]]
 - SDD contract: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
 - SDD template: [[../templates/agent.sdd.v1.org][agent.sdd.v1.org]]
 - ADR contract: [[../contracts/agent.adr.v1.org][agent.adr.v1]]
@@ -69,6 +71,10 @@ The capture init command materializes =languages/org= resources into
   =agent.sdd.v1= for software architecture and design drift, =agent.adr.v1=
   for a decision, =agent.bdd.v1= for behavior and acceptance, and
   =agent.prd.v1= for product requirements.
+- If the task needs a new governing specification family, use
+  =agent.spec-flow.v1= first. Define the theory, then add contract, template,
+  example, skill registration, template index entry, validation, and
+  adversarial review in that order.
 - If no query result matches, narrow the AST query or inspect the linked
   contract/template before creating new structure.
 
@@ -78,12 +84,18 @@ reading prose alone:
 #+begin_src shell
 asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org ../templates/agent.plan.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org ../templates/agent.execplan.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.spec-flow.v1.org ../templates/agent.spec-flow.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.sdd.v1.org ../templates/agent.sdd.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.adr.v1.org ../templates/agent.adr.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.bdd.v1.org ../templates/agent.bdd.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.prd.v1.org ../templates/agent.prd.v1.org
 asp org contract trace --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
 #+end_src
+
+Before creating or updating a Plan, ExecPlan, or governing specification family,
+read the matching contract's =Definition= section. The definition tells the
+agent what the artifact is, what it is not, and which governing contract should
+be linked instead of duplicated.
 
 ** Plan Capture
 Use =capture-plan= only for a non-mutating, reviewable Org entry plan. Capture
@@ -117,6 +129,9 @@ write the target file.
 - Do not place SDD, ADR, BDD, or PRD body content inside =agent.plan.v1= or
   =agent.execplan.v1=. Use =GOVERNING_CONTRACT= and =GOVERNING_REF= to link the
   plan to the specification record.
+- Do not add a new governing specification family by editing the skill alone.
+  First create or update a SpecFlow record, then add the contract, template,
+  example, skill registration, template index entry, and validation evidence.
 - Do not rewrite package-relative links as installation-root placeholders or
   repository-root paths.
 
@@ -128,6 +143,8 @@ asp org lint --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-c
 asp org contract trace --org-contract-registry ../contracts/asp.skill.trunk.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
 asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org ../templates/agent.plan.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org ../templates/agent.execplan.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.spec-flow.v1.org ../templates/agent.spec-flow.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.spec-flow.v1.org ../contracts/examples/agent.spec-flow.v1.example.org
 asp org contract trace --org-contract-registry ../contracts/agent.sdd.v1.org ../templates/agent.sdd.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.adr.v1.org ../templates/agent.adr.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.bdd.v1.org ../templates/agent.bdd.v1.org

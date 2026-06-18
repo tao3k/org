@@ -27,6 +27,17 @@ The intended output is an Org document with:
 - context, work plan, concrete steps, validation, audit, and final gate sections;
 - evidence expectations without embedding client-specific behavior.
 
+** Definition
+
+An ExecPlan is a durable execution plan for work that is large, risky, or
+cross-cutting. It coordinates research, implementation, validation, audit, and
+recovery while work is active.
+
+An ExecPlan is not a product requirement, behavior scenario, architecture
+decision, or software design description. It chooses and links to the governing
+specification through =GOVERNING_CONTRACT= and =GOVERNING_REF= before it
+coordinates execution.
+
 ** execplan-has-root
 :PROPERTIES:
 :ASSERT_ID: execplan-has-root
