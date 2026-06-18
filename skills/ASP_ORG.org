@@ -56,9 +56,12 @@ asp org query --kind property --field key=<KEY> --workspace . --view metadata
 asp org query --kind property --field key=GOVERNING_CONTRACT --workspace . --view metadata
 #+end_src
 
-The capture init command materializes =languages/org= resources into
-=.cache/agent-semantic-protocol/org= and creates =flow/sdd=, =flow/BDR=, and
-=flow/plans=. Reference the materialized skill from AGENTS.md with
+The capture init command materializes =languages/org= resources into the ASP Org
+state root. ASP resolves that root as
+=${PRJ_CACHE_HOME}/agent-semantic-protocol/org= when =PRJ_CACHE_HOME= is set,
+otherwise as =<git-toplevel>/.cache/agent-semantic-protocol/org=. It creates
+=flow/sdd=, =flow/BDR=, and =flow/plans= below that state root. Reference the
+materialized skill from AGENTS.md with
 =@.cache/agent-semantic-protocol/org/skills/ASP_ORG.org=.
 
 - If the query returns TODO headlines, treat them as =kind=task= and inspect
@@ -106,7 +109,7 @@ content.
 asp org capture-plan \
   --kind task \
   --title <TITLE> \
-  --target-file .cache/agent-semantic-protocol/org/flow/plans/PLANS.org \
+  --target-file <ASP_ORG_STATE_ROOT>/flow/plans/<PLAN_SLUG>.org \
   --outline Plans/Active \
   --tag plan \
   --property PLAN_ID=<PLAN_ID> \
