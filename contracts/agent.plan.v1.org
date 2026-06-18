@@ -15,7 +15,7 @@ The intended output is a single recoverable task heading with:
 - identity and recovery properties for later agents;
 - a lifecycle checklist that shows where the slice stands;
 - Context, Checkpoints, Validation, Evidence, and Recovery sections;
-- concrete command/evidence records that can be replayed without a live LLM.
+- concrete evidence and recovery anchors that can be inspected without a live LLM.
 
 See =org/contracts/examples/agent.plan.v1.example.org= for the concrete shape.
 
@@ -158,9 +158,9 @@ Plan `{{ scope.title }}` must identify the active slice.
 Plan `{{ scope.title }}` must declare a NEXT_ACTION recovery hint.
 #+END_SRC
 
-** plan-has-resume-query-property
+** plan-has-recovery-ref-property
 :PROPERTIES:
-:ASSERT_ID: plan.has-resume-query-property
+:ASSERT_ID: plan.has-recovery-ref-property
 :SEVERITY: error
 :END:
 
@@ -168,11 +168,11 @@ Plan `{{ scope.title }}` must declare a NEXT_ACTION recovery hint.
 (let ((plan
        (headline :at $scope)))
   (assert count >= 1
-    (node-property :descendant-of plan :summary (key "RESUME_QUERY"))))
+    (node-property :descendant-of plan :summary (key "RECOVERY_REF"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
-Plan `{{ scope.title }}` must declare a RESUME_QUERY for agent recovery.
+Plan `{{ scope.title }}` must declare a RECOVERY_REF anchor for agent recovery.
 #+END_SRC
 
 ** plan-has-evidence-property

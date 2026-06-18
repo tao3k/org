@@ -17,16 +17,10 @@ agent templates and their public contracts live here.
 
 - Template: [[agent.plan.v1.org][agent.plan.v1.org]]
 - Contract: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
-- Validation:
-
-#+begin_src shell
-asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org agent.plan.v1.org
-#+end_src
 
 Use this template when an agent needs to leave a recoverable task ledger under
-=.cache/agent-semantic-protocol/org/flow/plans= after work is done. The paired
-contract verifies identity, recovery, lifecycle, validation, evidence, and
-replay sections.
+=flow/plans= after work is done. The paired contract verifies identity,
+recovery, lifecycle, validation, evidence, and replay sections.
 
 ** ExecPlan
 :PROPERTIES:
@@ -39,11 +33,6 @@ replay sections.
 
 - Template: [[agent.execplan.v1.org][agent.execplan.v1.org]]
 - Contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
-- Validation:
-
-#+begin_src shell
-asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org agent.execplan.v1.org
-#+end_src
 
 Use this template when an agent needs a durable, contract-checked execution
 plan. The paired contract verifies the required planning, validation,

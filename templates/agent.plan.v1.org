@@ -11,8 +11,8 @@
 :PACKAGE: current-package
 :SLICE: current-slice
 :NEXT_ACTION: continue-from-next-checkpoint
-:RESUME_QUERY: asp org query --kind property --field key=PLAN_ID --field value=agent-plan-id --workspace . --view metadata
-:EVIDENCE: validation receipts and recovery commands recorded below
+:RECOVERY_REF: PLAN_ID=agent-plan-id
+:EVIDENCE: validation receipts and recovery anchors recorded below
 :END:
 - [X] Scope and recovery anchor confirmed.
 - [X] Task-local research complete.
@@ -26,13 +26,13 @@ Record the current state, relevant package boundaries, and why this plan should 
 - Work boundary confirmed.
 - Validation route selected.
 ** Validation
-- [X] Replace this item with the first successful validation command receipt.
+- [X] Replace this item with the first successful validation evidence receipt.
 ** Evidence
-- Record concrete command output, contract traces, file selectors, or review notes that prove the plan state.
+- Record concrete evidence references, validation receipts, file selectors, or review notes that prove the plan state.
 ** Recovery
 #+begin_src text
-resume-query: asp org query --kind property --field key=PLAN_ID --field value=agent-plan-id --workspace . --view metadata
-read-first: .cache/agent-semantic-protocol/org/flow/plans/PLANS.org
+recovery-ref: PLAN_ID=agent-plan-id
+read-first: flow/plans/PLANS.org
 contract: agent.plan.v1
 next-action: continue-from-next-checkpoint
 #+end_src

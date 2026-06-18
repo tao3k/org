@@ -33,8 +33,8 @@ is meant to improve.
 *** Files or Dirs to Read
 - [ ] List only task-local target files and directories.
 
-*** Commands or Tools to Run
-- [ ] List exact validation and inspection commands.
+*** Evidence to Collect
+- [ ] Name validation evidence, inspection receipts, or acceptance checks without embedding CLI instructions.
 
 *** Expected Outputs
 - [ ] Define concrete implementation, documentation, and evidence outputs.
@@ -45,7 +45,7 @@ is meant to improve.
 ** TODO Plan Self Check [0/7] [0%]
 - [ ] Scope matches the request and risk level.
 - [ ] Files or dirs to read are complete and minimal.
-- [ ] Commands or tools to run are complete and safe.
+- [ ] Evidence to collect is complete and safe.
 - [ ] Expected outputs are concrete and testable.
 - [ ] Stop conditions are clear.
 - [ ] Dependencies and constraints are recorded.
@@ -92,10 +92,11 @@ history.
 ** Decision Log
 - Record decisions and tradeoffs here.
 
-** Recovery Commands
-#+begin_src shell
-asp org query --kind property --field key=PLAN_ID --field value=<PLAN_ID> --workspace . --view metadata
-asp org query --kind property --field key=STEP_STATUS --field value=pending --workspace . --view metadata
-asp org query --kind property --field key=RECEIPT_STATUS --field value=pending --workspace . --view metadata
-asp org contract trace --org-contract-registry ../contracts/agent.execplan.v1.org agent.execplan.v1.org
+** Recovery Anchors
+#+begin_src text
+plan-id: agent-plan-id
+step-status: pending
+receipt-status: pending
+contract: agent.execplan.v1
+next-action: continue-from-current-step
 #+end_src
