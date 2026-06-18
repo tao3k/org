@@ -11,6 +11,8 @@
 :EXECPLAN_ID: execplan-id
 :OBJECTIVE: durable outcome this execution plan coordinates
 :SCOPE_REF: stable work boundary or design reference
+:GOVERNING_CONTRACT: none
+:GOVERNING_REF: none
 :RISK_LEVEL: medium
 :STATUS: draft
 :NEXT_ACTION: start-with-scope-check
@@ -35,7 +37,7 @@ is meant to improve.
 - [ ] Define conditions that should stop implementation or require replanning.
 
 ** TODO Plan Self Check [0/7] [0%]
-- [ ] Scope matches the request and risk level.
+- [ ] Scope matches the request, risk level, and governing specification.
 - [ ] Files or dirs to read are complete and minimal.
 - [ ] Evidence to collect is complete and safe.
 - [ ] Expected outputs are concrete and testable.

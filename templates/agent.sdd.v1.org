@@ -1,0 +1,48 @@
+#+TITLE: System SDD Title
+#+CONTRACT_ORG: agent.sdd.v1
+
+* System SDD Title :sdd:system:
+:PROPERTIES:
+:TEMPLATE_ID: agent.sdd.v1
+:TEMPLATE_KIND: sdd
+:TEMPLATE_CONTRACT: agent.sdd.v1
+:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
+:CONTRACT_ORG: agent.sdd.v1
+:ID: 00000000-0000-7000-8000-000000000101
+:SDD_KIND: system
+:SDD_STATUS: draft
+:SDD_CONCERN: system boundary, quality attributes, and design drift risks
+:SDD_SLUG: system-sdd-title
+:END:
+
+** System Boundary
+Describe the system, the boundary it owns, and the external systems or
+providers it relies on.
+
+** Quality Attributes
+- Quality: correctness
+- Quality: maintainability
+- Quality: performance
+
+** Design Concerns
+- Concern: describe a durable architecture concern.
+- Constraint: describe a boundary that implementation plans must preserve.
+
+** Architecture Views
+*** Runtime View
+Describe runtime components and interaction boundaries.
+
+*** Data View
+Describe stored facts, identifiers, and ownership boundaries.
+
+** Decisions
+*** Decision: title
+State the selected design direction and rejected alternatives.
+
+** Fitness Criteria
+- Gate: record the measurable condition for accepting implementation work.
+- Drift: record what evidence should trigger redesign.
+
+** Linked Implementation
+Implementation work belongs in an Org task or ExecPlan that uses
+=GOVERNING_CONTRACT= =agent.sdd.v1= and =GOVERNING_REF= pointing back here.

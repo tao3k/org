@@ -1,28 +1,36 @@
 #+TITLE: Agent ExecPlan Contract Example
 #+CONTRACT_ORG: agent.execplan.v1
 
-* TODO ExecPlan: adapt Org memory contracts for ASP [0/4] [0%]
+* TODO ExecPlan: adapt Org specification contracts for ASP
 :PROPERTIES:
-:ID: agent-execplan-example
-:PACKAGE: agent-semantic-protocols
-:SLICE: org-memory-contract-adaptation
+:EXECPLAN_ID: agent-execplan-example
+:OBJECTIVE: adapt Org specification contracts for ASP planning
+:SCOPE_REF: languages/org contracts
+:GOVERNING_CONTRACT: agent.sdd.v1
+:GOVERNING_REF: contracts/examples/agent.sdd.v1.example.org
+:RISK_LEVEL: medium
+:STATUS: draft
+:NEXT_ACTION: start-with-scope-check
+:RECOVERY_REF: EXECPLAN_ID=agent-execplan-example
 :END:
 
 ** Purpose / Big Picture
-Adapt Org-native planning and memory contracts so ASP can consume them through
-language-owned providers and independent memory-engine packages.
+Adapt Org-native specification contracts so ASP planning records can link to
+the governing SDD, ADR, BDD, or PRD without embedding specification bodies in
+execution state.
 
 ** Scope and Boundaries
 - Keep Org syntax and contract semantics in the Org package.
-- Keep memory ranking and persistence in a memory-engine package.
-- Keep graph-turbo as a consumer of packet-level memory facts.
+- Keep specification knowledge in SDD, ADR, BDD, or PRD records.
+- Keep execution state in Plan, ExecPlan, or task records that link back through
+  governing properties.
 
 ** Plan Self Check
 - [ ] Provider-owned discovery has identified the relevant contract files.
 - [ ] The plan does not introduce client-specific execution requirements.
 
 ** Context and Orientation
-The work bridges Org contract records, ASP packet rendering, and memory recall
+The work bridges Org contract records, ASP packet rendering, and plan recovery
 without making one layer reimplement another layer's parser or storage model.
 
 ** Plan of Work

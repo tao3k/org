@@ -10,8 +10,9 @@
 ** What This Produces
 This contract validates a recoverable execution plan for large, risky, or
 cross-cutting agent work. It defines the theory of an execution plan: an
-objective, bounded scope, risk level, current status, ordered work, validation,
-audit, and recovery anchors. Runtime commands, storage paths, and
+objective, bounded scope, governing specification reference, risk level, current
+status, ordered work, validation, audit, and recovery anchors. Runtime commands,
+storage paths, and
 client-specific workflows are out of scope for this contract.
 
 It is intentionally separate from =agent.plan.v1=: =agent.execplan.v1= governs
@@ -21,7 +22,7 @@ ledger an agent leaves as durable state.
 The intended output is an Org document with:
 - an ExecPlan root heading;
 - explicit scope and boundaries;
-- identity, objective, scope, risk, status, next-action, and recovery properties;
+- identity, objective, scope, governing specification, risk, status, next-action, and recovery properties;
 - a self-check before widening work;
 - context, work plan, concrete steps, validation, audit, and final gate sections;
 - evidence expectations without embedding client-specific behavior.
@@ -99,6 +100,36 @@ ExecPlan files must name the scope or design reference that bounds execution.
 
 #+BEGIN_SRC jinja2 :name message
 ExecPlan files must declare RISK_LEVEL.
+#+END_SRC
+
+** execplan-has-governing-contract-property
+:PROPERTIES:
+:ASSERT_ID: execplan-has-governing-contract-property
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(assert exists
+  (node-property :summary (key "GOVERNING_CONTRACT")))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must declare the governing specification contract, or `none`.
+#+END_SRC
+
+** execplan-has-governing-ref-property
+:PROPERTIES:
+:ASSERT_ID: execplan-has-governing-ref-property
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(assert exists
+  (node-property :summary (key "GOVERNING_REF")))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+ExecPlan files must declare the governing specification reference, or `none`.
 #+END_SRC
 
 ** execplan-has-status-property

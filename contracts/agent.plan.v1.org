@@ -7,14 +7,14 @@
 ** What This Produces
 
 This contract validates a recoverable plan ledger. It defines the theory of a
-plan record: a bounded objective, a scope, a recoverable state, evidence, and a
-next action. Runtime commands, storage paths, and client-specific workflows are
-out of scope for this contract.
+plan record: a bounded objective, a scope, a governing specification reference,
+recoverable state, evidence, and a next action. Runtime commands, storage paths,
+and client-specific workflows are out of scope for this contract.
 
 The intended output is a single recoverable task heading with:
 
 - a native Org workflow state and progress cookies;
-- identity, objective, scope, status, and recovery properties for later agents;
+- identity, objective, scope, governing specification, status, and recovery properties for later agents;
 - a lifecycle checklist that shows where the plan stands;
 - Context, Checkpoints, Validation, Evidence, and Recovery sections;
 - concrete evidence and recovery anchors that can be inspected without a live LLM.
@@ -105,6 +105,40 @@ Plan `{{ scope.title }}` must declare the objective it records.
 
 #+BEGIN_SRC jinja2 :name message
 Plan `{{ scope.title }}` must name a stable source reference.
+#+END_SRC
+
+** plan-has-governing-contract-property
+:PROPERTIES:
+:ASSERT_ID: plan.has-governing-contract-property
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "GOVERNING_CONTRACT"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Plan `{{ scope.title }}` must declare the governing specification contract, or `none`.
+#+END_SRC
+
+** plan-has-governing-ref-property
+:PROPERTIES:
+:ASSERT_ID: plan.has-governing-ref-property
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((plan
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of plan :summary (key "GOVERNING_REF"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Plan `{{ scope.title }}` must declare the governing specification reference, or `none`.
 #+END_SRC
 
 ** plan-has-scope-ref-property

@@ -8,13 +8,15 @@
 :ID: agent-plan-id
 :OBJECTIVE: durable outcome this plan records
 :SCOPE_REF: stable work boundary or design reference
+:GOVERNING_CONTRACT: none
+:GOVERNING_REF: none
 :STABLE_REF: stable-source-ref
 :STATUS: active
 :NEXT_ACTION: continue-from-next-checkpoint
 :RECOVERY_REF: PLAN_ID=agent-plan-id
 :EVIDENCE: validation receipts and recovery anchors recorded below
 :END:
-- [X] Objective and scope are explicit.
+- [X] Objective, scope, and governing specification are explicit.
 - [X] Current state is recoverable from this record.
 - [X] Work checkpoints are recorded.
 - [X] Validation evidence is recorded.

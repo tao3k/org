@@ -1,0 +1,43 @@
+#+TITLE: Example - Agent SDD v1
+#+CONTRACT_ORG: agent.sdd.v1
+
+* System SDD: ASP Org Specification Contracts :sdd:system:
+:PROPERTIES:
+:CONTRACT_ORG: agent.sdd.v1
+:ID: 00000000-0000-7000-8000-000000000201
+:SDD_KIND: system
+:SDD_STATUS: accepted
+:SDD_CONCERN: separate specification knowledge from execution state
+:SDD_SLUG: asp-org-spec-contracts
+:END:
+
+** System Boundary
+ASP Org owns reusable Org contracts and templates. Language providers own
+parsing and contract evaluation. Agent skills own workflow instructions.
+
+** Quality Attributes
+- Quality: semantic boundaries remain explicit.
+- Quality: contracts stay parser-visible.
+- Quality: execution state links back to specification records.
+
+** Design Concerns
+- Concern: plan records must not duplicate SDD, ADR, BDD, or PRD content.
+- Constraint: execution plans link to this SDD through governing properties.
+
+** Architecture Views
+*** Runtime View
+Agents query Org AST facts, choose a governing contract, and write or update the
+matching specification before implementation plans depend on it.
+
+** Decisions
+*** Decision: use governing contract links
+Plan and ExecPlan records carry =GOVERNING_CONTRACT= and =GOVERNING_REF= instead
+of embedding domain-specific specification fields.
+
+** Fitness Criteria
+- Gate: plan and ExecPlan templates pass their contracts with governing links.
+- Drift: any SDD-specific task progress belongs in an ExecPlan, not the SDD.
+
+** Linked Implementation
+Implementation work uses =GOVERNING_CONTRACT= =agent.sdd.v1= and
+=GOVERNING_REF= pointing at this SDD.
