@@ -6,18 +6,18 @@
 
 ** What This Produces
 
-This contract is not a prose plan template. It validates the Org ledger an agent
-leaves behind after doing work.
+This contract validates a recoverable plan ledger. It defines the theory of a
+plan record: a bounded objective, a scope, a recoverable state, evidence, and a
+next action. Runtime commands, storage paths, and client-specific workflows are
+out of scope for this contract.
 
 The intended output is a single recoverable task heading with:
 
 - a native Org workflow state and progress cookies;
-- identity and recovery properties for later agents;
-- a lifecycle checklist that shows where the slice stands;
+- identity, objective, scope, status, and recovery properties for later agents;
+- a lifecycle checklist that shows where the plan stands;
 - Context, Checkpoints, Validation, Evidence, and Recovery sections;
 - concrete evidence and recovery anchors that can be inspected without a live LLM.
-
-See =org/contracts/examples/agent.plan.v1.example.org= for the concrete shape.
 
 ** plan-has-workflow-state
 :PROPERTIES:
@@ -73,9 +73,9 @@ Plan `{{ scope.title }}` must expose native Org progress cookies such as [5/5] a
 Plan `{{ scope.title }}` must carry a stable ID property.
 #+END_SRC
 
-** plan-has-sdd-property
+** plan-has-objective-property
 :PROPERTIES:
-:ASSERT_ID: plan.has-sdd-property
+:ASSERT_ID: plan.has-objective-property
 :SEVERITY: error
 :END:
 
@@ -83,11 +83,11 @@ Plan `{{ scope.title }}` must carry a stable ID property.
 (let ((plan
        (headline :at $scope)))
   (assert count >= 1
-    (node-property :descendant-of plan :summary (key "SDD"))))
+    (node-property :descendant-of plan :summary (key "OBJECTIVE"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
-Plan `{{ scope.title }}` must link its SDD property.
+Plan `{{ scope.title }}` must declare the objective it records.
 #+END_SRC
 
 ** plan-has-stable-ref-property
@@ -107,9 +107,9 @@ Plan `{{ scope.title }}` must link its SDD property.
 Plan `{{ scope.title }}` must name a stable source reference.
 #+END_SRC
 
-** plan-has-package-property
+** plan-has-scope-ref-property
 :PROPERTIES:
-:ASSERT_ID: plan.has-package-property
+:ASSERT_ID: plan.has-scope-ref-property
 :SEVERITY: error
 :END:
 
@@ -117,16 +117,16 @@ Plan `{{ scope.title }}` must name a stable source reference.
 (let ((plan
        (headline :at $scope)))
   (assert count >= 1
-    (node-property :descendant-of plan :summary (key "PACKAGE"))))
+    (node-property :descendant-of plan :summary (key "SCOPE_REF"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
-Plan `{{ scope.title }}` must identify the affected package.
+Plan `{{ scope.title }}` must name the scope or design reference that bounds the plan.
 #+END_SRC
 
-** plan-has-slice-property
+** plan-has-status-property
 :PROPERTIES:
-:ASSERT_ID: plan.has-slice-property
+:ASSERT_ID: plan.has-status-property
 :SEVERITY: error
 :END:
 
@@ -134,11 +134,11 @@ Plan `{{ scope.title }}` must identify the affected package.
 (let ((plan
        (headline :at $scope)))
   (assert count >= 1
-    (node-property :descendant-of plan :summary (key "SLICE"))))
+    (node-property :descendant-of plan :summary (key "STATUS"))))
 #+END_SRC
 
 #+BEGIN_SRC jinja2 :name message
-Plan `{{ scope.title }}` must identify the active slice.
+Plan `{{ scope.title }}` must expose a STATUS property.
 #+END_SRC
 
 ** plan-has-next-action-property

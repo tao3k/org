@@ -18,9 +18,9 @@ agent templates and their public contracts live here.
 - Template: [[agent.plan.v1.org][agent.plan.v1.org]]
 - Contract: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
 
-Use this template when an agent needs to leave a recoverable task ledger under
-=flow/plans= after work is done. The paired contract verifies identity,
-recovery, lifecycle, validation, evidence, and replay sections.
+Use this template when an agent needs to leave a recoverable plan ledger after
+work is done. The paired contract verifies identity, objective, scope, status,
+recovery, lifecycle, validation, and evidence sections.
 
 ** ExecPlan
 :PROPERTIES:

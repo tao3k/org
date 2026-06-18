@@ -5,10 +5,10 @@ CLOSED: [2026-06-14 Sun]
 :PROPERTIES:
 :CONTRACT_ORG: agent.plan.v1
 :ID: agent-plan-ledger-example-20260614
-:SDD: docs/40-rfcs/40.71-workspace-project-protocol.org
+:OBJECTIVE: demonstrate a recoverable agent plan ledger
+:SCOPE_REF: agent.plan.v1 contract example
 :STABLE_REF: org/contracts/agent.plan.v1.org
-:PACKAGE: marlin-org-workspace
-:SLICE: contract-org-plan-ledger-example
+:STATUS: done
 :COOKIE_DATA: direct
 :NEXT_ACTION: Reuse this file as the reference shape when generating agent plan ledgers.
 :RECOVERY_REF: contract-org-plan-ledger-example
@@ -47,8 +47,8 @@ ledger, not a free-form project plan.
 
 - The root heading carries =CONTRACT_ORG: agent.plan.v1=, so the workspace loader
   can resolve this ledger against the standard contract library.
-- The property drawer gives a future agent a stable identity, package, slice,
-  next action, recovery reference, and evidence summary.
+- The property drawer gives a future agent a stable identity, objective, scope,
+  status, next action, recovery reference, and evidence summary.
 - The validation section records evidence receipts instead of relying on memory.
 - The recovery section below preserves the exact restart handle.
 

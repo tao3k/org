@@ -1,4 +1,4 @@
-* TODO Plan Title [5/5] [100%] :agent:org:plan:
+* TODO Plan Title [5/5] [100%] :agent:plan:
 :PROPERTIES:
 :TEMPLATE_ID: agent.plan.v1
 :TEMPLATE_KIND: plan
@@ -6,33 +6,32 @@
 :TEMPLATE_CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
 :CONTRACT_ORG: agent.plan.v1
 :ID: agent-plan-id
-:SDD: sdd-id-or-link
+:OBJECTIVE: durable outcome this plan records
+:SCOPE_REF: stable work boundary or design reference
 :STABLE_REF: stable-source-ref
-:PACKAGE: current-package
-:SLICE: current-slice
+:STATUS: active
 :NEXT_ACTION: continue-from-next-checkpoint
 :RECOVERY_REF: PLAN_ID=agent-plan-id
 :EVIDENCE: validation receipts and recovery anchors recorded below
 :END:
-- [X] Scope and recovery anchor confirmed.
-- [X] Task-local research complete.
-- [X] Implementation complete.
-- [X] Validation complete.
-- [X] Evidence and recovery state updated.
+- [X] Objective and scope are explicit.
+- [X] Current state is recoverable from this record.
+- [X] Work checkpoints are recorded.
+- [X] Validation evidence is recorded.
+- [X] Next action is clear.
 ** Context
-Record the current state, relevant package boundaries, and why this plan should be recoverable after the conversation is gone.
+Record the current state, relevant boundaries, and why this plan should remain understandable after the conversation is gone.
 ** Checkpoints
 - Initial context captured.
 - Work boundary confirmed.
 - Validation route selected.
 ** Validation
-- [X] Replace this item with the first successful validation evidence receipt.
+- [X] Replace this item with the first validation evidence receipt.
 ** Evidence
 - Record concrete evidence references, validation receipts, file selectors, or review notes that prove the plan state.
 ** Recovery
 #+begin_src text
 recovery-ref: PLAN_ID=agent-plan-id
-read-first: flow/plans/PLANS.org
 contract: agent.plan.v1
 next-action: continue-from-next-checkpoint
 #+end_src

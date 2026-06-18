@@ -8,25 +8,17 @@
 :TEMPLATE_CONTRACT: agent.execplan.v1
 :TEMPLATE_CONTRACT_ORG: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 :CONTRACT_ORG: agent.execplan.v1
-:PLAN_CONTRACT: agent.execplan.v1
-:PLAN_PROJECT: current-project
-:PLAN_SESSION: current-session
-:PLAN_ID: agent-plan-id
-:PLAN_BRANCH: main
-:PLAN_SHARING: session
-:PLAN_STATUS: draft
-:PLAN_INTERFACE: asp org query
-:MEMORY_SCOPE: project=current-project;session=current-session;plan=agent-plan-id;branch=main
-:MEMORY_RECALL_K1: 20
-:MEMORY_RECALL_K2: 5
-:MEMORY_RECALL_LAMBDA: 0.30
-:MEMORY_MIN_SCORE: 0.12
-:MEMORY_MAX_CONTEXT_CHARS: 1200
-:MEMORY_FEEDBACK_BIAS: 0.0
+:EXECPLAN_ID: execplan-id
+:OBJECTIVE: durable outcome this execution plan coordinates
+:SCOPE_REF: stable work boundary or design reference
+:RISK_LEVEL: medium
+:STATUS: draft
+:NEXT_ACTION: start-with-scope-check
+:RECOVERY_REF: EXECPLAN_ID=execplan-id
 :END:
 
 ** Purpose / Big Picture
-Describe the user-visible outcome, why this slice exists, and the boundary it
+Describe the user-visible outcome, why this work exists, and the boundary it
 is meant to improve.
 
 ** Scope and Boundaries
@@ -52,8 +44,8 @@ is meant to improve.
 - [ ] Validation plan is adequate for risk.
 
 ** Context and Orientation
-Record the current state, relevant package boundaries, and why this work needs
-an ExecPlan instead of a short in-message plan.
+Record the current state, relevant work boundaries, risk factors, and why this
+work needs an ExecPlan instead of a short in-message plan.
 
 ** Plan of Work
 Summarize the sequence at a level that another agent can execute without chat
@@ -94,7 +86,7 @@ history.
 
 ** Recovery Anchors
 #+begin_src text
-plan-id: agent-plan-id
+execplan-id: execplan-id
 step-status: pending
 receipt-status: pending
 contract: agent.execplan.v1
