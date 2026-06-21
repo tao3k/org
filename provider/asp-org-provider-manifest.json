@@ -11,10 +11,19 @@
   "binary": "asp",
   "execution": "embedded",
   "source": {
-    "defaultExtensions": [".org", ".org_archive"],
+    "defaultExtensions": [
+      ".org",
+      ".org_archive"
+    ],
     "defaultConfigFiles": [],
-    "defaultSourceRoots": ["docs"],
-    "defaultIgnoredPathPrefixes": ["target"]
+    "defaultSourceRoots": [
+      "docs"
+    ],
+    "defaultIgnoredPathPrefixes": [
+      "target"
+    ],
+    "defaultProjectMarkers": [],
+    "defaultDependencyMarkers": []
   },
   "policy": {
     "directSourceRead": "block",
@@ -24,26 +33,84 @@
   },
   "routes": {
     "prime": {
-      "argv": ["asp", "org", "search", "prime", "--workspace", "{projectRoot}", "--view", "seeds"]
+      "argv": [
+        "asp",
+        "org",
+        "search",
+        "prime",
+        "--workspace",
+        "{projectRoot}",
+        "--view",
+        "seeds"
+      ]
     },
     "owner": {
-      "argv": ["asp", "org", "query", "--selector", "{path}", "--view", "metadata", "{projectRoot}"]
+      "argv": [
+        "asp",
+        "org",
+        "query",
+        "--selector",
+        "{path}",
+        "--view",
+        "metadata",
+        "{projectRoot}"
+      ]
     },
     "fzf": {
-      "argv": ["asp", "org", "query", "--term", "{query}", "--view", "metadata", "{projectRoot}"]
+      "argv": [
+        "asp",
+        "org",
+        "query",
+        "--term",
+        "{query}",
+        "--view",
+        "metadata",
+        "{projectRoot}"
+      ]
     },
     "query": {
-      "argv": ["asp", "org", "query", "{termArgs}", "--view", "metadata", "{projectRoot}"]
+      "argv": [
+        "asp",
+        "org",
+        "query",
+        "{termArgs}",
+        "--view",
+        "metadata",
+        "{projectRoot}"
+      ]
     },
     "ingest": {
-      "argv": ["asp", "org", "search", "prime", "--workspace", "{projectRoot}", "--view", "seeds"],
+      "argv": [
+        "asp",
+        "org",
+        "search",
+        "prime",
+        "--workspace",
+        "{projectRoot}",
+        "--view",
+        "seeds"
+      ],
       "stdinMode": "pipe-candidates"
     },
     "checkChanged": {
-      "argv": ["asp", "org", "search", "prime", "--workspace", "{projectRoot}", "--view", "seeds"]
+      "argv": [
+        "asp",
+        "org",
+        "search",
+        "prime",
+        "--workspace",
+        "{projectRoot}",
+        "--view",
+        "seeds"
+      ]
     },
     "guide": {
-      "argv": ["asp", "org", "guide", "{projectRoot}"]
+      "argv": [
+        "asp",
+        "org",
+        "guide",
+        "{projectRoot}"
+      ]
     }
   }
 }
