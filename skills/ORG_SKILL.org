@@ -1,0 +1,76 @@
+#+TITLE: ASP Org Skill Entry
+#+PROPERTY: GOVERNING_CONTRACT asp.skill.trunk.v1
+
+* ASP Org State Entry
+:PROPERTIES:
+:SKILL_ID: asp-org-state
+:SKILL_DESCRIPTION: Use when an agent needs the materialized ASP Org state entry that points AGENTS.md to contracts, templates, skills, and flow directories.
+:CONTRACT_ORG: ../contracts/asp.skill.trunk.v1.org#asp.skill.trunk.v1
+:END:
+
+** Use Boundary
+Use this skill when the agent needs to enter the materialized ASP Org state tree from AGENTS.md.
+
+Do not use this skill when the agent is already inside [[ASP_ORG.org][ASP_ORG.org]] and only needs a specific query, contract, template, or flow command.
+
+** Progressive Disclosure
+Read only the linked resource needed by the current state workflow step:
+
+- Operational skill: [[ASP_ORG.org][ASP_ORG.org]]
+- Skill trunk contract: [[../contracts/asp.skill.trunk.v1.org][asp.skill.trunk.v1]]
+- Skill contract: [[../contracts/asp.skill.v1.org][asp.skill.v1]]
+- Template index: [[../templates/README.org][templates README]]
+- Plans flow: [[../flow/plans/][flow/plans]]
+- SDD flow: [[../flow/sdd/][flow/sdd]]
+- BDR flow: [[../flow/BDR/][flow/BDR]]
+
+** State Workflow
+Start from this entry, then use =ASP_ORG.org= for the operational commands and the flow directories for durable state.
+
+#+begin_src shell
+asp org capture init
+asp org guide
+asp org query --kind task --field todo=TODO --workspace . --view metadata
+asp org capture --kind task --title <TITLE> --target-file <ORG_FILE> --outline <OUTLINE> --tag <TAG> --body <TEXT>
+#+end_src
+
+The AGENTS.md include should point to this state entry:
+
+#+begin_src text
+@.cache/agent-semantic-protocol/org/skills/ORG_SKILL.org
+#+end_src
+
+State files created by agents belong under these directories:
+
+- [[../flow/plans/][flow/plans]]
+- [[../flow/sdd/][flow/sdd]]
+- [[../flow/BDR/][flow/BDR]]
+
+** Rules
+- Keep this file as the state tree entry and link to [[ASP_ORG.org][ASP_ORG.org]] for implementation detail.
+- Use =asp org capture init= to refresh this state tree.
+- Use =asp org capture= for reviewable Org capture plans.
+- Do not route agent workflows through =asp org capture-plan=.
+- Do not duplicate contracts or templates inside this entry file.
+
+** Validation
+Replay these checks after changing this entry:
+
+#+begin_src shell
+asp org capture init
+asp org contract trace --org-contract-registry ../contracts/asp.skill.trunk.v1.org ../skills/ORG_SKILL.org
+asp org query --term "ASP Org State Entry" --workspace .cache/agent-semantic-protocol/org --view metadata
+#+end_src
+
+pressure scenario: an agent starts from AGENTS.md with no prior Org context and must find =ASP_ORG.org=, the templates, and the flow directories without reading unrelated files.
+
+** Adversarial Review
+Check redundancy: this file should index the state tree and must not repeat the detailed operating contract in =ASP_ORG.org=.
+
+Check out of scope content: this file should not describe unrelated language providers, client hook policy, or non-Org workflows.
+
+Check command clarity: each command must be runnable as written after =asp org capture init= materializes the state tree.
+
+Check mechanism clarity: the reader should understand that =ORG_SKILL.org= is the AGENTS.md entry and =ASP_ORG.org= is the operational skill.
+
+Check structure: the file must keep Use Boundary, Progressive Disclosure, State Workflow, Rules, Validation, and Adversarial Review as top-level subsections.

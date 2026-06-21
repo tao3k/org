@@ -61,8 +61,9 @@ state root. ASP resolves that root as
 =${PRJ_CACHE_HOME}/agent-semantic-protocol/org= when =PRJ_CACHE_HOME= is set,
 otherwise as =<git-toplevel>/.cache/agent-semantic-protocol/org=. It creates
 =flow/sdd=, =flow/BDR=, and =flow/plans= below that state root. Reference the
-materialized skill from AGENTS.md with
-=@.cache/agent-semantic-protocol/org/skills/ASP_ORG.org=.
+materialized skill entry from AGENTS.md with
+=@.cache/agent-semantic-protocol/org/skills/ORG_SKILL.org=. =ORG_SKILL.org=
+points to this operational skill and the state tree resources.
 
 - If the query returns TODO headlines, treat them as =kind=task= and inspect
   the relevant selector before editing.
