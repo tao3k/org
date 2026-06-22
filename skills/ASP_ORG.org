@@ -57,6 +57,18 @@ State layout after =asp org capture init=:
 - =.cache/agent-semantic-protocol/artifacts/org/flow/plans= stores plan records.
 - =.cache/agent-semantic-protocol/artifacts/org/flow/sdd= stores SDD records.
 - =.cache/agent-semantic-protocol/artifacts/org/flow/BDR= stores BDR records.
+- =.cache/agent-semantic-protocol/artifacts/org/archives= stores completed, superseded, or inactive agent-authored Org state.
+
+The archive root is =.cache/agent-semantic-protocol/artifacts/org/archives=, or the corresponding path under =$(asp paths --get orgArtifacts)/archives= when the artifacts root is resolved dynamically.
+
+Archive records live under artifacts/org/archives.
+
+Archive lane:
+- Resolve the writable artifact root with =asp paths --get orgArtifacts= before archiving from a non-root working directory.
+- Query active Org facts first, such as =asp org query --kind task --field todo=DONE --workspace . --view metadata=, then inspect the returned selector before moving content.
+- Preserve active layout under =archives= when possible: move =flow/plans/<PLAN_SLUG>.org= to =archives/flow/plans/<PLAN_SLUG>.org=, SDD records to =archives/flow/sdd/=, and BDR records to =archives/flow/BDR/=.
+- Add archive metadata such as =ARCHIVED_FROM= and =ARCHIVE_REASON= on the destination record instead of encoding archive status as a hidden search/query side effect.
+- Do not archive by deleting AST facts discovered through =asp org query= without writing the destination archive record first.
 
 - If the query returns TODO headlines, treat them as =kind=task= and inspect the relevant selector before editing.
 - If the query returns checkbox list items, treat them as =kind=checklistItem=; do not collapse them into task headlines.

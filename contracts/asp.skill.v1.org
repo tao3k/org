@@ -162,6 +162,32 @@ ASP Org skills must show =asp paths --get orgArtifacts= as the canonical command
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose the artifacts/org/flow directory layout for plan, SDD, and BDR records.
 #+END_SRC
+
+** skill-has-org-archives-layout
+:PROPERTIES:
+:ASSERT_ID: skill-has-org-archives-layout
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "artifacts/org/archives")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must expose the artifacts/org/archives directory for completed, superseded, or inactive agent-authored Org state.
+#+END_SRC
+
+** skill-has-org-archive-lane
+:PROPERTIES:
+:ASSERT_ID: skill-has-org-archive-lane
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "Archive lane")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must include an Archive lane that queries active Org facts before moving state into archives.
+#+END_SRC
 ** skill-has-query-command
 :PROPERTIES:
 :ASSERT_ID: skill-has-query-command
