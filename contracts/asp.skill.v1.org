@@ -132,6 +132,36 @@ ASP skill files must state when not to use the skill.
 ASP skill files must include a State Workflow section driven by provider query output.
 #+END_SRC
 
+** skill-has-org-artifacts-root
+:PROPERTIES:
+#+BEGIN_SRC org-contract
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "artifacts/org")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must name the agent-authored Org artifacts root under artifacts/org.
+#+END_SRC
+** skill-has-org-artifacts-path-command
+:PROPERTIES:
+:ASSERT_ID: skill-has-org-artifacts-path-command
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "asp paths --get orgArtifacts")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must show =asp paths --get orgArtifacts= as the canonical command for resolving the agent-authored Org artifacts root.
+#+END_SRC
+** skill-has-org-flow-layout
+:PROPERTIES:
+#+BEGIN_SRC org-contract
+(assert exists
+  (plain-text :descendant-of $scope :summary-contains (value "artifacts/org/flow/plans")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must expose the artifacts/org/flow directory layout for plan, SDD, and BDR records.
+#+END_SRC
 ** skill-has-query-command
 :PROPERTIES:
 :ASSERT_ID: skill-has-query-command
