@@ -93,25 +93,13 @@ Before creating or updating a Plan, ExecPlan, or governing specification family,
 ** Contract Capture
 Use =asp org capture --contract CONTRACT_ID= for a non-mutating, contract-checked Org entry plan. =CONTRACT_ID= must be a registry id such as =agent.task.v1=, =agent.plan.v1=, =agent.sdd.v1=, =agent.adr.v1=, =agent.bdd.v1=, =agent.prd.v1=, or =agent.execplan.v1=. Capture kinds stay generic; contract semantics are carried by the =CONTRACT_ORG= property injected by capture.
 The contract id must be explicit; do not use positional aliases such as =task=, =plan=, or =sdd=.
-
 #+begin_src shell
 asp org capture --contract agent.task.v1 \
-  --kind task \
   --title <TITLE> \
-  --target-file <ASP_ORG_ARTIFACTS_ROOT>/<TASK_SLUG>.org \
-  --outline Plans/Active \
-  --tag task \
-  --body '** Goal
-<GOAL>
-** Acceptance
-- [ ] <ACCEPTANCE>
-** Progress
-- [ ] <PROGRESS>
-** Evidence
-- <EVIDENCE>'
+  --target-file <ASP_ORG_ARTIFACTS_ROOT>/<TASK_SLUG>.org
 #+end_src
 
-The command renders an Org entry, application preconditions, and a contract-check receipt before returning =org-entry=. It does not write the target file.
+The command renders an Org entry, application preconditions, and a contract-check receipt before returning =org-entry=. It does not write the target file. The =agent.task.v1= wrapper supplies task kind, task tag, and a minimal Goal/Acceptance/Progress/Evidence scaffold unless the caller overrides them.
 ** Rules
 - Preserve the semantic AST provider boundary: query Org tasks, checklist items, properties, planning timestamps, links, and source blocks as Org facts.
 - Keep =ASP_ORG.org= as the single state skill entry; do not reintroduce a wrapper skill.

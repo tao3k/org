@@ -214,6 +214,21 @@ ASP Org skills must expose semantic AST queries through asp org query.
 ASP Org skills must expose contract validation through asp org contract trace.
 #+END_SRC
 
+** skill-has-simplified-capture-contract-command
+:PROPERTIES:
+:ASSERT_ID: skill-has-simplified-capture-contract-command
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (src-block
+    :descendant-of $scope
+    :language "shell"
+    :summary-contains (value "asp org capture --contract agent.task.v1")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must expose the simplified task capture command through =asp org capture --contract agent.task.v1 --title <TITLE> --target-file <ORG_FILE>= and leave task kind, tag, and scaffold defaults to the contract-aware wrapper.
+#+END_SRC
 ** skill-has-progressive-disclosure
 :PROPERTIES:
 :ASSERT_ID: skill-has-progressive-disclosure
