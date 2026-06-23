@@ -3,7 +3,7 @@
 
 * PRD: Govern product-facing plan intent
 :PROPERTIES:
-:CONTRACT_ORG: agent.prd.v1
+:CONTRACT_ORG: [[../agent.prd.v1.org][agent.prd.v1]]
 :PRD_ID: prd-govern-product-plan-intent
 :PRD_STATUS: accepted
 :PRODUCT_AREA: asp-org

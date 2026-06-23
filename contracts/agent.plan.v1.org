@@ -8,8 +8,10 @@
 
 This contract validates a recoverable plan ledger. It defines the theory of a
 plan record: a bounded objective, a scope, a governing specification reference,
-recoverable state, evidence, and a next action. Runtime commands, storage paths,
-and client-specific workflows are out of scope for this contract.
+recoverable state, evidence, and a next action. Runtime commands and
+client-specific workflows are out of scope for this contract; storage placement
+and filename shape are part of the contract because agents can create several
+plan ledgers during one session.
 
 The intended output is a single recoverable task heading with:
 
@@ -30,6 +32,15 @@ specification. Those records live under purpose-specific contracts such as
 =agent.prd.v1=, =agent.bdd.v1=, =agent.adr.v1=, or =agent.sdd.v1= and are linked
 through =GOVERNING_CONTRACT= and =GOVERNING_REF=.
 
+** Filename And Placement
+
+Plan files must live under =artifacts/org/flow/plans/= or a project-local
+equivalent ending in =org/flow/plans/=. A plan filename must match
+=agent-plan-*.org= and should include the hook session id when the client
+provides one, for example =agent-plan-session-abc-123-1782181538337.org=.
+The capture command materializer enforces this placement for =agent.plan.v1=
+when =--target-file= is provided. This keeps temporary task placeholders such as
+=current-agent-task.org= out of the durable plan ledger namespace.
 ** plan-has-workflow-state
 :PROPERTIES:
 :ASSERT_ID: plan.has-workflow-state

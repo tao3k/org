@@ -3,7 +3,7 @@
 * DONE Contract Org Plan Example [5/5] [100%] :agent:org:contract:achievement:
 CLOSED: [2026-06-14 Sun]
 :PROPERTIES:
-:CONTRACT_ORG: agent.plan.v1
+:CONTRACT_ORG: [[../agent.plan.v1.org][agent.plan.v1]]
 :ID: agent-plan-ledger-example-20260614
 :OBJECTIVE: demonstrate a recoverable agent plan ledger
 :SCOPE_REF: agent.plan.v1 contract example

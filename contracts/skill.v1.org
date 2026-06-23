@@ -1,24 +1,24 @@
-* asp-skill-trunk-v1
+* skill-v1
 :PROPERTIES:
-:CONTRACT_ID: asp.skill.trunk.v1
-:CONTRACT_ALIAS: ../contracts/asp.skill.trunk.v1.org#asp.skill.trunk.v1 ../contracts/asp.skill.trunk.v1.org
+:CONTRACT_ID: skill.v1
+:CONTRACT_ALIAS: ../contracts/skill.v1.org#skill.v1 ../contracts/skill.v1.org
 :CONTRACT_KIND: org-elements
 :CONTRACT_SCOPE: subtree
 :END:
 
 ** What This Produces
-This contract validates the shared trunk shape for ASP Org skill subtrees.
+This contract validates the shared shape for Org-backed skill subtrees.
 It treats Org as a stronger skill medium than Markdown: machine-readable
 properties carry activation metadata, headings carry workflow phases, links
 carry progressive-disclosure resources, and source blocks carry replayable
 commands.
 
-Set this contract as a package or file default with =#+PROPERTY:
-CONTRACT_ORG=. Concrete skill contracts may override this trunk from a skill
-subtree by setting their own =CONTRACT_ORG= property. Override contracts must
-repeat any trunk requirements they still want enforced.
+Apply this contract directly to any Org skill subtree with a =CONTRACT_ORG=
+property. Product- or provider-specific skill contracts should be listed as
+additional =CONTRACT_ORG= properties on the same subtree instead of pretending
+that contract inheritance is implicit.
 
-The shared trunk requires:
+The shared skill contract requires:
 - identity metadata that can be indexed before loading the full body;
 - explicit use and non-use boundaries;
 - a state-oriented workflow rather than a prose-only description;
@@ -29,9 +29,9 @@ The shared trunk requires:
 - provider-owned commands in shell source blocks;
 - package-relative links, never install-root placeholders or repo-root paths.
 
-** trunk-has-root-heading
+** skill-has-root-heading
 :PROPERTIES:
-:ASSERT_ID: trunk-has-root-heading
+:ASSERT_ID: skill.has-root-heading
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -39,12 +39,25 @@ The shared trunk requires:
   (headline :at $scope))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must have a root heading.
+Skill subtrees must have a root heading.
 #+END_SRC
 
-** trunk-has-skill-id
+** skill-has-contract-org
 :PROPERTIES:
-:ASSERT_ID: trunk-has-skill-id
+:ASSERT_ID: skill.has-contract-org
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (node-property :descendant-of $scope :summary (key "CONTRACT_ORG")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Skill subtrees must declare at least one governing CONTRACT_ORG property.
+#+END_SRC
+
+** skill-has-skill-id
+:PROPERTIES:
+:ASSERT_ID: skill.has-skill-id
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -52,12 +65,12 @@ ASP skill subtrees must have a root heading.
   (node-property :descendant-of $scope :summary (key "SKILL_ID")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must declare SKILL_ID in their root property drawer.
+Skill subtrees must declare SKILL_ID in their root property drawer.
 #+END_SRC
 
-** trunk-has-trigger-description
+** skill-has-trigger-description
 :PROPERTIES:
-:ASSERT_ID: trunk-has-trigger-description
+:ASSERT_ID: skill.has-trigger-description
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -71,9 +84,9 @@ ASP skill subtrees must declare SKILL_ID in their root property drawer.
 SKILL_DESCRIPTION must carry trigger metadata with "Use when ..."; body-only trigger prose is too late for discovery.
 #+END_SRC
 
-** trunk-states-use-boundary
+** skill-states-use-boundary
 :PROPERTIES:
-:ASSERT_ID: trunk-states-use-boundary
+:ASSERT_ID: skill.states-use-boundary
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -81,12 +94,12 @@ SKILL_DESCRIPTION must carry trigger metadata with "Use when ..."; body-only tri
   (headline :descendant-of $scope :summary-contains (title "Use Boundary")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must include a Use Boundary section that states when to use and when not to use the skill.
+Skill subtrees must include a Use Boundary section that states when to use and when not to use the skill.
 #+END_SRC
 
-** trunk-states-positive-trigger
+** skill-states-positive-trigger
 :PROPERTIES:
-:ASSERT_ID: trunk-states-positive-trigger
+:ASSERT_ID: skill.states-positive-trigger
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -94,12 +107,12 @@ ASP skill subtrees must include a Use Boundary section that states when to use a
   (plain-text :descendant-of $scope :summary-contains (value "Use this skill when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must state a positive trigger with "Use this skill when ...".
+Skill subtrees must state a positive trigger with "Use this skill when ...".
 #+END_SRC
 
-** trunk-states-negative-trigger
+** skill-states-negative-trigger
 :PROPERTIES:
-:ASSERT_ID: trunk-states-negative-trigger
+:ASSERT_ID: skill.states-negative-trigger
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -107,12 +120,12 @@ ASP skill subtrees must state a positive trigger with "Use this skill when ...".
   (plain-text :descendant-of $scope :summary-contains (value "Do not use this skill when")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must state a negative trigger with "Do not use this skill when ...".
+Skill subtrees must state a negative trigger with "Do not use this skill when ...".
 #+END_SRC
 
-** trunk-has-state-workflow
+** skill-has-state-workflow
 :PROPERTIES:
-:ASSERT_ID: trunk-has-state-workflow
+:ASSERT_ID: skill.has-state-workflow
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -120,12 +133,12 @@ ASP skill subtrees must state a negative trigger with "Do not use this skill whe
   (headline :descendant-of $scope :summary-contains (title "State Workflow")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must include a State Workflow section that maps query results to next actions.
+Skill subtrees must include a State Workflow section that maps query results to next actions.
 #+END_SRC
 
-** trunk-has-rules-section
+** skill-has-rules-section
 :PROPERTIES:
-:ASSERT_ID: trunk-has-rules-section
+:ASSERT_ID: skill.has-rules-section
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -133,12 +146,12 @@ ASP skill subtrees must include a State Workflow section that maps query results
   (headline :descendant-of $scope :summary-contains (title "Rules")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must include rules that state boundaries and forbidden shortcuts.
+Skill subtrees must include rules that state boundaries and forbidden shortcuts.
 #+END_SRC
 
-** trunk-has-progressive-disclosure
+** skill-has-progressive-disclosure
 :PROPERTIES:
-:ASSERT_ID: trunk-has-progressive-disclosure
+:ASSERT_ID: skill.has-progressive-disclosure
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -146,12 +159,12 @@ ASP skill subtrees must include rules that state boundaries and forbidden shortc
   (headline :descendant-of $scope :summary-contains (title "Progressive Disclosure")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must include Progressive Disclosure guidance for linked contracts, templates, references, or assets.
+Skill subtrees must include Progressive Disclosure guidance for linked contracts, templates, references, or assets.
 #+END_SRC
 
-** trunk-has-resource-link
+** skill-has-resource-link
 :PROPERTIES:
-:ASSERT_ID: trunk-has-resource-link
+:ASSERT_ID: skill.has-resource-link
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -159,12 +172,12 @@ ASP skill subtrees must include Progressive Disclosure guidance for linked contr
   (link :descendant-of $scope :summary-contains (path "../")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must link package-relative resources instead of embedding every detail inline.
+Skill subtrees must link package-relative resources instead of embedding every detail inline.
 #+END_SRC
 
-** trunk-has-validation-section
+** skill-has-validation-section
 :PROPERTIES:
-:ASSERT_ID: trunk-has-validation-section
+:ASSERT_ID: skill.has-validation-section
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -172,12 +185,12 @@ ASP skill subtrees must link package-relative resources instead of embedding eve
   (headline :descendant-of $scope :summary-contains (title "Validation")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must include a Validation section with replayable checks or pressure scenarios.
+Skill subtrees must include a Validation section with replayable checks or pressure scenarios.
 #+END_SRC
 
-** trunk-has-adversarial-review-section
+** skill-has-adversarial-review-section
 :PROPERTIES:
-:ASSERT_ID: trunk-has-adversarial-review-section
+:ASSERT_ID: skill.has-adversarial-review-section
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -185,12 +198,12 @@ ASP skill subtrees must include a Validation section with replayable checks or p
   (headline :descendant-of $scope :summary-contains (title "Adversarial Review")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must include an Adversarial Review section for model-audited content quality.
+Skill subtrees must include an Adversarial Review section for model-audited content quality.
 #+END_SRC
 
-** trunk-adversarial-checks-redundancy
+** skill-adversarial-checks-redundancy
 :PROPERTIES:
-:ASSERT_ID: trunk-adversarial-checks-redundancy
+:ASSERT_ID: skill.adversarial-checks-redundancy
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -198,12 +211,12 @@ ASP skill subtrees must include an Adversarial Review section for model-audited 
   (plain-text :descendant-of $scope :summary-contains (value "redundancy")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill adversarial criteria must check redundancy.
+Skill adversarial criteria must check redundancy.
 #+END_SRC
 
-** trunk-adversarial-checks-out-of-scope
+** skill-adversarial-checks-out-of-scope
 :PROPERTIES:
-:ASSERT_ID: trunk-adversarial-checks-out-of-scope
+:ASSERT_ID: skill.adversarial-checks-out-of-scope
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -211,12 +224,12 @@ ASP skill adversarial criteria must check redundancy.
   (plain-text :descendant-of $scope :summary-contains (value "out of scope")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill adversarial criteria must check out of scope content.
+Skill adversarial criteria must check out of scope content.
 #+END_SRC
 
-** trunk-adversarial-checks-command-clarity
+** skill-adversarial-checks-command-clarity
 :PROPERTIES:
-:ASSERT_ID: trunk-adversarial-checks-command-clarity
+:ASSERT_ID: skill.adversarial-checks-command-clarity
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -224,12 +237,12 @@ ASP skill adversarial criteria must check out of scope content.
   (plain-text :descendant-of $scope :summary-contains (value "command clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill adversarial criteria must check command clarity.
+Skill adversarial criteria must check command clarity.
 #+END_SRC
 
-** trunk-adversarial-checks-mechanism-clarity
+** skill-adversarial-checks-mechanism-clarity
 :PROPERTIES:
-:ASSERT_ID: trunk-adversarial-checks-mechanism-clarity
+:ASSERT_ID: skill.adversarial-checks-mechanism-clarity
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -237,12 +250,12 @@ ASP skill adversarial criteria must check command clarity.
   (plain-text :descendant-of $scope :summary-contains (value "mechanism clarity")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill adversarial criteria must check mechanism clarity.
+Skill adversarial criteria must check mechanism clarity.
 #+END_SRC
 
-** trunk-adversarial-checks-structure
+** skill-adversarial-checks-structure
 :PROPERTIES:
-:ASSERT_ID: trunk-adversarial-checks-structure
+:ASSERT_ID: skill.adversarial-checks-structure
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -250,12 +263,12 @@ ASP skill adversarial criteria must check mechanism clarity.
   (plain-text :descendant-of $scope :summary-contains (value "structure")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill adversarial criteria must check structure.
+Skill adversarial criteria must check structure.
 #+END_SRC
 
-** trunk-has-pressure-scenario
+** skill-has-pressure-scenario
 :PROPERTIES:
-:ASSERT_ID: trunk-has-pressure-scenario
+:ASSERT_ID: skill.has-pressure-scenario
 :SEVERITY: warning
 :END:
 #+BEGIN_SRC org-contract
@@ -263,12 +276,12 @@ ASP skill adversarial criteria must check structure.
   (plain-text :descendant-of $scope :summary-contains (value "pressure scenario")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees should name at least one pressure scenario so future agents can verify the skill changes behavior under stress.
+Skill subtrees should name at least one pressure scenario so future agents can verify the skill changes behavior under stress.
 #+END_SRC
 
-** trunk-has-shell-block
+** skill-has-shell-block
 :PROPERTIES:
-:ASSERT_ID: trunk-has-shell-block
+:ASSERT_ID: skill.has-shell-block
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -276,29 +289,29 @@ ASP skill subtrees should name at least one pressure scenario so future agents c
   (src-block :descendant-of $scope :language "shell"))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must preserve runnable provider commands in shell source blocks.
+Skill subtrees must preserve runnable provider commands in shell source blocks.
 #+END_SRC
 
-** trunk-avoids-install-root-placeholder
+** skill-avoids-install-root-placeholder
 :PROPERTIES:
-:ASSERT_ID: trunk-avoids-install-root-placeholder
+:ASSERT_ID: skill.avoids-install-root-placeholder
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
 assert not exists link where descendant_of($scope) and summary(path) contains "<ASP_ORG_ROOT>"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must not require install-root placeholders such as <ASP_ORG_ROOT>.
+Skill subtrees must not require install-root placeholders such as <ASP_ORG_ROOT>.
 #+END_SRC
 
-** trunk-avoids-repo-root-paths
+** skill-avoids-repo-root-paths
 :PROPERTIES:
-:ASSERT_ID: trunk-avoids-repo-root-paths
+:ASSERT_ID: skill.avoids-repo-root-paths
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
 assert not exists link where descendant_of($scope) and summary(path) contains "languages/org/"
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP skill subtrees must not use repository-root paths for package-local contracts or templates.
+Skill subtrees must not use repository-root paths for package-local contracts or templates.
 #+END_SRC

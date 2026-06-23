@@ -3,7 +3,7 @@
 
 * Feature: Select governing contract before implementation
 :PROPERTIES:
-:CONTRACT_ORG: agent.bdd.v1
+:CONTRACT_ORG: [[../agent.bdd.v1.org][agent.bdd.v1]]
 :BDD_ID: bdd-select-governing-contract
 :BDD_STATUS: accepted
 :BDD_ACTOR: implementation agent

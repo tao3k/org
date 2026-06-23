@@ -6,8 +6,7 @@
 :TEMPLATE_ID: agent.bdd.v1
 :TEMPLATE_KIND: bdd
 :TEMPLATE_CONTRACT: agent.bdd.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.bdd.v1.org][agent.bdd.v1]]
-:CONTRACT_ORG: agent.bdd.v1
+:CONTRACT_ORG: [[../contracts/agent.bdd.v1.org][agent.bdd.v1]]
 :BDD_ID: bdd-id
 :BDD_STATUS: draft
 :BDD_ACTOR: primary actor

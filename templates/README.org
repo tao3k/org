@@ -6,13 +6,48 @@ This directory contains language-facing Org authoring templates. Provider
 crates such as =languages/orgize= implement parsing and evaluation; reusable
 agent templates and their public contracts live here.
 
+** Contract And Template Change Workflow
+
+Contracts and templates are a paired surface. When a file under
+=languages/org/contracts/= changes required properties, headings, file naming,
+storage placement, validation sections, or recovery semantics, update the
+corresponding file under =languages/org/templates/= in the same change.
+
+Use this workflow:
+
+- Identify the contract id and paired template from this README before editing.
+- Update the contract first when the contract semantics are changing.
+- Update the paired template so a freshly rendered entry satisfies the new
+  contract without manual repair.
+- Update this README if the pair, filename convention, storage convention, or
+  authoring workflow changes.
+- Run =asp org contract trace --org-contract-registry ../contracts/<id>.org <template-file>=
+  from =languages/org/templates=, or the equivalent workspace-relative command,
+  and record the result with the change.
+
+Do not leave a contract-only change that makes the paired template stale. If a
+contract change intentionally has no template effect, state that explicitly in
+the change summary.
+
+** ASP Org Skill
+:PROPERTIES:
+:TEMPLATE_ID: asp-org
+:TEMPLATE_KIND: skill
+:TEMPLATE_FILE: ASP_ORG_SKILL.org
+:TEMPLATE_CONTRACT: skill.v1 asp.skill.v1
+:END:
+- Template: [[ASP_ORG_SKILL.org][ASP_ORG_SKILL.org]]
+- Skill Contract: [[../contracts/skill.v1.org][skill.v1]]
+- ASP Org Skill Contract: [[../contracts/asp.skill.v1.org][asp.skill.v1]]
+
+Skill template filenames use the skill filename contract: uppercase stem and =_SKILL.org= suffix under =languages/org/templates=.
+
 ** Plan
 :PROPERTIES:
 :TEMPLATE_ID: agent.plan.v1
 :TEMPLATE_KIND: plan
 :TEMPLATE_FILE: agent.plan.v1.org
 :TEMPLATE_CONTRACT: agent.plan.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
 :END:
 
 - Template: [[agent.plan.v1.org][agent.plan.v1.org]]
@@ -29,7 +64,6 @@ sections.
 :TEMPLATE_KIND: execplan
 :TEMPLATE_FILE: agent.execplan.v1.org
 :TEMPLATE_CONTRACT: agent.execplan.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 :END:
 
 - Template: [[agent.execplan.v1.org][agent.execplan.v1.org]]

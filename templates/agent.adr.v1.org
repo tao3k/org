@@ -6,8 +6,7 @@
 :TEMPLATE_ID: agent.adr.v1
 :TEMPLATE_KIND: adr
 :TEMPLATE_CONTRACT: agent.adr.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.adr.v1.org][agent.adr.v1]]
-:CONTRACT_ORG: agent.adr.v1
+:CONTRACT_ORG: [[../contracts/agent.adr.v1.org][agent.adr.v1]]
 :ADR_ID: adr-id
 :ADR_STATUS: proposed
 :GOVERNING_REF: none

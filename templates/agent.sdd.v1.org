@@ -7,7 +7,7 @@
 :TEMPLATE_ID: agent.sdd.v1
 :TEMPLATE_KIND: sdd
 :TEMPLATE_CONTRACT: agent.sdd.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
+:CONTRACT_ORG: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
 :ID: 00000000-0000-7000-8000-000000000101
 :SDD_KIND: system
 :SDD_STATUS: draft

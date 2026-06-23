@@ -3,8 +3,7 @@
 :TEMPLATE_ID: agent.task.v1
 :TEMPLATE_KIND: task
 :TEMPLATE_CONTRACT: agent.task.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.task.v1.org][agent.task.v1]]
-:CONTRACT_ORG: agent.task.v1
+:CONTRACT_ORG: [[../contracts/agent.task.v1.org][agent.task.v1]]
 :ID: agent-task-id
 :OBJECTIVE: Record the task intent.
 :STATUS: active

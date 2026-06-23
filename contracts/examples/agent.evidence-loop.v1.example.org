@@ -2,7 +2,7 @@
 
 * Evidence Loop
 :PROPERTIES:
-:CONTRACT_ORG: agent.evidence-loop.v1
+:CONTRACT_ORG: [[../agent.evidence-loop.v1.org][agent.evidence-loop.v1]]
 :EVIDENCE_LOOP_ID: asp-org-reflection-evidence-loop
 :EVAL_STATUS: passed
 :END:

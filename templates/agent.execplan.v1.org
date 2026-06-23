@@ -6,8 +6,7 @@
 :TEMPLATE_ID: agent.execplan.v1
 :TEMPLATE_KIND: execplan
 :TEMPLATE_CONTRACT: agent.execplan.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
-:CONTRACT_ORG: agent.execplan.v1
+:CONTRACT_ORG: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 :EXECPLAN_ID: execplan-id
 :OBJECTIVE: durable outcome this execution plan coordinates
 :SCOPE_REF: stable work boundary or design reference

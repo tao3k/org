@@ -3,7 +3,7 @@
 
 * ADR: Link plans to governing specifications
 :PROPERTIES:
-:CONTRACT_ORG: agent.adr.v1
+:CONTRACT_ORG: [[../agent.adr.v1.org][agent.adr.v1]]
 :ADR_ID: adr-governing-spec-links
 :ADR_STATUS: accepted
 :GOVERNING_REF: contracts/examples/agent.sdd.v1.example.org

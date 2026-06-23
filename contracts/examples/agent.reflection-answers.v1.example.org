@@ -2,7 +2,7 @@
 
 * Reflection Questions
 :PROPERTIES:
-:CONTRACT_ORG: agent.reflection-answers.v1
+:CONTRACT_ORG: [[../agent.reflection-answers.v1.org][agent.reflection-answers.v1]]
 :END:
 
 | Question | Value |

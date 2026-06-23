@@ -6,8 +6,7 @@
 :TEMPLATE_ID: agent.spec-flow.v1
 :TEMPLATE_KIND: spec-flow
 :TEMPLATE_CONTRACT: agent.spec-flow.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.spec-flow.v1.org][agent.spec-flow.v1]]
-:CONTRACT_ORG: agent.spec-flow.v1
+:CONTRACT_ORG: [[../contracts/agent.spec-flow.v1.org][agent.spec-flow.v1]]
 :SPEC_FLOW_ID: spec-flow-id
 :SPEC_FAMILY_ID: agent.example.v1
 :SPEC_STATUS: draft
@@ -26,7 +25,7 @@ what it explicitly does not govern.
 ** Template
 - [ ] Create =<spec-family>.org=.
 - [ ] Include =TEMPLATE_ID=, =TEMPLATE_KIND=, =TEMPLATE_CONTRACT=, and
-  =TEMPLATE_CONTRACT_ORG=.
+  =CONTRACT_ORG=.
 - [ ] Include only reusable authoring shape, not client-local state paths.
 
 ** Example

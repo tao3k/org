@@ -3,8 +3,7 @@
 :TEMPLATE_ID: agent.plan.v1
 :TEMPLATE_KIND: plan
 :TEMPLATE_CONTRACT: agent.plan.v1
-:TEMPLATE_CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
-:CONTRACT_ORG: agent.plan.v1
+:CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
 :ID: agent-plan-id
 :OBJECTIVE: durable outcome this plan records
 :SCOPE_REF: stable work boundary or design reference
@@ -22,6 +21,7 @@
 :EVIDENCE: validation receipts and recovery anchors recorded below
 :EVIDENCE_STATUS: pending
 :REVIEW_STATUS: pending
+:PLAN_FILE_PATTERN: artifacts/org/flow/plans/agent-plan-*.org
 :ARCHIVE_TARGET: artifacts/org/flow/plans/archive/agent-plan-id.org
 :GRAPH: flowchart LR;P["plan:agent-plan-id"]-->S["scope:stable work boundary or design reference"];P-->G["governing:none"];P-->E["evidence:pending"]
 :END:

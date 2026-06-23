@@ -3,7 +3,7 @@
 
 * SpecFlow: Add an agent governing specification family
 :PROPERTIES:
-:CONTRACT_ORG: agent.spec-flow.v1
+:CONTRACT_ORG: [[../agent.spec-flow.v1.org][agent.spec-flow.v1]]
 :SPEC_FLOW_ID: spec-flow-governing-family-example
 :SPEC_FAMILY_ID: agent.example.v1
 :SPEC_STATUS: accepted
