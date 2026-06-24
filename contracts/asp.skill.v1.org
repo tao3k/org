@@ -52,10 +52,10 @@ ASP Org skills must show =asp paths --get orgArtifacts= as the canonical command
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
-  (item :descendant-of $scope :summary-contains (value "artifacts/org/flow/plans")))
+  (plain-text :descendant-of $scope :summary-contains (value "Flow records are artifacts/org/flow/plans, artifacts/org/flow/sdd, artifacts/org/flow/bdd, artifacts/org/flow/tdd, and artifacts/org/flow/bdr.")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP Org skills must expose the artifacts/org/flow directory layout for plan, SDD, and BDR records.
+ASP Org skills must expose the artifacts/org/flow directory layout for plan, SDD, BDD, TDD, and BDR records.
 #+END_SRC
 
 ** skill-has-org-archives-layout

@@ -54,6 +54,7 @@ Agent-authored Org state belongs under the separate artifacts root returned by =
 Run asp paths --get orgArtifacts before writing agent-authored Org state from a non-root working directory.
 
 State layout after ASP install/sync:
+Flow records are artifacts/org/flow/plans, artifacts/org/flow/sdd, artifacts/org/flow/bdd, artifacts/org/flow/tdd, and artifacts/org/flow/bdr.
 - =.cache/agent-semantic-protocol/org= is the git-backed Org resource checkout.
 - =.cache/agent-semantic-protocol/org/contracts= stores contract resources.
 - =.cache/agent-semantic-protocol/org/templates= stores template resources.
