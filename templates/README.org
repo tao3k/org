@@ -54,9 +54,9 @@ Skill template filenames use the skill filename contract: uppercase stem and =_S
 - Contract: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
 
 Use this template when an agent needs to leave a recoverable plan ledger after
-work is done. The paired contract verifies identity, objective, scope,
-governing specification, status, recovery, lifecycle, validation, and evidence
-sections.
+work is done. The paired contract verifies identity, objective, scope, status,
+recovery, lifecycle, validation, and evidence sections. Specification references
+are added only when the task actually needs them.
 
 ** ExecPlan
 :PROPERTIES:
@@ -86,11 +86,16 @@ reflection, and recovery sections.
 - ADR Contract: [[../contracts/agent.adr.v1.org][agent.adr.v1]]
 - BDD Template: [[agent.bdd.v1.org][agent.bdd.v1.org]]
 - BDD Contract: [[../contracts/agent.bdd.v1.org][agent.bdd.v1]]
+- TDD Template: [[agent.tdd.v1.org][agent.tdd.v1.org]]
+- TDD Contract: [[../contracts/agent.tdd.v1.org][agent.tdd.v1]]
+- BDR Template: [[agent.bdr.v1.org][agent.bdr.v1.org]]
+- BDR Contract: [[../contracts/agent.bdr.v1.org][agent.bdr.v1]]
 - PRD Template: [[agent.prd.v1.org][agent.prd.v1.org]]
 - PRD Contract: [[../contracts/agent.prd.v1.org][agent.prd.v1]]
 
 Use these templates when work needs a governing specification before or
 alongside planning. SpecFlow covers the process of adding a new specification
 family. SDD covers software architecture and design drift, ADR covers a specific
-decision, BDD covers behavior and acceptance scenarios, and PRD covers product
-requirements.
+decision, BDD covers behavior and acceptance scenarios, TDD covers test-first or
+regression contracts, BDR covers Business Development Representative workflows,
+and PRD covers product requirements.

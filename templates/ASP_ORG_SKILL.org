@@ -28,6 +28,10 @@ Keep this skill body as the operational index. Read linked resources only when t
 - ADR template: [[../templates/agent.adr.v1.org][agent.adr.v1.org]]
 - BDD contract: [[../contracts/agent.bdd.v1.org][agent.bdd.v1]]
 - BDD template: [[../templates/agent.bdd.v1.org][agent.bdd.v1.org]]
+- TDD contract: [[../contracts/agent.tdd.v1.org][agent.tdd.v1]]
+- TDD template: [[../templates/agent.tdd.v1.org][agent.tdd.v1.org]]
+- BDR contract: [[../contracts/agent.bdr.v1.org][agent.bdr.v1]]
+- BDR template: [[../templates/agent.bdr.v1.org][agent.bdr.v1.org]]
 - PRD contract: [[../contracts/agent.prd.v1.org][agent.prd.v1]]
 - PRD template: [[../templates/agent.prd.v1.org][agent.prd.v1.org]]
 - Template index: [[../templates/README.org][templates README]]
@@ -57,7 +61,9 @@ State layout after ASP install/sync:
 - =.cache/agent-semantic-protocol/artifacts/org= stores agent-authored Org state.
 - =.cache/agent-semantic-protocol/artifacts/org/flow/plans= stores plan records.
 - =.cache/agent-semantic-protocol/artifacts/org/flow/sdd= stores SDD records.
-- =.cache/agent-semantic-protocol/artifacts/org/flow/BDR= stores BDR records.
+- =.cache/agent-semantic-protocol/artifacts/org/flow/bdd= stores BDD records.
+- =.cache/agent-semantic-protocol/artifacts/org/flow/tdd= stores TDD records.
+- =.cache/agent-semantic-protocol/artifacts/org/flow/bdr= stores BDR records.
 - =.cache/agent-semantic-protocol/artifacts/org/archives= stores completed, superseded, or inactive agent-authored Org state.
 
 The archive root is =.cache/agent-semantic-protocol/artifacts/org/archives=, or the corresponding path under =$(asp paths --get orgArtifacts)/archives= when the artifacts root is resolved dynamically.
@@ -67,14 +73,15 @@ Archive records live under artifacts/org/archives.
 Archive lane:
 - Resolve the writable artifact root with =asp paths --get orgArtifacts= before archiving from a non-root working directory.
 - Query active Org facts first, such as =asp org query --kind task --field todo=DONE --workspace . --view metadata=, then inspect the returned selector before moving content.
-- Preserve active layout under =archives= when possible: move =flow/plans/<PLAN_SLUG>.org= to =archives/flow/plans/<PLAN_SLUG>.org=, SDD records to =archives/flow/sdd/=, and BDR records to =archives/flow/BDR/=.
+- Preserve active layout under =archives= when possible: move =flow/plans/<PLAN_SLUG>.org= to =archives/flow/plans/<PLAN_SLUG>.org=, SDD records to =archives/flow/sdd/=, BDD records to =archives/flow/bdd/=, TDD records to =archives/flow/tdd/=, and BDR records to =archives/flow/bdr/=.
 - Add archive metadata such as =ARCHIVED_FROM= and =ARCHIVE_REASON= on the destination record instead of encoding archive status as a hidden search/query side effect.
 - Do not archive by deleting AST facts discovered through =asp org query= without writing the destination archive record first.
 
 - If the query returns TODO headlines, treat them as =kind=task= and inspect the relevant selector before editing.
 - If the query returns checkbox list items, treat them as =kind=checklistItem=; do not collapse them into task headlines.
 - If the query returns a property drawer match, use the property key/value as the semantic anchor; do not invent SDD, Wendao, or agent-plan search modes.
-- If the task needs a governing specification, choose it by purpose: =agent.sdd.v1= for software architecture and design drift, =agent.adr.v1= for a decision, =agent.bdd.v1= for behavior and acceptance, and =agent.prd.v1= for product requirements.
+- If the task needs a governing specification, choose it by purpose: =agent.sdd.v1= for software architecture and design drift, =agent.bdd.v1= for behavior and acceptance, =agent.tdd.v1= for test-first or regression contracts, and =agent.bdr.v1= for Business Development Representative workflow, qualification, outreach, or handoff. Add only the relevant specification reference to the plan. If none applies, do not write placeholder =none= rows or properties.
+- Use =agent.adr.v1= for a decision and =agent.prd.v1= for product requirements when those are the relevant governing records.
 - If the task needs a new governing specification family, use =agent.spec-flow.v1= first. Define the theory, then add contract, template, example, skill registration, template index entry, validation, and adversarial review in that order.
 - If no query result matches, narrow the AST query or inspect the linked contract/template before creating new structure.
 
@@ -86,13 +93,18 @@ asp org contract trace --org-contract-registry ../contracts/agent.spec-flow.v1.o
 asp org contract trace --org-contract-registry ../contracts/agent.sdd.v1.org ../templates/agent.sdd.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.adr.v1.org ../templates/agent.adr.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.bdd.v1.org ../templates/agent.bdd.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.tdd.v1.org ../templates/agent.tdd.v1.org
+asp org contract trace --org-contract-registry ../contracts/agent.bdr.v1.org ../templates/agent.bdr.v1.org
 asp org contract trace --org-contract-registry ../contracts/agent.prd.v1.org ../templates/agent.prd.v1.org
 asp org contract trace --org-contract-registry ../contracts/skill.v1.org --org-contract-registry ../contracts/asp.skill.v1.org ../skills/ASP_ORG.org
 #+end_src
 
-Before creating or updating a Plan, ExecPlan, or governing specification family, read the matching contract's =Definition= section. The definition tells the agent what the artifact is, what it is not, and which governing contract should be linked instead of duplicated.
+Before creating or updating a Plan, ExecPlan, or governing specification family, read the matching contract's =Definition= section. For =agent.plan.v1=, also read =Specification Choice Reasoning= so the agent can decide whether SDD, BDD, TDD, BDR, or none applies before writing the plan. The definition tells the agent what the artifact is, what it is not, and which governing records should be linked only when relevant.
+#+begin_src shell
+asp org search owner .cache/agent-semantic-protocol/org/contracts/agent.plan.v1.org items --query "Specification Choice Reasoning SDD BDD TDD BDR" --workspace . --view seeds
+#+end_src
 ** Contract Capture
-Use =asp org capture --contract CONTRACT_ID= for a non-mutating, contract-checked Org entry plan. =CONTRACT_ID= must be a registry id such as =agent.task.v1=, =agent.plan.v1=, =agent.sdd.v1=, =agent.adr.v1=, =agent.bdd.v1=, =agent.prd.v1=, or =agent.execplan.v1=. Capture kinds stay generic; contract semantics are carried by the =CONTRACT_ORG= property injected by capture.
+Use =asp org capture --contract CONTRACT_ID= for a non-mutating, contract-checked Org entry plan. =CONTRACT_ID= must be a registry id such as =agent.task.v1=, =agent.plan.v1=, =agent.sdd.v1=, =agent.adr.v1=, =agent.bdd.v1=, =agent.tdd.v1=, =agent.bdr.v1=, =agent.prd.v1=, or =agent.execplan.v1=. Capture kinds stay generic; contract semantics are carried by the =CONTRACT_ORG= property injected by capture.
 The contract id must be explicit; do not use positional aliases such as =task=, =plan=, or =sdd=.
 #+begin_src shell
 asp org capture --contract agent.task.v1 \
@@ -107,7 +119,7 @@ The command renders an Org entry, application preconditions, and a contract-chec
 - Do not use =--kind agent-plan=; =agent-plan= is not a provider-owned capture kind.
 - Do not add guide labels such as =agent-plan-*=, =wendao-task-*=, =wendao-orgid=, =sdd-property=, or =plan-record=.
 - Do not encode SDD, Wendao, or task archive behavior as hidden search/query side effects. Express them as AST queries first, then route mutations through an edit-plan or AST-patch contract.
-- Do not place SDD, ADR, BDD, or PRD body content inside =agent.plan.v1= or =agent.execplan.v1=. Use =GOVERNING_CONTRACT= and =GOVERNING_REF= to link the plan to the specification record.
+- Do not place SDD, ADR, BDD, TDD, BDR, or PRD body content inside =agent.plan.v1= or =agent.execplan.v1=. Link a plan to a specification only when that specification is relevant; otherwise omit the specification reference entirely.
 - Do not add a new governing specification family by editing the skill alone. First create or update a SpecFlow record, then add the contract, template, example, skill registration, template index entry, and validation evidence.
 - Do not rewrite package-relative links as installation-root placeholders or repository-root paths.
 ** Validation

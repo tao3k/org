@@ -7,13 +7,13 @@ CLOSED: [2026-06-14 Sun]
 :ID: agent-plan-ledger-example-20260614
 :OBJECTIVE: demonstrate a recoverable agent plan ledger
 :SCOPE_REF: agent.plan.v1 contract example
-:GOVERNING_CONTRACT: none
-:GOVERNING_REF: none
 :STABLE_REF: org/contracts/agent.plan.v1.org
-:STATUS: done
-:NEXT_ACTION: Reuse this file as the reference shape when generating agent plan ledgers.
+:STATUS: complete
+:NEXT_ACTION: archive-ready: reuse this file as the reference shape when generating agent plan ledgers.
 :RECOVERY_REF: contract-org-plan-ledger-example
 :EVIDENCE: Example validates the agent.plan.v1 contract and shows recoverable agent evidence.
+:EVIDENCE_STATUS: validated
+:REVIEW_STATUS: passed
 :END:
 
 - [X] Scope and recovery anchor confirmed.
@@ -53,11 +53,32 @@ ledger, not a free-form project plan.
 - The validation section records evidence receipts instead of relying on unrecorded context.
 - The recovery section below preserves the exact restart handle.
 
+** Evidence Loop
+:PROPERTIES:
+:EVIDENCE_LOOP_ID: contract-org-plan-ledger-example-loop
+:EVAL_STATUS: passed
+:END:
+| Claim | Evidence | Command | Result |
+| The plan example is contract-valid and archive-ready. | [[#agent-plan-ledger-example-20260614][plan root]] | asp org contract trace --org-contract-registry ../agent.plan.v1.org examples/agent.plan.v1.example.org | passed |
+#+begin_src sh
+asp org contract trace --org-contract-registry ../agent.plan.v1.org examples/agent.plan.v1.example.org
+#+end_src
+** Reflection
+:PROPERTIES:
+:REVIEW_MODE: closure-reflection
+:REVIEW_STATUS: passed
+:END:
+| Question | Value | Evidence |
+| Did the task finish? | yes | [[#agent-plan-ledger-example-20260614][plan root]] |
+| Did project scope drift? | no | [[#agent-plan-ledger-example-20260614][plan root]] |
+| Are all checklist items done? | yes | [[#agent-plan-ledger-example-20260614][plan root]] |
+| Is evidence sufficient and replayable? | yes | [[#contract-org-plan-ledger-example-loop][evidence loop]] |
+| Is the plan archive-ready? | yes | [[#agent-plan-ledger-example-20260614][plan root]] |
 ** Recovery
 
 #+begin_src text
 recovery-ref: contract-org-plan-ledger-example
 read-first: org/contracts/examples/agent.plan.v1.example.org
 contract: agent.plan.v1
-next-action: reuse this file as the reference shape when generating agent plan ledgers
+next-action: archive-ready: reuse this file as the reference shape when generating agent plan ledgers
 #+end_src

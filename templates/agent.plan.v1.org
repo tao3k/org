@@ -1,4 +1,4 @@
-* TODO Plan Title [1/8] [12%] :agent:plan:
+* TODO <PLAN_TITLE> [1/7] [14%] :agent:plan:
 :PROPERTIES:
 :TEMPLATE_ID: agent.plan.v1
 :TEMPLATE_KIND: plan
@@ -7,10 +7,7 @@
 :ID: agent-plan-id
 :OBJECTIVE: durable outcome this plan records
 :SCOPE_REF: stable work boundary or design reference
-:GOVERNING_CONTRACT: none
-:GOVERNING_REF: none
 :STABLE_REF: stable-source-ref
-:SDD: none
 :PACKAGE: workspace
 :SLICE: agent-plan-id
 :COMMAND_POLICY: RTK.md
@@ -23,23 +20,20 @@
 :REVIEW_STATUS: pending
 :PLAN_FILE_PATTERN: artifacts/org/flow/plans/agent-plan-*.org
 :ARCHIVE_TARGET: artifacts/org/flow/plans/archive/agent-plan-id.org
-:GRAPH: flowchart LR;P["plan:agent-plan-id"]-->S["scope:stable work boundary or design reference"];P-->G["governing:none"];P-->E["evidence:pending"]
+:GRAPH: flowchart LR;P["plan:agent-plan-id"]-->S["scope:stable work boundary or design reference"];P-->E["evidence:pending"]
 :END:
 - [X] Plan record initialized and contract check passed.
-- [ ] Governing specification reference resolved or explicitly marked none.
 - [ ] Task-local research and search route recorded.
 - [ ] Work checkpoints are current.
 - [ ] Validation command receipts recorded.
 - [ ] Evidence loop has claim, evidence, command, and result anchors.
-- [ ] Adversarial review questions answered.
+- [ ] Reflection questions answered with evidence.
 - [ ] Next action and archive readiness updated.
 ** Context
 Record the current state, relevant boundaries, and why this plan should remain understandable after the conversation is gone.
 ** Scope And Boundaries
 - Objective :: durable outcome this plan records
 - Scope reference :: stable work boundary or design reference
-- Governing contract :: none
-- Governing reference :: none
 - Stable source reference :: stable-source-ref
 - Out of scope :: Record unrelated refactors, broad design speculation, and commands that were not evaluated outside this plan.
 ** Checkpoints
@@ -64,18 +58,24 @@ Record the current state, relevant boundaries, and why this plan should remain u
 :EVAL_STATUS: pending
 :END:
 | Claim | Evidence | Command | Result |
+| Plan state is recoverable. | [[#agent-plan-id][plan root]] [[#agent-plan-id][plan evidence]] | asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org <PLAN_FILE> | pending |
 |-------+----------+---------+--------|
 | Plan structure satisfies agent.plan.v1. | [[#agent-plan-id][plan root]] | asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org <PLAN_FILE> | pending |
 | Validation receipts are replayable. | [[#agent-plan-id][plan evidence]] | replace-with-evaluated-command | pending |
 #+begin_src sh
 asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org <PLAN_FILE>
 #+end_src
-** Adversarial Review
+** Reflection
 :PROPERTIES:
-:REVIEW_MODE: content-quality
+:REVIEW_MODE: closure-reflection
 :REVIEW_STATUS: pending
 :END:
-| Criterion | Challenge | Answer | Evidence |
+| Question | Value | Evidence |
+| Did the task finish? | pending | [[#agent-plan-id][plan evidence]] |
+| Did project scope drift? | pending | [[#agent-plan-id][plan root]] |
+| Are all checklist items done? | pending | [[#agent-plan-id][plan root]] |
+| Is evidence sufficient and replayable? | pending | [[#agent-plan-id-loop][evidence loop]] |
+| Is the plan archive-ready? | pending | [[#agent-plan-id][plan root]] |
 |-----------+-----------+--------+----------|
 | Redundancy | Does this plan repeat information that belongs in a governing spec, skill, or contract? | pending | pending |
 | Scope | Is any item outside the current bounded objective? | pending | pending |
