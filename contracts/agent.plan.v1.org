@@ -34,12 +34,27 @@ contracts such as =agent.prd.v1=, =agent.bdd.v1=, =agent.adr.v1=, =agent.sdd.v1=
 
 A Plan may link to governing specifications when they are relevant. Agents decide whether SDD, BDD, TDD, or BDR applies before writing the plan, but unused specification families must be omitted instead of recorded as placeholder =none= rows or properties.
 ** Specification Choice Reasoning
-Use this contract-owned reasoning window before creating or updating a Plan:
-- SDD :: software design description for architecture, boundaries, invariants, integration, migration, or design drift.
-- BDD :: behavior-driven development record for user-visible behavior, actors, scenarios, and acceptance evidence.
-- TDD :: test-driven development record for test-first work, regression protection, failing tests, passing evidence, or executable test contracts.
-- BDR :: Business Development Representative record for account/prospect qualification, outreach hypotheses, business-development workflow, or handoff evidence.
-Select only the records that materially govern the task. Add concise references to the plan for selected records only; do not add skip rows, =none= properties, or acronym explanations that are not needed by the task.
+Use this contract-owned choice window before creating or updating a Plan. The
+choice is transient: select one specification or ask for details, then render
+only the plan content and references that are materially needed by the task.
+
+#+BEGIN_SRC org-contract :type agent-interactive
+id: specification
+method: choice
+stage: pre-capture
+group: SPEC
+create: deferred
+target: agent.plan.v1
+info: Select one specification if you already know the terms. If not, choose ? to expand details before selecting.
+categories: 1=SDD,2=BDD,3=TDD,4=BDR,5=TASK,?=detail
+details:
+|n|id|contract|full|use-if|
+|1|SDD|agent.sdd.v1|Specification-Driven Development|scope/design/API/schema boundary changes|
+|2|BDD|agent.bdd.v1|Behavior-Driven Development|behavior/scenario/acceptance unclear|
+|3|TDD|agent.tdd.v1|Test-Driven Development|failing test/regression gate drives work|
+|4|BDR|agent.bdr.v1|Business Development Representative|market/customer/revenue/outreach hypothesis|
+|5|TASK||Task Plan|plain checklist/reflection is enough|
+#+END_SRC
 ** Filename And Placement
 
 Plan files must live under =artifacts/org/flow/plans/= or a project-local

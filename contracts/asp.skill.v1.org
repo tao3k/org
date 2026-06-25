@@ -10,12 +10,11 @@
 This contract validates ASP Org-specific requirements for an Org skill subtree.
 Pair it with =skill.v1= by listing both contracts as =CONTRACT_ORG= properties
 on the same subtree. Shared skill quality belongs in =skill.v1=; this contract
-adds only semantic-AST query boundaries, ASP contract/template resources, and
+adds only semantic-AST query boundaries, command surfaces, state paths, and
 recovery behavior.
 
 The intended output is an ASP Org skill with:
 - state workflow steps driven by =asp org= query/trace output;
-- progressive-disclosure links to contracts and templates;
 - validation checks and pressure-scenario guidance;
 - adversarial review criteria for model-audited quality;
 - provider-boundary rules that prevent SDD, Wendao, or client planning labels
@@ -124,45 +123,6 @@ ASP Org skills must expose contract validation through asp org contract trace.
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose the simplified task capture command through =asp org capture --contract agent.task.v1 --title <TITLE> --target-file <ORG_FILE>= and leave task kind, tag, and scaffold defaults to the contract-aware wrapper.
 #+END_SRC
-** skill-has-progressive-disclosure
-:PROPERTIES:
-:ASSERT_ID: skill-has-progressive-disclosure
-:SEVERITY: error
-:END:
-#+BEGIN_SRC org-contract
-(assert exists
-  (headline :descendant-of $scope :summary-contains (title "Progressive Disclosure")))
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-ASP Org skills must describe when to read linked contracts, templates, and indexes.
-#+END_SRC
-
-** skill-uses-relative-contract-reference
-:PROPERTIES:
-:ASSERT_ID: skill-uses-relative-contract-reference
-:SEVERITY: error
-:END:
-#+BEGIN_SRC org-contract
-(assert exists
-  (link :descendant-of $scope :summary-contains (path "../contracts/")))
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-ASP skill contract references must use sibling-relative paths such as ../contracts/name.org.
-#+END_SRC
-
-** skill-uses-relative-template-reference
-:PROPERTIES:
-:ASSERT_ID: skill-uses-relative-template-reference
-:SEVERITY: error
-:END:
-#+BEGIN_SRC org-contract
-(assert exists
-  (link :descendant-of $scope :summary-contains (path "../templates/")))
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-ASP skill template references must use sibling-relative paths such as ../templates/name.org.
-#+END_SRC
-
 ** skill-has-provider-boundary-rule
 :PROPERTIES:
 :ASSERT_ID: skill-has-provider-boundary-rule
@@ -174,47 +134,6 @@ ASP skill template references must use sibling-relative paths such as ../templat
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skill rules must explicitly preserve the semantic AST provider boundary.
-#+END_SRC
-
-** skill-links-adversarial-review-contract
-:PROPERTIES:
-:ASSERT_ID: skill-links-adversarial-review-contract
-:SEVERITY: error
-:END:
-#+BEGIN_SRC org-contract
-(assert exists
-  (link :descendant-of $scope :summary-contains (path "../contracts/agent.adversarial-review.v1.org")))
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-ASP skill files must link the adversarial review receipt contract.
-#+END_SRC
-
-** skill-links-reflection-answer-contract
-:PROPERTIES:
-:ASSERT_ID: skill-links-reflection-answer-contract
-:SEVERITY: error
-:END:
-#+BEGIN_SRC org-contract
-(assert exists
-  (link :descendant-of $scope :summary-contains (path "../contracts/agent.reflection-answers.v1.org")))
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-ASP skill files must link the reflection answer table contract.
-#+END_SRC
-
-** skill-links-evidence-loop-contract
-:PROPERTIES:
-:ASSERT_ID: skill-links-evidence-loop-contract
-:SEVERITY: error
-:END:
-
-#+BEGIN_SRC org-contract
-(assert exists
-  (link :descendant-of $scope :summary-contains (path "../contracts/agent.evidence-loop.v1.org")))
-#+END_SRC
-
-#+BEGIN_SRC jinja2 :name message
-ASP skill files must link the evidence loop receipt contract.
 #+END_SRC
 
 ** skill-adversarial-checks-evidence-loop

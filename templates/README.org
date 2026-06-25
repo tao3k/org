@@ -42,6 +42,27 @@ the change summary.
 
 Skill template filenames use the skill filename contract: uppercase stem and =_SKILL.org= suffix under =languages/org/templates=.
 
+** Basic Template Metadata
+:PROPERTIES:
+:TEMPLATE_ID: basic.template.v1
+:TEMPLATE_KIND: base
+:TEMPLATE_FILE: basic.template.v1.org
+:TEMPLATE_CONTRACT: basic.template.v1
+:END:
+
+- Template: [[basic.template.v1.org][basic.template.v1.org]]
+- Contract: [[../contracts/basic.template.v1.org][basic.template.v1]]
+- Example: [[../contracts/examples/basic.template.v1.example.org][basic.template.v1.example.org]]
+- Multi-contract Example: [[../contracts/examples/basic.template.v1.with-task.example.org][basic.template.v1.with-task.example.org]]
+
+Use this template when an Org document needs reusable document metadata before
+it is combined with a purpose-specific contract. The paired contract verifies
+=#+TITLE=, =#+DATE=, =#+AUTHOR=, =#+FILETAGS=, document-level =#+PROPERTY=
+metadata, and =#+CONTRACT_ORG=. The template date value uses a
+seconds-precision timestamp shape such as =2026-06-24T12:34:56Z=. Orgize can
+evaluate multiple =#+CONTRACT_ORG= declarations, so another contract can be
+added only when the document actually needs that contract's semantics.
+
 ** Plan
 :PROPERTIES:
 :TEMPLATE_ID: agent.plan.v1

@@ -9,32 +9,6 @@
 Use this skill when the task depends on durable Org planning state, Org contracts, Org templates, TODO headlines, checklist items, property drawers, planning timestamps, links, or source blocks that should be queried through =asp org=.
 
 Do not use this skill when the task is generic Markdown authoring, free-form chat planning, or client-local todo management that does not need Org AST facts or Org contract validation.
-** Progressive Disclosure
-Keep this skill body as the operational index. Read linked resources only when the state workflow reaches them:
-- Skill contract: [[../contracts/skill.v1.org][skill.v1]]
-- ASP Org Skill contract: [[../contracts/asp.skill.v1.org][asp.skill.v1]]
-- Adversarial review receipt: [[../contracts/agent.adversarial-review.v1.org][agent.adversarial-review.v1]]
-- Reflection answer table: [[../contracts/agent.reflection-answers.v1.org][agent.reflection-answers.v1]]
-- Evidence loop receipt: [[../contracts/agent.evidence-loop.v1.org][agent.evidence-loop.v1]]
-- Plan contract: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
-- Plan template: [[../templates/agent.plan.v1.org][agent.plan.v1.org]]
-- Exec plan contract: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
-- Exec plan template: [[../templates/agent.execplan.v1.org][agent.execplan.v1.org]]
-- SpecFlow contract: [[../contracts/agent.spec-flow.v1.org][agent.spec-flow.v1]]
-- SpecFlow template: [[../templates/agent.spec-flow.v1.org][agent.spec-flow.v1.org]]
-- SDD contract: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
-- SDD template: [[../templates/agent.sdd.v1.org][agent.sdd.v1.org]]
-- ADR contract: [[../contracts/agent.adr.v1.org][agent.adr.v1]]
-- ADR template: [[../templates/agent.adr.v1.org][agent.adr.v1.org]]
-- BDD contract: [[../contracts/agent.bdd.v1.org][agent.bdd.v1]]
-- BDD template: [[../templates/agent.bdd.v1.org][agent.bdd.v1.org]]
-- TDD contract: [[../contracts/agent.tdd.v1.org][agent.tdd.v1]]
-- TDD template: [[../templates/agent.tdd.v1.org][agent.tdd.v1.org]]
-- BDR contract: [[../contracts/agent.bdr.v1.org][agent.bdr.v1]]
-- BDR template: [[../templates/agent.bdr.v1.org][agent.bdr.v1.org]]
-- PRD contract: [[../contracts/agent.prd.v1.org][agent.prd.v1]]
-- PRD template: [[../templates/agent.prd.v1.org][agent.prd.v1.org]]
-- Template index: [[../templates/README.org][templates README]]
 ** State Workflow
 ASP materializes the Org resource tree when project runtime state is installed or synchronized. Start by resolving the writable artifact root, then ask the provider what Org facts exist and let the result shape the next action. The provider exposes asp org query for semantic AST facts. The provider exposes asp org contract trace for contract validation.
 

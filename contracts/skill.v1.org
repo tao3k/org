@@ -9,9 +9,8 @@
 ** What This Produces
 This contract validates the shared shape for Org-backed skill subtrees.
 It treats Org as a stronger skill medium than Markdown: machine-readable
-properties carry activation metadata, headings carry workflow phases, links
-carry progressive-disclosure resources, and source blocks carry replayable
-commands.
+properties carry activation metadata, headings carry workflow phases, and source
+blocks carry replayable commands.
 
 Apply this contract directly to any Org skill subtree with a =CONTRACT_ORG=
 property. Product- or provider-specific skill contracts should be listed as
@@ -22,12 +21,10 @@ The shared skill contract requires:
 - identity metadata that can be indexed before loading the full body;
 - explicit use and non-use boundaries;
 - a state-oriented workflow rather than a prose-only description;
-- progressive-disclosure links to resources outside the skill body;
 - validation or pressure-test guidance;
 - adversarial review criteria for content quality that cannot be fully checked
   by structural assertions;
-- provider-owned commands in shell source blocks;
-- package-relative links, never install-root placeholders or repo-root paths.
+- provider-owned commands in shell source blocks.
 
 ** skill-has-root-heading
 :PROPERTIES:
@@ -147,32 +144,6 @@ Skill subtrees must include a State Workflow section that maps query results to 
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 Skill subtrees must include rules that state boundaries and forbidden shortcuts.
-#+END_SRC
-
-** skill-has-progressive-disclosure
-:PROPERTIES:
-:ASSERT_ID: skill.has-progressive-disclosure
-:SEVERITY: error
-:END:
-#+BEGIN_SRC org-contract
-(assert exists
-  (headline :descendant-of $scope :summary-contains (title "Progressive Disclosure")))
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-Skill subtrees must include Progressive Disclosure guidance for linked contracts, templates, references, or assets.
-#+END_SRC
-
-** skill-has-resource-link
-:PROPERTIES:
-:ASSERT_ID: skill.has-resource-link
-:SEVERITY: error
-:END:
-#+BEGIN_SRC org-contract
-(assert exists
-  (link :descendant-of $scope :summary-contains (path "../")))
-#+END_SRC
-#+BEGIN_SRC jinja2 :name message
-Skill subtrees must link package-relative resources instead of embedding every detail inline.
 #+END_SRC
 
 ** skill-has-validation-section
