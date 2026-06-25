@@ -1,9 +1,20 @@
+#+TITLE: <PLAN_TITLE>
+#+DATE: <YYYY-MM-DDTHH:MM:SSZ>
+#+AUTHOR: <AUTHOR>
+#+FILETAGS: :agent:plan:scope_generic_task:
+#+PROPERTY: TEMPLATE_ID agent.plan.v1
+#+PROPERTY: TEMPLATE_KIND plan
+#+PROPERTY: TEMPLATE_CONTRACT agent.plan.v1
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
+:END:
+
 * TODO <PLAN_TITLE> [1/7] [14%] :agent:plan:
 :PROPERTIES:
 :TEMPLATE_ID: agent.plan.v1
 :TEMPLATE_KIND: plan
 :TEMPLATE_CONTRACT: agent.plan.v1
-:CONTRACT_ORG: [[../contracts/agent.plan.v1.org][agent.plan.v1]]
 :ID: agent-plan-id
 :OBJECTIVE: durable outcome this plan records
 :SCOPE_REF: stable work boundary or design reference

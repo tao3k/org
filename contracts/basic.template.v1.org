@@ -99,10 +99,8 @@ Basic templates must include document-level #+PROPERTY metadata.
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
-  (and
-    (keyword :context "metadata")
-    (= (summary key) "CONTRACT_ORG")))
+  (node-property :summary (key "CONTRACT_ORG")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-Basic templates must declare #+CONTRACT_ORG so they can be combined with other Org contracts.
+Basic templates must declare CONTRACT_ORG in a property drawer so they can be combined with other Org contracts.
 #+END_SRC
