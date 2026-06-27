@@ -1,5 +1,9 @@
 #+TITLE: Agent BDR Contract v1
 
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-bdr-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.bdr.v1

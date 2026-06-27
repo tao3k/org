@@ -1,5 +1,9 @@
 #+TITLE: Agent PRD Contract v1
 
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-prd-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.prd.v1

@@ -1,6 +1,10 @@
 #+TITLE: Contract agent.task.v1
 #+PROPERTY: CONTRACT_LIBRARY marlin.agent.contracts
 
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-task-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.task.v1

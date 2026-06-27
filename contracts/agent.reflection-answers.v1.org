@@ -1,3 +1,7 @@
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-reflection-answers-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.reflection-answers.v1

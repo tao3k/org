@@ -19,12 +19,12 @@ template-map:
           printf '%s -> %s\n' "{{basic_contract}}" "$template"; \
           ;; \
         basic.template.v1.with-task.org) \
-          printf '%s + %s -> %s\n' "{{basic_contract}}" "{{contracts_dir}}/agent.task.v1.org" "$template"; \
+          printf '%s -> %s\n' "{{contracts_dir}}/agent.task.v1.org" "$template"; \
           ;; \
         *) \
           contract="{{contracts_dir}}/$name"; \
           if [[ -f "$contract" ]]; then \
-            printf '%s + %s -> %s\n' "{{basic_contract}}" "$contract" "$template"; \
+            printf '%s -> %s\n' "$contract" "$template"; \
           fi; \
           ;; \
       esac; \
@@ -45,12 +45,12 @@ trace-generated-templates:
           registries=("--org-contract-registry" "{{basic_contract}}") \
           ;; \
         basic.template.v1.with-task.org) \
-          registries=("--org-contract-registry" "{{basic_contract}}" "--org-contract-registry" "{{contracts_dir}}/agent.task.v1.org") \
+          registries=("--org-contract-registry" "{{contracts_dir}}/agent.task.v1.org") \
           ;; \
         *) \
           contract="{{contracts_dir}}/$name"; \
           [[ -f "$contract" ]] || continue; \
-          registries=("--org-contract-registry" "{{basic_contract}}" "--org-contract-registry" "$contract") \
+          registries=("--org-contract-registry" "$contract") \
           ;; \
       esac; \
       printf 'trace %s\n' "$template"; \

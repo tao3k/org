@@ -1,5 +1,9 @@
 #+TITLE: Agent Specification Authoring Flow Contract v1
 
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-spec-flow-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.spec-flow.v1

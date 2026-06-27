@@ -1,6 +1,10 @@
 #+TITLE: Contract agent.memory.v1
 #+PROPERTY: CONTRACT_LIBRARY marlin.agent.contracts
 
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-memory-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.memory.v1

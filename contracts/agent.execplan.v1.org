@@ -1,5 +1,9 @@
 #+TITLE: Agent ExecPlan Contract v1
 
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-execplan-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.execplan.v1

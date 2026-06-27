@@ -1,5 +1,9 @@
 #+TITLE: Agent ADR Contract v1
 
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
 * agent-adr-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.adr.v1
