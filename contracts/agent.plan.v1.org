@@ -112,7 +112,7 @@ understandable after the conversation is gone.
 - Evidence anchors :: Link concrete Org headings, code selectors, command receipts, or artifact paths here.
 - Validation receipts :: Record command, status, and short result for every evaluated check.
 - Missing evidence :: Keep explicit until resolved; do not silently drop unknowns.
-
+  
 *** Evidence Loop
 :PROPERTIES:
 :EVIDENCE_LOOP_ID: agent-plan-id-loop

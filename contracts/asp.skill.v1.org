@@ -167,6 +167,7 @@ Check mechanism clarity: the reader must understand that
 =.cache/agent-semantic-protocol/org= is the managed resource checkout and
 =.cache/agent-semantic-protocol/artifacts/org= is the agent-authored state root.
 
+** Contract Assertions
 *** asp-skill-has-root-heading
 :PROPERTIES:
 :ASSERT_ID: asp.skill.has-root-heading
@@ -287,7 +288,7 @@ Check mechanism clarity: the reader must understand that
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
-  (plain-text :descendant-of $scope :summary-contains (value "artifacts/org")))
+  (verbatim :descendant-of $scope :summary-contains (value "artifacts/org")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must name the agent-authored Org artifacts root under artifacts/org.
@@ -300,7 +301,10 @@ ASP Org skills must name the agent-authored Org artifacts root under artifacts/o
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
-  (plain-text :descendant-of $scope :summary-contains (value "asp paths --get orgArtifacts")))
+  (src-block
+    :descendant-of $scope
+    :language "shell"
+    :summary-contains (value "asp paths --get orgArtifacts")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must show =asp paths --get orgArtifacts= as the canonical command for resolving the agent-authored Org artifacts root.
@@ -326,7 +330,7 @@ ASP Org skills must expose the artifacts/org/flow directory layout for plan, SDD
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
-  (plain-text :descendant-of $scope :summary-contains (value "artifacts/org/archives")))
+  (verbatim :descendant-of $scope :summary-contains (value "artifacts/org/archives")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose the artifacts/org/archives directory for completed, superseded, or inactive agent-authored Org state.
@@ -352,7 +356,10 @@ ASP Org skills must include an Archive lane that queries active Org facts before
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
-  (plain-text :descendant-of $scope :summary-contains (value "asp org query")))
+  (src-block
+    :descendant-of $scope
+    :language "shell"
+    :summary-contains (value "asp org query")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose semantic AST queries through asp org query.
@@ -365,7 +372,10 @@ ASP Org skills must expose semantic AST queries through asp org query.
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
-  (plain-text :descendant-of $scope :summary-contains (value "asp org contract trace")))
+  (src-block
+    :descendant-of $scope
+    :language "shell"
+    :summary-contains (value "asp org contract trace")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose contract validation through asp org contract trace.
