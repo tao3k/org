@@ -1,12 +1,18 @@
 #+TITLE: BDR Title
-#+CONTRACT_ORG: agent.bdr.v1
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:bdr:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.bdr.v1.org][agent.bdr.v1]]
+:END:
 
 * BDR: Business Development Representative Workflow Title
 :PROPERTIES:
 :TEMPLATE_ID: agent.bdr.v1
 :TEMPLATE_KIND: bdr
 :TEMPLATE_CONTRACT: agent.bdr.v1
-:CONTRACT_ORG: [[../contracts/agent.bdr.v1.org][agent.bdr.v1]]
 :BDR_ID: bdr-id
 :BDR_STATUS: draft
 :BDR_OWNER: business development representative

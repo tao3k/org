@@ -1,12 +1,18 @@
 #+TITLE: ADR Title
-#+CONTRACT_ORG: agent.adr.v1
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:adr:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.adr.v1.org][agent.adr.v1]]
+:END:
 
 * ADR: Decision Title
 :PROPERTIES:
 :TEMPLATE_ID: agent.adr.v1
 :TEMPLATE_KIND: adr
 :TEMPLATE_CONTRACT: agent.adr.v1
-:CONTRACT_ORG: [[../contracts/agent.adr.v1.org][agent.adr.v1]]
 :ADR_ID: adr-id
 :ADR_STATUS: proposed
 :GOVERNING_REF: none

@@ -1,4 +1,12 @@
-#+CONTRACT_ORG: agent.adversarial-review.v1
+#+TITLE: Adversarial Review Template
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:adversarial_review:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.adversarial-review.v1.org][agent.adversarial-review.v1]]
+:END:
 
 * Adversarial Review
 :PROPERTIES:

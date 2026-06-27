@@ -1,12 +1,18 @@
 #+TITLE: PRD Title
-#+CONTRACT_ORG: agent.prd.v1
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:prd:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.prd.v1.org][agent.prd.v1]]
+:END:
 
 * PRD: Product Requirement Title
 :PROPERTIES:
 :TEMPLATE_ID: agent.prd.v1
 :TEMPLATE_KIND: prd
 :TEMPLATE_CONTRACT: agent.prd.v1
-:CONTRACT_ORG: [[../contracts/agent.prd.v1.org][agent.prd.v1]]
 :PRD_ID: prd-id
 :PRD_STATUS: draft
 :PRODUCT_AREA: product-area

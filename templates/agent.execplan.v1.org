@@ -1,12 +1,18 @@
 #+TITLE: ExecPlan Title
-#+CONTRACT_ORG: agent.execplan.v1
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:execplan:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
+:END:
 
 * TODO ExecPlan Title :execplan:
 :PROPERTIES:
 :TEMPLATE_ID: agent.execplan.v1
 :TEMPLATE_KIND: execplan
 :TEMPLATE_CONTRACT: agent.execplan.v1
-:CONTRACT_ORG: [[../contracts/agent.execplan.v1.org][agent.execplan.v1]]
 :EXECPLAN_ID: execplan-id
 :OBJECTIVE: durable outcome this execution plan coordinates
 :SCOPE_REF: stable work boundary or design reference

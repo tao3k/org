@@ -10,7 +10,7 @@
 
 ** Example
 
-See =org/contracts/examples/agent.task.v1.example.org= for the concrete task
+See =org/templates/agent.task.v1.org= for the audited template
 shape this contract accepts.
 
 ** task-has-workflow-state

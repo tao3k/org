@@ -1,3 +1,11 @@
+#+TITLE: Agent Task Template
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:task:
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:END:
+
 * TODO Task Title :task:
 :PROPERTIES:
 :TEMPLATE_ID: agent.task.v1

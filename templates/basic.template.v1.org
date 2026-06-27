@@ -1,13 +1,10 @@
-#+TITLE: <DOCUMENT_TITLE>
-#+DATE: <YYYY-MM-DDTHH:MM:SSZ>
-#+AUTHOR: <AUTHOR>
-#+FILETAGS: :<SCOPE_TAG>:
-#+CONTRACT_ORG: basic.template.v1
-#+PROPERTY: TEMPLATE_ID basic.template.v1
-#+PROPERTY: TEMPLATE_KIND base
-#+PROPERTY: CREATED_AT <YYYY-MM-DDTHH:MM:SSZ>
-#+PROPERTY: SOURCE_REF <SOURCE_REF>
+#+TITLE: Basic Template
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:END:
 
 * <DOCUMENT_TITLE>
-Record document-specific content here, or combine this metadata block with a
-purpose-specific template by adding another =#+CONTRACT_ORG:= keyword.
+Record document-specific content here, or combine this metadata block with a purpose-specific template by adding another subtree =CONTRACT_ORG= property.

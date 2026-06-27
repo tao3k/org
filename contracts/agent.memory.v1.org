@@ -29,8 +29,8 @@ candidate frontier quickly, while the graph layer applies project, session,
 content, evidence, trust, retention, backlink, salience, and validation facts to
 return only a compact context pack.
 
-See =org/contracts/examples/agent.memory.v1.example.org= for the concrete
-memory candidate shape this contract accepts.
+See =org/templates/agent.memory.v1.org= for the audited template
+shape this contract accepts.
 
 ** memory-has-id-property
 :PROPERTIES:

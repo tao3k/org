@@ -1,13 +1,18 @@
 #+TITLE: agent.sdd.v1 template
-#+FILETAGS: :asp:template:
-#+CONTRACT_ORG: agent.sdd.v1
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:sdd:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
+:END:
 
 * System SDD Title :sdd:system:
 :PROPERTIES:
 :TEMPLATE_ID: agent.sdd.v1
 :TEMPLATE_KIND: sdd
 :TEMPLATE_CONTRACT: agent.sdd.v1
-:CONTRACT_ORG: [[../contracts/agent.sdd.v1.org][agent.sdd.v1]]
 :ID: 00000000-0000-7000-8000-000000000101
 :SDD_KIND: system
 :SDD_STATUS: draft

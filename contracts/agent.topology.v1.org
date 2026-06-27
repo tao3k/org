@@ -25,8 +25,8 @@ Topology is the route map. Detailed content, claims, source spans, and session
 records remain in the Org memory/session contracts and are reached through the
 source anchor.
 
-See =org/contracts/examples/agent.topology.v1.example.org= for the concrete
-topology shape this contract accepts.
+See =org/templates/agent.topology.v1.org= for the audited template
+shape this contract accepts.
 
 ** topology-has-id-property
 :PROPERTIES:

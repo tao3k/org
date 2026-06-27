@@ -1,8 +1,12 @@
 #+TITLE: Example - Agent Loop Contract v1
 
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:END:
+
 * Agent Loop Contract Example :agent:loop:contract:
 :PROPERTIES:
-:CONTRACT_ORG: [[../agent.loop.v1.org][agent.loop.v1]]
+:CONTRACT_ORG: [[../contracts/agent.loop.v1.org][agent.loop.v1]]
 :ID: agent-loop-contract-example-20260615
 :END:
 

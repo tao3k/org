@@ -1,12 +1,18 @@
 #+TITLE: Feature Title
-#+CONTRACT_ORG: agent.bdd.v1
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:bdd:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.bdd.v1.org][agent.bdd.v1]]
+:END:
 
 * Feature: Behavior Title
 :PROPERTIES:
 :TEMPLATE_ID: agent.bdd.v1
 :TEMPLATE_KIND: bdd
 :TEMPLATE_CONTRACT: agent.bdd.v1
-:CONTRACT_ORG: [[../contracts/agent.bdd.v1.org][agent.bdd.v1]]
 :BDD_ID: bdd-id
 :BDD_STATUS: draft
 :BDD_ACTOR: primary actor

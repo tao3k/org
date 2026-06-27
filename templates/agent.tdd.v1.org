@@ -1,12 +1,18 @@
 #+TITLE: TDD Title
-#+CONTRACT_ORG: agent.tdd.v1
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:tdd:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../contracts/agent.tdd.v1.org][agent.tdd.v1]]
+:END:
 
 * TDD: Test Design Title
 :PROPERTIES:
 :TEMPLATE_ID: agent.tdd.v1
 :TEMPLATE_KIND: tdd
 :TEMPLATE_CONTRACT: agent.tdd.v1
-:CONTRACT_ORG: [[../contracts/agent.tdd.v1.org][agent.tdd.v1]]
 :TDD_ID: tdd-id
 :TDD_STATUS: draft
 :TEST_SCOPE: target behavior or module

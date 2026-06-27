@@ -10,7 +10,7 @@
 
 ** Example
 
-See =org/contracts/examples/agent.loop.v1.example.org= for the concrete loop
+See =org/templates/agent.loop.v1.org= for the audited template
 shape this contract accepts.
 
 ** loop-has-graph

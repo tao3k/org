@@ -1,0 +1,17 @@
+#+TITLE: Reflection Answers Template
+#+DATE: 2026-06-24T12:34:56Z
+#+AUTHOR: Agent Semantic Protocol
+#+FILETAGS: :agent:org:template:reflection:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/basic.template.v1.org][basic.template.v1]]
+:END:
+
+* Reflection Questions
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/agent.reflection-answers.v1.org][agent.reflection-answers.v1]]
+:END:
+
+| Question | Value |
+|----------+-------|
+| What should the next agent remember? | The provider must expose table Value cells so contracts can reject missing reflection answers. |
