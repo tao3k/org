@@ -58,6 +58,8 @@ details:
 #+END_SRC
 ** TODO <PLAN_TITLE> [1/7] [14%] :agent:plan:
 :PROPERTIES:
+:SESSION_ID: {{SESSION_ID}}
+:SESSION_CLIENT: {{SESSION_CLIENT}}
 :TEMPLATE_ID: agent.plan.v1
 :TEMPLATE_KIND: plan
 :TEMPLATE_CONTRACT: agent.plan.v1
