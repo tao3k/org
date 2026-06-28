@@ -148,8 +148,8 @@ contract: agent.plan.v1
 status: active
 next-action: continue-from-next-checkpoint
 session-recall: asp org recall plans
-session-locator: SESSION_ID=$SESSION_ID CWD=$PWD
-source-locator: CWD=$PWD PLAN_ID=agent-plan-id TASK_SOURCE=recovery
+session-locator: SESSION_ID=<agent-session-id>
+source-locator: PLAN_ID=agent-plan-id TASK_KIND=recovery TASK_SOURCE_LINE=<line>
 archive-target: resolved-by-asp-org-archive-defaults
 #+end_src
 
