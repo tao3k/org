@@ -147,8 +147,10 @@ recovery-ref: PLAN_ID=agent-plan-id
 contract: agent.plan.v1
 status: active
 next-action: continue-from-next-checkpoint
-resume-query: asp org query <PLAN_FILE> agent-plan-id recovery evidence next-action
-archive-target: artifacts/org/flow/plans/archive/agent-plan-id.org
+session-recall: asp org recall plans
+session-locator: SESSION_ID=$SESSION_ID CWD=$PWD
+source-locator: CWD=$PWD PLAN_ID=agent-plan-id TASK_SOURCE=recovery
+archive-target: resolved-by-asp-org-archive-defaults
 #+end_src
 
 ** Contract Assertions

@@ -45,8 +45,12 @@ provider what Org facts exist and let the result shape the next action. The
 provider exposes =asp org query= for semantic AST facts. The provider exposes
 =asp org contract trace= for contract validation.
 
+Use =asp org recall plans= before creating a new plan so the current agent session can resume related tasks, checklist state, and properties before branching new work.
 #+begin_src shell
 asp paths --get orgArtifacts
+ORG_ARTIFACTS="$(asp paths --get orgArtifacts)"
+asp org recall plans --artifacts-root "$ORG_ARTIFACTS" --archive-dir archives
+asp org recall plans --artifacts-root "$ORG_ARTIFACTS" --archive-dir archives --checkpoint-sync
 asp org guide
 asp org query --kind task --field todo=TODO --workspace . --view metadata
 asp org query --kind checklistItem --field checked=false --workspace . --view metadata
@@ -82,6 +86,7 @@ and =artifacts/org/flow/bdr=.
 
 Archive lane:
 - Resolve the writable artifact root with =asp paths --get orgArtifacts= before archiving from a non-root working directory.
+- Before creating a new plan or task branch, recall candidate plans for the current agent session with =asp org recall plans=. Supported current-session envs are =CODEX_THREAD_ID=, =CLAUDE_CODE_SESSION_ID=, and =CLAUDE_CODE_REMOTE_SESSION_ID=; the active agent platform is expected to expose one non-empty value. There is no generic =AGENT_SESSION_ID= or =SESSION_ID= fallback. Use explicit =--session= only for cross-session lookup. Recall output is the reasoning tree entry point: ranked plans expose task candidates, checklist state, properties, and =resumeCommand= so the agent can choose a related branch instead of starting from a blank plan. Ordinary recall is read-only; add =--checkpoint-sync= only when you intend to persist a durable checkpoint into the SQLite-backed memory index.
 - Query active Org facts first, such as =asp org query --kind task --field todo=DONE --workspace . --view metadata=, then inspect the returned selector before moving content.
 - Preserve active layout under =archives= when possible.
 - Add archive metadata such as =ARCHIVED_FROM= and =ARCHIVE_REASON= on the destination record instead of encoding archive status as a hidden search/query side effect.
@@ -408,6 +413,50 @@ ASP Org skills must include an Archive lane that queries active Org facts before
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
 ASP Org skills must expose semantic AST queries through asp org query.
+#+END_SRC
+
+*** asp-skill-has-memory-recall-command
+:PROPERTIES:
+:ASSERT_ID: asp-skill-has-memory-recall-command
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (src-block
+    :descendant-of $scope
+    :language "shell"
+    :summary-contains (value "asp org recall plans")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must expose session-scoped plan recall through asp org recall plans before new state is created.
+#+END_SRC
+
+*** asp-skill-has-memory-checkpoint-sync-command
+:PROPERTIES:
+:ASSERT_ID: asp-skill-has-memory-checkpoint-sync-command
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (src-block
+    :descendant-of $scope
+    :language "shell"
+    :summary-contains (value "--checkpoint-sync")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must expose explicit durable checkpoint sync through --checkpoint-sync.
+#+END_SRC
+
+*** asp-skill-has-platform-session-recall-guidance
+:PROPERTIES:
+:ASSERT_ID: asp-skill-has-platform-session-recall-guidance
+:END:
+#+BEGIN_SRC org-contract
+(assert exists
+  (plain-text
+    :descendant-of $scope
+    :summary-contains (value "CODEX_THREAD_ID")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+ASP Org skills must document platform-owned session detection for recall, including CODEX_THREAD_ID.
 #+END_SRC
 
 *** skill-has-contract-trace-command
