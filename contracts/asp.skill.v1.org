@@ -49,8 +49,8 @@ Use =asp org recall plans= before creating a new plan so the current agent sessi
 #+begin_src shell
 asp paths --get orgArtifacts
 ORG_ARTIFACTS="$(asp paths --get orgArtifacts)"
-asp org recall plans --artifacts-root "$ORG_ARTIFACTS" --archive-dir archives
-asp org recall plans --artifacts-root "$ORG_ARTIFACTS" --archive-dir archives --checkpoint-sync
+asp org recall plans
+asp org recall plans --checkpoint-sync
 asp org guide
 asp org query --kind task --field todo=TODO --workspace . --view metadata
 asp org query --kind checklistItem --field checked=false --workspace . --view metadata
@@ -86,7 +86,7 @@ and =artifacts/org/flow/bdr=.
 
 Archive lane:
 - Resolve the writable artifact root with =asp paths --get orgArtifacts= before archiving from a non-root working directory.
-- Before creating a new plan or task branch, recall candidate plans for the current agent session with =asp org recall plans=. Supported current-session envs are =CODEX_THREAD_ID=, =CLAUDE_CODE_SESSION_ID=, and =CLAUDE_CODE_REMOTE_SESSION_ID=; the active agent platform is expected to expose one non-empty value. There is no generic =AGENT_SESSION_ID= or =SESSION_ID= fallback. Use explicit =--session= only for cross-session lookup. Recall output is the reasoning tree entry point: text output starts with compact =|next=, =|why=, =|query=, =|evidence=, and =|candidate= rows. The =|why= row is the memory/graph selection receipt: session match, selected sources, task hits, checkpoint hits, alternatives, and memory transport. The executable resume surface is the single =|query= row, normally =asp org query <agent-plan-id> recovery evidence next-action=. JSON keeps full scores and per-plan =selectionReceipt= for tooling. Ordinary recall is read-only; add =--checkpoint-sync= only when you intend to persist a durable checkpoint into the SQLite-backed memory index.
+- Before creating a new plan or task branch, recall candidate plans for the current agent session with =asp org recall plans=. Supported current-session envs are =CODEX_THREAD_ID=, =CLAUDE_CODE_SESSION_ID=, and =CLAUDE_CODE_REMOTE_SESSION_ID=; the active agent platform is expected to expose one non-empty value. There is no generic =AGENT_SESSION_ID= or =SESSION_ID= fallback. Use explicit =--session= only for cross-session lookup. Codex subagents have their own =CODEX_THREAD_ID=, so parent prompts must pass the root session explicitly or set =ASP_ROOT_SESSION_ID= before child recall. Keep =SESSION_ID= as the root/main task session in Org properties, and record branch edges with =ROOT_SESSION_ID=, =PARENT_SESSION_ID=, =CHILD_SESSION_ID=, or =SUBAGENT_SESSION_ID= when a plan spans child agent threads. Recall output is the reasoning tree entry point: text output starts with compact =|next=, =|why=, =|query=, =|evidence=, and =|candidate= rows. The =|why= row is the memory/graph selection receipt: session match, selected sources, task hits, checkpoint hits, alternatives, and memory transport. The executable resume surface is the single =|query= row, normally =asp org query <agent-plan-id> recovery evidence next-action=. JSON keeps full scores and per-plan =selectionReceipt= for tooling. Ordinary recall is read-only; add =--checkpoint-sync= only when you intend to persist a durable checkpoint into the SQLite-backed memory index.
 - Query active Org facts first, such as =asp org query --kind task --field todo=DONE --workspace . --view metadata=, then inspect the returned selector before moving content.
 - Preserve active layout under =archives= when possible.
 - Add archive metadata such as =ARCHIVED_FROM= and =ARCHIVE_REASON= on the destination record instead of encoding archive status as a hidden search/query side effect.
