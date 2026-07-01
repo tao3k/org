@@ -1,0 +1,229 @@
+#+TITLE: ASP TaskFrame Archive Scenario
+#+DATE: 2026-07-01T00:00:00Z
+#+AUTHOR: agent-semantic-protocols
+#+FILETAGS: :asp:scenario:archive:artifact-lattice:task-frame:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:SCENARIO_ID: asp.task-frame-archive.scenario.v1
+:SCENARIO_KIND: archive-flow
+:FEATURE_SCOPE: asp-task-frame-archive
+:STATUS: draft
+:END:
+
+* ASP TaskFrame Archive Scenario
+
+** What This Reproduces
+
+This scenario defines how a completed, suspended, superseded, or handed-off ASP
+task keeps its useful evidence without preserving noisy transient context. It
+connects Org-readable archives with JSON packets so humans, agents, Python graph
+analysis, and Julia research notebooks can inspect the same task history.
+
+The archive is not a memory dump. It is a compact task-local evidence boundary:
+
+- stable facts can be promoted into project evidence
+- volatile dirty-overlay evidence expires with the task frame
+- observations preserve why the model changed course
+- promoted facts feed future search ranking, topology jumps, and policy
+  selection
+
+** Scenario Contract
+
+#+BEGIN_SRC org-contract :type agent-interactive
+id: asp-task-frame-archive
+version: 1
+method: choice
+stage: archive
+group: ASP_ARCHIVE
+target: agent.semantic-protocols.task-frame-archive
+create: explicit
+info: Reproduce the TaskFrame archive boundary with Org reviewability and JSON-backed graph analysis.
+categories: 1=COMPLETE,2=SUSPEND,3=SUPERSEDE,4=HANDOFF,5=PROMOTE,?=DETAIL
+details:
+| key | archive-state | contract | full | use-if |
+| 1 | completed | retain chosen plan, edit groups, observations, and promoted facts | A completed task must explain what changed, which evidence supported it, and which facts are reusable. | task succeeded |
+| 2 | suspended | retain current evidence state and next action | A suspended task must be resumable without replaying all search commands. | waiting for user/external state |
+| 3 | superseded | retain replacement reason and stale evidence boundary | A superseded task must record why a newer task frame replaces it. | intent shifted |
+| 4 | handoff | retain enough context for another agent to continue | A handoff archive must include feature topology, selectors, risks, and next commands. | task moves to another session/agent |
+| 5 | promote | move stable facts into project evidence store | Promotion requires confidence, source ids, and expiration rules. | fact is reusable beyond the task |
+| ? | detail | reveal full linked packets by id | The archive render stays compact; large data is addressed through artifact ids. | deeper audit requested |
+#+END_SRC
+
+** Archive Shape
+
+The Org archive is the human and agent-facing surface. The JSON packet is the
+machine contract used by graph analysis, state replay, and future ranking.
+
+#+BEGIN_SRC org
+* TaskFrame task-2026-07-01-search-stage-receipt
+:PROPERTIES:
+:TASK_FRAME_ID: task-2026-07-01-search-stage-receipt
+:INTENT_ID: intent-search-receipt
+:PROJECT_ID: agent-semantic-protocols
+:FEATURE_ID: feature-search-stage-receipt
+:STATUS: completed
+:SCHEMA_ID: agent.semantic-protocols.task-frame-archive
+:SCHEMA_VERSION: 1
+:END:
+
+** WhereFrame
+- target: =feature-search-stage-receipt=
+- selectors:
+  - =schema:semantic-search-stage-receipt.v1=
+  - =rust:SearchStageReceiptWriter=
+  - =test:search-stage-receipt-schema=
+- topology: =topology:search-pipe-stage-receipt:v3=
+
+** HowFrame
+- policy facts:
+  - =policy:rust.schema-writer.compatible-json-envelope=
+  - =policy:rust.async-search-stage.no-blocking-path=
+- scenario facts:
+  - =scenario:source-index-search-pipe-warm-path=
+- prior failures:
+  - =failure:schema-renderer-drift=
+
+** EditGroups
+- group: =schema-and-writer=
+  files: =schemas/semantic-search-stage-receipt.v1.schema.json=, =crates/.../writer.rs=
+  chosen-plan: =extend shared schema before provider implementation=
+  observation: =json tool and unit test passed=
+
+** PromotedFacts
+- =fact:search-stage-receipt-schema-owner= promoted because it is stable across tasks.
+
+** EphemeralEvidence
+- dirty overlay snippets expired after task completion.
+#+END_SRC
+
+** JSON Packet Shape
+
+#+BEGIN_SRC json
+{
+  "schemaId": "agent.semantic-protocols.task-frame-archive",
+  "schemaVersion": 1,
+  "taskFrameId": "task-2026-07-01-search-stage-receipt",
+  "status": "completed",
+  "intentId": "intent-search-receipt",
+  "projectId": "agent-semantic-protocols",
+  "featureId": "feature-search-stage-receipt",
+  "archivedAt": "2026-07-01T00:00:00Z",
+  "whereFrame": {
+    "target": "feature-search-stage-receipt",
+    "selectorIds": [
+      "schema:semantic-search-stage-receipt.v1",
+      "rust:SearchStageReceiptWriter",
+      "test:search-stage-receipt-schema"
+    ],
+    "topologyIds": [
+      "topology:search-pipe-stage-receipt:v3"
+    ],
+    "evidenceGeneration": "overlay-17"
+  },
+  "howFrame": {
+    "policyFactIds": [
+      "policy:rust.schema-writer.compatible-json-envelope",
+      "policy:rust.async-search-stage.no-blocking-path"
+    ],
+    "scenarioIds": [
+      "scenario:source-index-search-pipe-warm-path"
+    ],
+    "priorFailureIds": [
+      "failure:schema-renderer-drift"
+    ]
+  },
+  "editGroups": [
+    {
+      "id": "schema-and-writer",
+      "files": [
+        "schemas/semantic-search-stage-receipt.v1.schema.json",
+        "crates/agent-semantic-search/src/search_stage_receipt.rs"
+      ],
+      "chosenPlan": "extend shared schema before provider implementation",
+      "observationIds": [
+        "obs:json-tool-pass",
+        "obs:unit-test-pass"
+      ]
+    }
+  ],
+  "promotedFacts": [
+    {
+      "id": "fact:search-stage-receipt-schema-owner",
+      "reason": "stable schema ownership fact reusable by later search-stage tasks"
+    }
+  ],
+  "ephemeralEvidence": [
+    {
+      "id": "overlay:dirty-snippet-42",
+      "expiration": "task-complete"
+    }
+  ]
+}
+#+END_SRC
+
+** Promotion Rules
+
+Promoted facts must be:
+
+- stable across task frames
+- tied to selectors or artifact ids, not line numbers
+- backed by observations, snapshots, benchmark receipts, scenario receipts, or
+  prior failure evidence
+- assigned an owner and expiration policy
+
+Facts that only describe a temporary dirty diff, a one-off model hypothesis, or
+an unverified local guess stay inside =ephemeralEvidence=.
+
+** Graph And Research Use
+
+Python can consume the JSON archive as a graph input:
+
+- task frame nodes connect intent, feature, selectors, policy facts, scenarios,
+  observations, and promoted facts
+- topology routing can rank future jumps by successful prior paths
+- failure nodes can be used as negative examples for ranking and policy
+  selection
+
+Julia can consume archive snapshots offline:
+
+- replay many sessions
+- evaluate which topology jumps reduced turns
+- find ranking failures and feed corrected graph features back to Python
+- compare scenario-backed policy selection against generic policy selection
+
+Julia does not own runtime search. It owns algorithm research and evidence
+analysis.
+
+** Prompt Budget Rule
+
+An archive render should give the agent a compact resume surface:
+
+- current status
+- feature topology id
+- selector list
+- policy/scenario facts actually used
+- observations that changed the plan
+- next command or handoff note
+
+Full packet lists and source excerpts stay behind ids.
+
+** Failure Modes
+
+- If archive stores every transient packet without promotion rules, the scenario
+  fails.
+- If stable facts cannot be linked back to source artifacts, the scenario fails.
+- If Org and JSON disagree about task status, the scenario fails.
+- If future ranking cannot tell promoted facts from expired dirty overlay facts,
+  the scenario fails.
+- If the archive is only useful to humans and not to Python/Julia analysis, the
+  scenario fails.
+
+** Validation
+
+- [ ] =asp org lint= accepts this scenario document.
+- [ ] The JSON example validates against =semantic-task-frame-archive.v1= after
+  implementation-specific ids are normalized.
+- [ ] Promotion rules can distinguish stable project facts from task-local
+  evidence.
+- [ ] The archive surface can resume a task without replaying every search.

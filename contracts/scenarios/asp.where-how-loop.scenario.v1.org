@@ -1,0 +1,211 @@
+#+TITLE: ASP Where/How Loop Scenario
+#+DATE: 2026-07-01T00:00:00Z
+#+AUTHOR: agent-semantic-protocols
+#+FILETAGS: :asp:scenario:where-how:policy:evidence-graph:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:SCENARIO_ID: asp.where-how-loop.scenario.v1
+:SCENARIO_KIND: architecture-flow
+:FEATURE_SCOPE: asp-where-how-loop
+:STATUS: draft
+:END:
+
+* ASP Where/How Loop Scenario
+
+** What This Reproduces
+
+This scenario turns the ASP design discussion into an auditable Org contract
+surface. It models the loop that starts from a user intent, decides whether ASP
+should intervene, gathers evidence for where to edit, then exposes policy and
+scenario facts for how to edit.
+
+The key boundary is:
+
+- =WhereFrame= is owned by search, query, EvidenceGraph, GraphRoute, and
+  topology slicing.
+- =HowFrame= is owned by policy facts, scenario facts, benchmark receipts,
+  snapshot facts, and prior failure evidence.
+- =ReflectionGate= prevents a hard-coded hook from checking every edit. It
+  asks whether the current evidence is sufficient for the next edit group.
+
+The goal is not to make the model follow a mechanical checklist. The goal is to
+give a strong model the smallest useful project-specific evidence needed to make
+better decisions with fewer turns.
+
+** Scenario Contract
+
+#+BEGIN_SRC org-contract :type agent-interactive
+id: asp-where-how-loop
+version: 1
+method: choice
+stage: intent-to-edit-loop
+group: ASP_FLOW
+target: asp.where-how-loop.scenario.v1
+create: none
+info: Reproduce the ASP where/how loop with bounded evidence, progressive disclosure, and edit-group reflection.
+categories: 1=UNDERSTAND,2=WHERE,3=HOW,4=REFLECT,5=OBSERVE,6=ARCHIVE,?=DETAIL
+details:
+| key | node | contract | full | use-if |
+| 1 | IntentUnderstanding | classify action, route ASP only when code/doc/project evidence is relevant | User intent is enriched with action, target kind, likely language, project scope, and whether ASP should intervene. | before any search command |
+| 2 | WhereFrame | localize edit targets through EvidenceGraph and topology slice | Search/query must return selectors, owners, dependencies, tests, artifacts, hot paths, and prior failures. Do not use line numbers as identity. | before deciding edit boundary |
+| 3 | HowFrame | expose policy/scenario facts after enough where evidence exists | Policy facts explain how this language/project should be changed, backed by benchmark, snapshot, scenario, or prior failure evidence. | before edit planning |
+| 4 | ReflectionGate | decide whether current evidence is sufficient for an edit group | The agent reflects once per coherent edit group, not once per file edit. It asks whether missing policy, topology, tests, or owner facts could materially change the edit plan. | before write/apply_patch |
+| 5 | Observation | attach parse, test, benchmark, and policy results | Observations update the next loop's topology overlay and ranking priors. | after edit group |
+| 6 | TaskFrameArchive | persist reusable facts and expire dynamic evidence | Stable facts can be promoted; volatile snippets and dirty overlay evidence expire with the task frame. | at suspend, handoff, or completion |
+| ? | Detail | reveal deeper facts only when requested | The default agent surface must stay compact and selector-first; larger evidence is reached by stable ids. | when the model asks for more evidence |
+#+END_SRC
+
+** Flow
+
+#+BEGIN_SRC mermaid
+flowchart TD
+    A["User Intent"] --> B["IntentUnderstanding"]
+    B --> C{"ASP relevant?"}
+    C -- "no" --> Z["Normal model reasoning"]
+    C -- "yes" --> D["WhereFrame"]
+    D --> E["EvidenceGraph slice"]
+    E --> F["FeatureTopologyOverview"]
+    F --> G["HowFrame"]
+    G --> H["Policy + Scenario Facts"]
+    H --> I{"ReflectionGate"}
+    I -- "need more where evidence" --> D
+    I -- "need more how evidence" --> G
+    I -- "sufficient for edit group" --> J["CandidatePlans"]
+    J --> K["ChosenPlan"]
+    K --> L["CodeAction"]
+    L --> M["Observation"]
+    M --> N["Dynamic Topology Overlay"]
+    N --> D
+    M --> O["TaskFrameArchive"]
+#+END_SRC
+
+** IntentUnderstanding Requirements
+
+IntentUnderstanding is a router and evidence shaper, not a replacement for the
+model's reasoning. It must decide:
+
+- whether the user action is code, documentation, architecture discussion,
+  data/artifact analysis, or unrelated natural-language reasoning
+- whether ASP should search, explain, plan, or only provide topology context
+- which project, feature, language, and artifact families are likely relevant
+- whether the current session already contains enough context to jump directly
+  into a later stage
+
+The output should be a compact =IntentFrame= with stable ids and uncertainty,
+not a verbose natural-language restatement.
+
+** WhereFrame Requirements
+
+WhereFrame answers where to inspect or edit. It must be selector-first:
+
+- file, symbol, AST selector, query selector, graph node id, artifact id, and
+  scenario id are valid identities
+- line numbers are presentation hints only and must not be used as durable
+  search identity
+- dirty working-tree evidence lives in a dynamic overlay and can override stale
+  persistent index evidence for the active task
+- stable dependency, owner, topology, and policy evidence can be persisted
+  through Turso-backed state when it has enough reuse value
+
+WhereFrame should expose a small default packet:
+
+#+BEGIN_SRC org
+* WhereFrame L0
+- target: =feature:search-stage-receipt=
+- edit-boundary: =crates/agent-semantic-search=, =schemas/semantic-search-stage-receipt.v1.schema.json=
+- evidence: =selector:SearchStageReceipt=, =artifact:query-stage-flow=, =test:search-stage-receipt-schema=
+- next: =open HowFrame for async pipeline policy and schema compatibility facts=
+#+END_SRC
+
+** HowFrame Requirements
+
+HowFrame answers how to edit the already-localized boundary. It must be
+language-neutral at the contract layer and language-owned at the provider layer:
+
+- Rust, Python, Julia, Gerbil, TypeScript, and future harnesses all emit the
+  same policy fact and recipe envelope
+- provider-specific facts live under provider-owned fields
+- benchmark facts describe measured behavior
+- snapshot facts describe observed project structure
+- scenario facts describe expert-like workflows that were validated by tests,
+  traces, or replay
+- prior failure facts explain historical regressions and the conditions that
+  caused them
+
+HowFrame should not flood the model with all matching policies. It should
+surface only facts that materially affect the current edit group.
+
+#+BEGIN_SRC org
+* HowFrame L0
+- decision: =edit async search stage without adding a blocking scan=
+- supporting-facts:
+  - =policy:rust.async-boundary.no-blocking-search-loop=
+  - =scenario:search-stage-receipt.warm-path=
+  - =benchmark:source-index-search-pipe.warm-path=
+- risk: =schema drift between receipt writer and graph renderer=
+- next: =compare CandidatePlan A/B under this risk=
+#+END_SRC
+
+** ReflectionGate Requirements
+
+ReflectionGate runs at edit-group boundaries. It does not run after every file
+edit. It asks:
+
+- Is the edit boundary coherent, or did the search evidence split into separate
+  features?
+- Is the topology overview current enough for this edit group?
+- Are there missing policy or scenario facts that could change the plan?
+- Are prior failures or resource-pressure facts relevant?
+- Is the next command a search command, a policy/scenario query, or an edit?
+
+If the answer is uncertain but low risk, the model may proceed and attach the
+uncertainty to the observation. If uncertainty can materially change the edit
+shape, the model should request more where or how evidence.
+
+** Artifact Links
+
+Every loop stage should be linkable by ids:
+
+| Field | Purpose |
+| =intentId= | ties the loop to the user request or inferred action |
+| =taskFrameId= | ties multiple turns to the same task-local context |
+| =featureId= | allows feature-scoped topology to survive across turns |
+| =evidenceGeneration= | distinguishes stale persistent facts from fresh overlay facts |
+| =selectorIds= | point to code, symbols, AST/query selectors, or artifacts |
+| =policyFactIds= | point to policy facts used in HowFrame |
+| =scenarioIds= | point to scenario facts used in HowFrame |
+| =observationIds= | point to parse, test, benchmark, and policy results |
+
+** Prompt Budget Rule
+
+The default render must be smaller than the evidence store. The agent should
+receive:
+
+- one compact topology overview
+- a bounded list of selectors
+- the minimum relevant policy/scenario facts
+- one recommended next action
+- links for progressive disclosure
+
+Full JSON, full source slices, and full policy bodies are behind ids unless the
+model requests them.
+
+** Failure Modes
+
+- If line numbers become durable ids, the scenario fails.
+- If HowFrame appears before enough WhereFrame evidence exists, the scenario
+  fails.
+- If every edit triggers a full policy check, the scenario fails.
+- If policy facts describe generic language advice without project evidence,
+  the scenario fails.
+- If topology overlay is only appended after the reasoning tree, candidate plans
+  lose architectural context and the scenario fails.
+
+** Validation
+
+- [ ] =asp org lint= accepts this scenario document.
+- [ ] The scenario can be referenced from the policy/schema RFC.
+- [ ] The default agent surface is compact enough for an LLM turn.
+- [ ] The details table can drive progressive disclosure.
+- [ ] The flow has a loop from observation back into topology and search.
