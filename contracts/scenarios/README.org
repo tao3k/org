@@ -30,13 +30,45 @@ The files here are not generic prose notes. Each scenario should include:
 | [[file:asp.where-how-loop.scenario.v1.org][asp.where-how-loop.scenario.v1]] | Reproduces the IntentUnderstanding, WhereFrame, HowFrame, ReflectionGate, Observation, and TaskFrameArchive loop. |
 | [[file:asp.task-frame-archive.scenario.v1.org][asp.task-frame-archive.scenario.v1]] | Reproduces the Org/JSON archive boundary for reusable task evidence, promotion rules, and Python/Julia analysis. |
 
-** Lint Contract Registry
+** Contract Root Resolution
 
-The current lint command must explicitly load the basic template contract:
+Contract references should be resolved from paths, not from hand-maintained
+per-file registration. A =CONTRACT_ORG= value such as:
+
+#+BEGIN_SRC org
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+#+END_SRC
+
+already contains the path evidence needed by the validator. The intended model
+is:
+
+- choose a contract root, normally =languages/org/contracts/= or the current
+  contract directory;
+- resolve relative =CONTRACT_ORG= file links from the referencing document or
+  contract root;
+- parse the referenced contract file and index its =CONTRACT_ID=;
+- recursively load referenced contracts with cycle detection;
+- validate the target document against the resolved contract graph.
+
+In that model, "registry" is an implementation cache built from a root path. It
+is not a requirement for authors or agents to list every contract file by hand.
+
+The current lint command still exposes the lower-level registry input:
 
 #+BEGIN_SRC sh
 asp org lint \
   --org-contract-registry languages/org/contracts/basic.template.v1.org \
+  languages/org/contracts/scenarios/README.org \
+  languages/org/contracts/scenarios/asp.where-how-loop.scenario.v1.org \
+  languages/org/contracts/scenarios/asp.task-frame-archive.scenario.v1.org
+#+END_SRC
+
+That should be treated as a current CLI gap. The desired CLI should accept a
+contract root and resolve relative references automatically, for example:
+
+#+BEGIN_SRC sh
+asp org lint \
+  --org-contract-root languages/org/contracts \
   languages/org/contracts/scenarios/README.org \
   languages/org/contracts/scenarios/asp.where-how-loop.scenario.v1.org \
   languages/org/contracts/scenarios/asp.task-frame-archive.scenario.v1.org
