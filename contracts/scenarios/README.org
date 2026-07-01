@@ -1,0 +1,46 @@
+#+TITLE: ASP Contract Scenarios
+#+DATE: 2026-07-01T00:00:00Z
+#+AUTHOR: agent-semantic-protocols
+#+FILETAGS: :asp:contracts:scenarios:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:SCENARIO_LIBRARY: asp.contract.scenarios
+:STATUS: draft
+:END:
+
+* ASP Contract Scenarios
+
+This directory contains replayable Org scenario contracts for ASP architecture
+flows that are larger than one schema file but still need to be auditable by
+agents and humans.
+
+The files here are not generic prose notes. Each scenario should include:
+
+- scenario metadata in Org properties
+- an =org-contract= block that defines the interaction surface
+- compact agent-facing render examples
+- failure modes
+- validation expectations
+- stable links to related schemas, RFCs, or artifacts when available
+
+** Current Scenarios
+
+| Scenario | Purpose |
+| [[file:asp.where-how-loop.scenario.v1.org][asp.where-how-loop.scenario.v1]] | Reproduces the IntentUnderstanding, WhereFrame, HowFrame, ReflectionGate, Observation, and TaskFrameArchive loop. |
+| [[file:asp.task-frame-archive.scenario.v1.org][asp.task-frame-archive.scenario.v1]] | Reproduces the Org/JSON archive boundary for reusable task evidence, promotion rules, and Python/Julia analysis. |
+
+** Lint Contract Registry
+
+The current lint command must explicitly load the basic template contract:
+
+#+BEGIN_SRC sh
+asp org lint \
+  --org-contract-registry languages/org/contracts/basic.template.v1.org \
+  languages/org/contracts/scenarios/README.org \
+  languages/org/contracts/scenarios/asp.where-how-loop.scenario.v1.org \
+  languages/org/contracts/scenarios/asp.task-frame-archive.scenario.v1.org
+#+END_SRC
+
+If scenario-specific contracts become reusable beyond these files, promote them
+into first-class contract registry files under =languages/org/contracts/=.
