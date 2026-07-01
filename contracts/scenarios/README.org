@@ -4,7 +4,7 @@
 #+FILETAGS: :asp:contracts:scenarios:
 
 :PROPERTIES:
-:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../basic.template.v1.org][basic.template.v1]]
 :SCENARIO_LIBRARY: asp.contract.scenarios
 :STATUS: draft
 :END:
@@ -36,7 +36,7 @@ Contract references should be resolved from paths, not from hand-maintained
 per-file registration. A =CONTRACT_ORG= value such as:
 
 #+BEGIN_SRC org
-:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../basic.template.v1.org][basic.template.v1]]
 #+END_SRC
 
 already contains the path evidence needed by the validator. The intended model

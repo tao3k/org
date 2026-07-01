@@ -4,7 +4,7 @@
 #+FILETAGS: :asp:scenario:archive:artifact-lattice:task-frame:
 
 :PROPERTIES:
-:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../basic.template.v1.org][basic.template.v1]]
 :SCENARIO_ID: asp.task-frame-archive.scenario.v1
 :SCENARIO_KIND: archive-flow
 :FEATURE_SCOPE: asp-task-frame-archive

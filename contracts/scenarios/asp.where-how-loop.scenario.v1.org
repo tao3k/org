@@ -4,7 +4,7 @@
 #+FILETAGS: :asp:scenario:where-how:policy:evidence-graph:
 
 :PROPERTIES:
-:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:CONTRACT_ORG: [[../basic.template.v1.org][basic.template.v1]]
 :SCENARIO_ID: asp.where-how-loop.scenario.v1
 :SCENARIO_KIND: architecture-flow
 :FEATURE_SCOPE: asp-where-how-loop
