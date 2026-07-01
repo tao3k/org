@@ -70,11 +70,10 @@ It is not a user-facing agreement and not something an agent should maintain.
 asp org lint languages/org/contracts/
 #+END_SRC
 
-This currently fails with =ORG044= because the upstream =orgize= lint loader
-still expects a preloaded contract registry instead of deriving the contract
-graph from the directory and the files' own relative =CONTRACT_ORG= links. That
-should be treated as an upstream design gap, not as a scenario-file authoring
-requirement.
+The =orgize= lint loader should build that contract graph from the directory
+and the files' own relative =CONTRACT_ORG= links. If this command reports that a
+declared contract cannot be found in a preloaded registry, that is a loader
+regression rather than a scenario-file authoring requirement.
 
 If scenario-specific contracts become reusable beyond these files, promote them
 into first-class contract registry files under =languages/org/contracts/=.
