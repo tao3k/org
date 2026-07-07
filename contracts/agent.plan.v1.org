@@ -1,3 +1,8 @@
+#+TITLE: Agent Plan Contract v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-07-01T23:06:52-07:00
+#+FILETAGS: :asp:contract:
+
 :PROPERTIES:
 :CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
 :END:
@@ -100,14 +105,14 @@ understandable after the conversation is gone.
 - Stable source reference :: stable-source-ref
 - Out of scope :: Record unrelated refactors, broad design speculation, and commands that were not evaluated outside this plan.
 
-*** Checkpoints [0/5]
+*** Checkpoints
 - [ ] Initial context captured.
 - [ ] Search or query route selected with replayable command.
 - [ ] Owner files, contracts, or templates identified.
 - [ ] Implementation or documentation checkpoint recorded.
 - [ ] Validation checkpoint recorded.
 
-*** Validation [1/4]
+*** Validation
 - [X] Capture rendered and =agent.plan.v1= contract check passed.
 - [ ] =asp org contract trace --org-contract-registry ../contracts/agent.plan.v1.org <PLAN_FILE>=
 - [ ] Add focused unit or contract test receipt.

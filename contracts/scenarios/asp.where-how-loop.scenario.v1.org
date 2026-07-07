@@ -22,12 +22,17 @@ scenario facts for how to edit.
 
 The key boundary is:
 
-- =WhereFrame= is owned by search, query, EvidenceGraph, GraphRoute, and
-  topology slicing.
+- =WhereFrame= is owned by search, query, EvidenceGraph, and GraphRoute. It
+  decides where to inspect or edit.
+- =DynamicTopology= is the current architecture-state slice. It explains target
+  role, owner edges, hot paths, trust boundary, and which reasoning branches
+  are legal.
 - =HowFrame= is owned by policy facts, scenario facts, benchmark receipts,
-  snapshot facts, and prior failure evidence.
+  snapshot facts, and prior failure evidence. It decides how to edit inside the
+  localized boundary.
 - =ReflectionGate= prevents a hard-coded hook from checking every edit. It
-  asks whether the current evidence is sufficient for the next edit group.
+  asks whether the current evidence and branch legality are sufficient for the
+  next edit group.
 
 The goal is not to make the model follow a mechanical checklist. The goal is to
 give a strong model the smallest useful project-specific evidence needed to make
@@ -44,15 +49,16 @@ group: ASP_FLOW
 target: asp.where-how-loop.scenario.v1
 create: none
 info: Reproduce the ASP where/how loop with bounded evidence, progressive disclosure, and edit-group reflection.
-categories: 1=UNDERSTAND,2=WHERE,3=HOW,4=REFLECT,5=OBSERVE,6=ARCHIVE,?=DETAIL
+categories: 1=UNDERSTAND,2=WHERE,3=TOPOLOGY,4=HOW,5=REFLECT,6=OBSERVE,7=ARCHIVE,?=DETAIL
 details:
 | key | node | contract | full | use-if |
 | 1 | IntentUnderstanding | classify action, route ASP only when code/doc/project evidence is relevant | User intent is enriched with action, target kind, likely language, project scope, and whether ASP should intervene. | before any search command |
-| 2 | WhereFrame | localize edit targets through EvidenceGraph and topology slice | Search/query must return selectors, owners, dependencies, tests, artifacts, hot paths, and prior failures. Do not use line numbers as identity. | before deciding edit boundary |
-| 3 | HowFrame | expose policy/scenario facts after enough where evidence exists | Policy facts explain how this language/project should be changed, backed by benchmark, snapshot, scenario, or prior failure evidence. | before edit planning |
-| 4 | ReflectionGate | decide whether current evidence is sufficient for an edit group | The agent reflects once per coherent edit group, not once per file edit. It asks whether missing policy, topology, tests, or owner facts could materially change the edit plan. | before write/apply_patch |
-| 5 | Observation | attach parse, test, benchmark, and policy results | Observations update the next loop's topology overlay and ranking priors. | after edit group |
-| 6 | TaskFrameArchive | persist reusable facts and expire dynamic evidence | Stable facts can be promoted; volatile snippets and dirty overlay evidence expire with the task frame. | at suspend, handoff, or completion |
+| 2 | WhereFrame | localize edit targets through EvidenceGraph and GraphRoute | Search/query must return selectors, owners, dependencies, tests, artifacts, hot paths, and prior failures. Do not use line numbers as identity. | before deciding edit boundary |
+| 3 | DynamicTopology | project the current feature/task architecture state | Topology explains target role, owner/dependency/test edges, trust boundary, pressure, prior failures, stale facts, and legal reasoning branches. | after where evidence changes |
+| 4 | HowFrame | expose policy/scenario facts after enough where and topology evidence exists | Policy facts explain how this language/project should be changed, including branch legality, backed by benchmark, snapshot, scenario, or prior failure evidence. | before edit planning |
+| 5 | ReflectionGate | decide whether current evidence is sufficient for an edit group | The agent reflects once per coherent edit group, not once per file edit. It asks whether missing policy, topology, tests, owner facts, or branch-legality facts could materially change the edit plan. | before write/apply_patch |
+| 6 | Observation | attach parse, test, benchmark, and policy results | Observations update the next loop's topology overlay and ranking priors. | after edit group |
+| 7 | TaskFrameArchive | persist reusable facts and expire dynamic evidence | Stable facts can be promoted; volatile snippets and dirty overlay evidence expire with the task frame. | at suspend, handoff, or completion |
 | ? | Detail | reveal deeper facts only when requested | The default agent surface must stay compact and selector-first; larger evidence is reached by stable ids. | when the model asks for more evidence |
 #+END_SRC
 
@@ -65,9 +71,9 @@ flowchart TD
     C -- "no" --> Z["Normal model reasoning"]
     C -- "yes" --> D["WhereFrame"]
     D --> E["EvidenceGraph slice"]
-    E --> F["FeatureTopologyOverview"]
+    E --> F["DynamicTopologySlice"]
     F --> G["HowFrame"]
-    G --> H["Policy + Scenario Facts"]
+    G --> H["Policy + Scenario Facts<br/>Branch Legality"]
     H --> I{"ReflectionGate"}
     I -- "need more where evidence" --> D
     I -- "need more how evidence" --> G
@@ -75,7 +81,7 @@ flowchart TD
     J --> K["ChosenPlan"]
     K --> L["CodeAction"]
     L --> M["Observation"]
-    M --> N["Dynamic Topology Overlay"]
+    M --> N["DynamicTopology Overlay"]
     N --> D
     M --> O["TaskFrameArchive"]
 #+END_SRC
@@ -118,6 +124,15 @@ WhereFrame should expose a small default packet:
 - next: =open HowFrame for async pipeline policy and schema compatibility facts=
 #+END_SRC
 
+** DynamicTopology Requirements
+DynamicTopology answers what the localized target is in the current architecture. It must be updated by search/query/read/observation/archive evidence, and it must expire facts whose selector generation or task scope changed.
+It should expose:
+- target role: writer, reader, adapter, boundary, renderer, validator, orchestrator, or invariant owner
+- owner and dependency edges
+- tests, scenarios, docs, artifacts, and prior failures connected to the target
+- hot path, memory pressure, token pressure, dirty overlay, or stale-index risk
+- branch legality for the next edit group
+The compact topology render should be enough for the model to compare candidate plans without reading every artifact.
 ** HowFrame Requirements
 
 HowFrame answers how to edit the already-localized boundary. It must be
@@ -130,6 +145,7 @@ language-neutral at the contract layer and language-owned at the provider layer:
 - snapshot facts describe observed project structure
 - scenario facts describe expert-like workflows that were validated by tests,
   traces, or replay
+- branch legality prunes edit branches that conflict with the current topology slice
 - prior failure facts explain historical regressions and the conditions that
   caused them
 
@@ -143,8 +159,10 @@ surface only facts that materially affect the current edit group.
   - =policy:rust.async-boundary.no-blocking-search-loop=
   - =scenario:search-stage-receipt.warm-path=
   - =benchmark:source-index-search-pipe.warm-path=
+- illegal: =consumer-side fallback for missing receipt writer proof=
 - risk: =schema drift between receipt writer and graph renderer=
-- next: =compare CandidatePlan A/B under this risk=
+- validate: =scenario:search-stage-receipt.warm-path=, =test:search-stage-receipt-schema=
+- next: =compare CandidatePlan A/B under branch legality and schema-drift risk=
 #+END_SRC
 
 ** ReflectionGate Requirements
@@ -155,6 +173,7 @@ edit. It asks:
 - Is the edit boundary coherent, or did the search evidence split into separate
   features?
 - Is the topology overview current enough for this edit group?
+- Is the proposed defensive branch legal in this topology slice, or should it be pruned and routed to producer/schema/test evidence?
 - Are there missing policy or scenario facts that could change the plan?
 - Are prior failures or resource-pressure facts relevant?
 - Is the next command a search command, a policy/scenario query, or an edit?

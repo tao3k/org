@@ -1,3 +1,8 @@
+#+TITLE: Agent SDD Contract v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-07-01T23:06:52-07:00
+#+FILETAGS: :asp:contract:
+
 :PROPERTIES:
 :CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
 :END:

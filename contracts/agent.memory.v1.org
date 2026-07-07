@@ -1,4 +1,7 @@
 #+TITLE: Contract agent.memory.v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-07-01T23:06:52-07:00
+#+FILETAGS: :asp:contract:
 #+PROPERTY: CONTRACT_LIBRARY marlin.agent.contracts
 
 :PROPERTIES:

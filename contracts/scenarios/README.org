@@ -27,8 +27,13 @@ The files here are not generic prose notes. Each scenario should include:
 ** Current Scenarios
 
 | Scenario | Purpose |
-| [[file:asp.where-how-loop.scenario.v1.org][asp.where-how-loop.scenario.v1]] | Reproduces the IntentUnderstanding, WhereFrame, HowFrame, ReflectionGate, Observation, and TaskFrameArchive loop. |
-| [[file:asp.task-frame-archive.scenario.v1.org][asp.task-frame-archive.scenario.v1]] | Reproduces the Org/JSON archive boundary for reusable task evidence, promotion rules, and Python/Julia analysis. |
+| [[file:asp.where-how-loop.scenario.v1.org][asp.where-how-loop.scenario.v1]] | Reproduces IntentUnderstanding -> WhereFrame -> DynamicTopology -> HowFrame -> ReflectionGate -> Observation -> TaskFrameArchive with compact agent-facing renders. |
+| [[file:asp.task-frame-archive.scenario.v1.org][asp.task-frame-archive.scenario.v1]] | Reproduces the Org/JSON archive boundary, promotion rules, and Python/Julia analysis surface for reusable task evidence. |
+The scenario layer should make the theory executable enough for review:
+- =WhereFrame= answers where to inspect or edit.
+- =DynamicTopology= answers what the current target is in the architecture and which reasoning branches are legal.
+- =HowFrame= answers how to edit with policy/scenario facts, benchmark receipts, snapshot facts, and prior failures.
+- =ReflectionGate= decides whether the current evidence is enough for the next coherent edit group.
 
 ** Directory Lint Resolution
 
