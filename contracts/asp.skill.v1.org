@@ -193,7 +193,7 @@ details:
 | KNOWN_SYMBOL | function/type/API symbol exists | syntax query or owner-items | broad rg before syntax |
 | KNOWN_DEPENDENCY | dependency/API package exists | dependency-topology/import-usage | workspace prime |
 | FAILURE_FRONTIER | failure/test/policy diagnostic exists | failure-frontier/test-selection | raw read loop |
-| BROAD_QUERY | terms but no stable anchor | search pipe | repeated prime/fzf |
+| BROAD_QUERY | terms but no stable anchor | search pipe | repeated prime/lexical |
 | UNKNOWN_WORKSPACE | no reliable anchor | search prime/project topology | pretending anchors exist |
 | NO_ASP | non-repo/prose task | no ASP | unnecessary search |
 
