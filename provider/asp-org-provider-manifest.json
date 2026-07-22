@@ -52,7 +52,7 @@
       "overlayMode": "merkle-delta",
       "exactSelectorResolution": "pinned-live-module-graph",
       "packetSchemaId": "asp.source-snapshot.v1",
-      "sourceOverlaySchemaId": "asp.source-overlay.v1",
+      "sourceSnapshotEnvelopeSchemaId": "asp.exact-source-snapshot-envelope.v1",
       "derivedArtifactEvidenceSchemaId": "asp.derived-source-artifact-evidence.v1",
       "exactSourcePacketSchemaId": "asp.exact-source-query-result.v1"
     }
