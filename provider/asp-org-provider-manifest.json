@@ -176,7 +176,7 @@
     "prime": "search/prime",
     "owner": "search/toc",
     "lexical": "search/lexical",
-    "query": "query/document",
+    "query": "query/exact-selector",
     "ingest": "search/ingest",
     "checkChanged": "search/prime",
     "guide": "guide"
