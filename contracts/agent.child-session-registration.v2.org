@@ -1,0 +1,56 @@
+#+TITLE: Agent Child Session Registration v2
+#+PROPERTY: CONTRACT_ID agent.child-session-registration.v2
+
+* Authority
+
+Child registration is owned by the project-local ASP registration authority.
+Runtime Server reconciliation is secondary and MUST NOT gate ChoicePlane or
+registration.
+
+The Host calling receipt exclusively owns =rootSessionId=, =parentSessionId=,
+and =childSessionId=.  A Hook denial selects work and a Host role, but neither a
+latest Hook event nor an Agent message may replace Host session topology.
+
+* Lifecycle
+
+The valid lifecycle is:
+
+#+begin_src text
+Host create
+  -> parent Call @REGISTERED_AGENT_NAME
+  -> Host SubagentStart publishes verified child topology
+  -> project authority serializes and assigns generation atomically
+  -> child's first PreToolUse consumes that exact receipt
+  -> same child executes the preserved denied command
+#+end_src
+
+There is no child self-registration command. The Host lifecycle bridge derives
+the current child from the called session and verifies the root and parent
+recorded by the Host rollout receipt. A permission denial preserves the exact
+executable argv and requires =sandbox_permissions=require_escalated= in the
+same child.
+
+* Linearization
+
+Registration is linearized by a namespace-local authority lock.  The authority
+MUST re-read the durable receipt inside the lock.  Repeating an identical
+Host-call receipt is idempotent and returns the same generation.  A different
+child in the same root/role namespace receives the next positive generation.
+Temporary receipt paths include both process and Host-call identity.  A stale
+lock may be recovered after the bounded lease expires.
+
+* ChoicePlane projection
+
+When registration is required, preserve the existing natural-language Host
+creation instruction and make the atomic Host handoff explicit:
+
+#+begin_src text
+Call @REGISTERED_AGENT_NAME with this instruction:
+Execute the preserved denied command in this same child. The Host SubagentStart
+event publishes the nonzero registration generation before the first tool use;
+consume that receipt automatically. Do not self-register, supply session IDs,
+or create another subagent.
+#+end_src
+
+After registration, ChoicePlane returns the existing natural-language
+=Call/resume @REGISTERED_AGENT_NAME= action.
