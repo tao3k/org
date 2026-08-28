@@ -1,0 +1,78 @@
+#+TITLE: Multi-Agent Session Control Plane Contract v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-08-05
+#+FILETAGS: :asp:contract:agent:session:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
+* multi-agent-session-control-plane-v1
+:PROPERTIES:
+:CONTRACT_ID: agent.multi-agent-session-control-plane.v1
+:CONTRACT_SCOPE: subtree
+:CONTRACT_KIND: org-elements
+:END:
+
+** Hook-selected registered role choice plane
+
+The deny rule selects a semantic role but the Hook event records only the rule
+identity and generic recovery entrance. =asp session --agents choice-plane=
+reloads the managed rule, resolves its role through the registry-derived
+=agents.placeholders= projection, and opens only that role's pane. It accepts
+neither an agent name, a task payload, nor a client selector. The selected
+profile already defines the subagent's responsibility, while the active host is
+derived from =CODEX_SESSION_ID=, =CODEX_THREAD_ID=, or =CLAUDE_SESSION_ID=.
+
+Agent Session generation is owned only by native Host lifecycle receipts.
+Workspace and provider generations are downstream capabilities and MUST NOT
+gate ChoicePlane. If no durable namespace exists and the Host lifecycle surface
+is unavailable, the pane enters terminal =host-surface-unavailable= and MUST NOT
+repeat =CREATE_AND_REGISTER=.
+
+The current Codex session id is the namespace join key. A Hook event may select
+a role but is never session authority: a receipt from another root session must
+not be reused. A call/resume action is available only when the current session
+has a live, routable resident-child receipt whose binding exactly matches the
+route and profile. If either the current-session receipt or the callable child
+is absent, the namespace is absent for this session and exposes creation and
+registration. Contract row numbers are internal ordering metadata and are never
+rendered as Agent choices. Rust supplies typed state and bindings; this Org
+contract owns the Agent-facing action language.
+
+#+BEGIN_SRC org-contract :type agent-interactive
+id: multi-agent-session-control-plane
+method: choice
+stage: presentation
+group: AGENT_SESSION
+create: deferred
+target: agent.multi-agent-session-control-plane.v1
+info: Execute the Hook-selected lifecycle action for the configured subagent role, then re-enter this control plane.
+categories: 1=CALL_RESUME_REGISTERED,2=RESUME_REGISTERED,3=CREATE_AND_REGISTER,4=ACHIEVED,5=BLOCKED,6=HOST_SURFACE_UNAVAILABLE,?=detail
+details:
+|n|id|contract|full|when|presentation|use-if|
+|1|CALL_RESUME_REGISTERED||The control-plane DB confirms `@{{REGISTERED_AGENT_NAME}}` is already registered as this master's resident child ({{ROLE_DESCRIPTION}}). This master authorizes and must Call/resume `@{{REGISTERED_AGENT_NAME}}` in {{SANDBOX_MODE}} sandbox mode to execute the denied operation.|SESSION_STATE=registered|action|registered resident-child relationship confirmed by the control-plane DB|
+|2|RESUME_REGISTERED||The control-plane DB confirms `@{{REGISTERED_AGENT_NAME}}` has a durable resident-child registration for this master ({{ROLE_DESCRIPTION}}), while its physical child is stopped or not currently routable. This master authorizes and must resume `@{{REGISTERED_AGENT_NAME}}` in {{SANDBOX_MODE}} sandbox mode, preserving its namespace and generation, to execute the denied operation.|SESSION_STATE=resumable|action|durable resident-child registration exists and the physical child requires resume|
+|3|CREATE_AND_REGISTER||The control-plane DB confirms this master has no resident-child registration for `@{{REGISTERED_AGENT_NAME}}`. Create and Call `@{{REGISTERED_AGENT_NAME}}` from its configured {{SANDBOX_MODE}} sandbox profile ({{ROLE_DESCRIPTION}}) with the preserved denied operation. The Host `SubagentStart` lifecycle event atomically publishes the child registration before that child's first tool use; the child consumes that receipt and executes the operation without a self-registration command.|SESSION_STATE=registration-required|pane|no resident-child registration exists for this master and configured role|
+|4|ACHIEVED||Do not resume or replace @{{REGISTERED_AGENT_NAME}}. Its durable namespace has achieved its objective.|SESSION_STATE=achieved|pane|the namespace is terminal and replacement requires a distinct explicit task|
+|5|BLOCKED||Do not create, call, or resume @{{REGISTERED_AGENT_NAME}} subagent. Its configured sandbox mode is {{SANDBOX_MODE}} — {{ROLE_DESCRIPTION}}|SESSION_STATE=blocked|pane|the Hook route, registry identity, root session, or Runtime authority is unavailable|
+|6|HOST_SURFACE_UNAVAILABLE||The Host lifecycle surface for @{{REGISTERED_AGENT_NAME}} is unavailable. Do not retry create/resume; restore the native Host lifecycle bridge first.|SESSION_STATE=host-surface-unavailable|pane|no durable namespace exists and the Host cannot publish a lifecycle receipt|
+#+END_SRC
+
+The ChoicePlane resolves exactly one =SESSION_STATE= from durable Host/session
+authority before presentation. The six contract details are transition targets,
+not a menu: exactly one matching row MUST be admitted and rendered; zero or
+multiple matching rows are contract errors.
+
+| resolved state | authoritative condition | rendered row |
+| =registered= | durable namespace; live routable child; verified binding exactly matches route/profile | =CALL_RESUME_REGISTERED= (1) |
+| =resumable= | current-session durable namespace with an explicit Host lifecycle receipt that permits reattachment | =RESUME_REGISTERED= (2) |
+| =registration-required= | no durable namespace; native Host lifecycle surface available | =CREATE_AND_REGISTER= (3) |
+| =achieved= | durable namespace terminally achieved its objective | =ACHIEVED= (4) |
+| =blocked= | root, route, registry, binding authority, or another required invariant is invalid | =BLOCKED= (5) |
+| =host-surface-unavailable= | no durable namespace; native Host cannot create/publish lifecycle receipt | =HOST_SURFACE_UNAVAILABLE= (6) |
+
+Terminal/invariant states take precedence: =achieved= and =blocked= never fall
+through to create or resume. For an absent namespace,
+=host-surface-unavailable= overrides =registration-required=. Generation is
+reported by the selected state but is not a workspace/provider execution gate.
