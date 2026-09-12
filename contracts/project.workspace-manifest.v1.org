@@ -1,0 +1,68 @@
+#+TITLE: Project Workspace Manifest Contract v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-09-08
+#+FILETAGS: :asp:contract:workspace:topology:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
+* project-workspace-manifest-v1
+:PROPERTIES:
+:CONTRACT_ID: project.workspace-manifest.v1
+:CONTRACT_SCOPE: subtree
+:CONTRACT_KIND: org-elements
+:TITLE: Parser-Owned Project Workspace Manifest v1
+:END:
+
+** What This Produces
+
+This contract validates the stable GitOps Project Workspace declaration read
+before Runtime Search and Query admission. It deliberately excludes source,
+provider, parser, MRR, ABI, and topology-generation digests. Those mutable
+identities are joined by Runtime receipts against this exact stable binding;
+placing them in the Git-tracked declaration would create stale or circular
+workspace identity.
+
+The corresponding machine contract is
+[[file:../../schemas/project-workspace-binding.v1.schema.json][project-workspace-binding.v1]].
+
+** workspace-has-identity
+:PROPERTIES:
+:ASSERT_ID: project-workspace-manifest.has-identity
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((workspace
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of workspace :summary (key "PROJECT_WORKSPACE_ID"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Workspace `{{ scope.title }}` must carry PROJECT_WORKSPACE_ID.
+#+END_SRC
+
+** workspace-has-binding
+:PROPERTIES:
+:ASSERT_ID: project-workspace-manifest.has-binding
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((workspace
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of workspace :summary (key "PROJECT_WORKSPACE_IDENTITY")))
+  (assert count >= 1
+    (node-property :descendant-of workspace :summary (key "WORKSPACE_ROOT_PATH")))
+  (assert count >= 1
+    (node-property :descendant-of workspace :summary (key "PORTABILITY")))
+  (assert count >= 1
+    (node-property :descendant-of workspace :summary (key "REPOSITORY_ALIASES"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Workspace `{{ scope.title }}` must bind its GitOps identity, repository-relative root, portability, and reviewed aliases.
+#+END_SRC
