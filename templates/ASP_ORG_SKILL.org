@@ -9,7 +9,7 @@
 Use this skill when the task depends on durable Org planning state, Org contracts, Org templates, TODO headlines, checklist items, property drawers, planning timestamps, links, or source blocks that should be queried through =asp org=.
 Do not use this skill when the task is generic Markdown authoring, free-form chat planning, or client-local todo management that does not need Org AST facts or Org contract validation.
 ** State Workflow
-ASP materializes the Org resource tree when project runtime state is installed or synchronized. Start by resolving the writable artifact root, then ask the provider what Org facts exist and let the result shape the next action. The provider exposes asp org query for semantic AST facts. The provider exposes asp org contract trace for contract validation.
+ASP materializes the Org resource tree during installation or lazily when an Org consumer requires a missing resource. Start by resolving the writable artifact root, then ask the provider what Org facts exist and let the result shape the next action. The provider exposes asp org query for semantic AST facts. The provider exposes asp org contract trace for contract validation.
 Use =asp org recall plans= before creating a new plan so the current agent session can resume related tasks, checklist state, and properties before branching new work.
 Recall session detection must include CODEX_THREAD_ID for Codex, CLAUDE_CODE_SESSION_ID for local Claude Code, and CLAUDE_CODE_REMOTE_SESSION_ID for remote Claude Code.
 #+begin_src shell
@@ -17,10 +17,7 @@ asp paths --get orgArtifacts
 ORG_ARTIFACTS="$(asp paths --get orgArtifacts)"
 asp org recall plans
 asp org recall plans --checkpoint-sync
-asp agent session register --name asp-main-explore --role main
-asp agent session register --name asp-explore-code --session-id <child-session-id> --root-session-id <root-session-id> --parent-session-id <parent-session-id> --role code
-asp agent session list
-asp org guide
+asp session --agents choice-plane
 asp org query --kind task --field todo=TODO --workspace . --view metadata
 asp org query --kind checklistItem --field checked=false --workspace . --view metadata
 asp org query --kind property --field key=<KEY> --workspace . --view metadata
@@ -45,8 +42,9 @@ The archive root is the path returned by =asp paths --get orgArtifacts= with =/a
 Archive records live under artifacts/org/archives.
 Archive lane:
 - Resolve the writable artifact root with =asp paths --get orgArtifacts= before archiving from a non-root working directory.
-- Agent session state is owned by =asp agent session=, not by Org. A root task session has one root/main session id and may have many child or subagent session ids. Register durable session-tree edges with =asp agent session register= so consumers can resolve names, roles, model hints, parent edges, and root session membership from the SQLite-backed agent registry.
-- Before creating a new plan or task branch, recall candidate plans for the current agent session with =asp org recall plans=. Supported current-session envs are =CODEX_THREAD_ID=, =CLAUDE_CODE_SESSION_ID=, and =CLAUDE_CODE_REMOTE_SESSION_ID=; the active agent platform is expected to expose one non-empty value. There is no generic =AGENT_SESSION_ID= or =SESSION_ID= fallback. Use explicit =--session= only for cross-session lookup. Codex subagents have their own =CODEX_THREAD_ID=; parent prompts should register the spawned child with =asp agent session register --session-id <child> --root-session-id <root> --parent-session-id <parent>= or set =ASP_ROOT_SESSION_ID= before child recall. =asp org recall plans= consumes the agent registry to resolve a registered child session back to its root task session. Keep =SESSION_ID= as the root/main task session in Org properties, and record branch edges with =ROOT_SESSION_ID=, =PARENT_SESSION_ID=, =CHILD_SESSION_ID=, or =SUBAGENT_SESSION_ID= when a plan spans child agent threads. Recall output is the reasoning tree entry point: text output starts with compact =|next=, =|why=, =|query=, =|evidence=, and =|candidate= rows. The =|why= row is the memory/graph selection receipt: session match, selected sources, task hits, checkpoint hits, alternatives, and memory transport. The executable resume surface is the single =|query= row, normally =asp org query <agent-plan-id> recovery evidence next-action=. JSON keeps full scores and per-plan =selectionReceipt= for tooling. Ordinary recall is read-only; add =--checkpoint-sync= only when you intend to persist a durable checkpoint into the SQLite-backed memory index.
+- Agent session state is owned by the Runtime Server. Host-native =SubagentStart= and =SubagentStop= events update the lifecycle registry; agents must not reconstruct or register session-tree identities through CLI flags.
+- Enter the Org-owned lifecycle window with =asp session --agents choice-plane=. Its admitted action uses the platform profile's exact =@name= and lets the Host call, resume, create, or archive the subagent. The platform is detected from =CODEX_SESSION_ID= or =CODEX_THREAD_ID= for Codex, and =CLAUDE_CODE_SESSION_ID= or =CLAUDE_CODE_REMOTE_SESSION_ID= for Claude Code.
+- Before creating a new plan or task branch, recall candidate plans for the current agent session with =asp org recall plans=. =asp org recall plans= consumes the Runtime Server lifecycle projection to resolve a registered child session back to its root task session. Keep =SESSION_ID= as the root/main task session in Org properties, and record branch edges with =ROOT_SESSION_ID=, =PARENT_SESSION_ID=, =CHILD_SESSION_ID=, or =SUBAGENT_SESSION_ID= when a plan spans child agent threads. Recall output is the reasoning tree entry point: text output starts with compact =|next=, =|why=, =|query=, =|evidence=, and =|candidate= rows. The =|why= row is the memory/graph selection receipt: session match, selected sources, task hits, checkpoint hits, alternatives, and memory transport. The executable resume surface is the single =|query= row, normally =asp org query <agent-plan-id> recovery evidence next-action=. JSON keeps full scores and per-plan =selectionReceipt= for tooling. Ordinary recall is read-only; add =--checkpoint-sync= only when you intend to persist a durable checkpoint into the memory index.
 - Query active Org facts first, such as =asp org query --kind task --field todo=DONE --workspace . --view metadata=, then inspect the returned selector before moving content.
 - Preserve active layout under =archives= when possible: move =flow/plans/<PLAN_SLUG>.org= to =archives/flow/plans/<PLAN_SLUG>.org=, SDD records to =archives/flow/sdd/=, BDD records to =archives/flow/bdd/=, TDD records to =archives/flow/tdd/=, and BDR records to =archives/flow/bdr/=.
 - Add archive metadata such as =ARCHIVED_FROM= and =ARCHIVE_REASON= on the destination record instead of encoding archive status as a hidden search/query side effect.
@@ -156,7 +154,7 @@ commands from =sourceLocatorHint= or =displayLineRange=. Do not create Org plan
 artifacts for normal search routing.
 
 ** Recovery
-If Codex does not load the plugin skill, use the configurable hook receipt and run =asp sync= from the project root. Then read the path returned by =asp paths --get orgStateSkill= and write durable Org state only under the path returned by =asp paths --get orgArtifacts=.
+If Codex does not load the plugin skill because a host agent projection is missing or stale, use the configurable Hook receipt and run =asp agent config sync=. If the Org resource itself is missing, run =asp sync= and then resolve the canonical paths with =asp paths --get orgStateSkill= and =asp paths --get orgArtifacts=. There is no guide lifecycle surface; =--help= describes syntax while the ChoicePlane owns progressive disclosure.
 ** Adversarial Review
 Ask reflection to challenge this skill with the receipt contract [[../contracts/agent.adversarial-review.v1.org][agent.adversarial-review.v1]]. Record answered questions with the table contract [[../contracts/agent.reflection-answers.v1.org][agent.reflection-answers.v1]].
 [[../contracts/agent.adversarial-review.v1.org][agent.adversarial-review.v1]]

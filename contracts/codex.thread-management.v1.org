@@ -1,0 +1,84 @@
+#+TITLE: Codex Thread Management Contract (Schema Version 1)
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-08-31
+#+FILETAGS: :asp:contract:codex:thread:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
+* codex-thread-management-schema-v1
+:PROPERTIES:
+:CONTRACT_ID: agent.codex-thread-management.v1
+:CONTRACT_SCOPE: subtree
+:CONTRACT_KIND: org-elements
+:END:
+
+** Authority
+
+Codex =ThreadId= is the sole identity carried by an existing-task deeplink and
+by the =codex_app= thread-management tools. The canonical deeplink is an
+address for navigation:
+
+#+BEGIN_SRC text
+codex://threads/{{{THREAD_ID}}}
+#+END_SRC
+
+It does not send a message, start a turn, create an Agent, or prove an
+AgentSession registration. =codex://threads/new?path=...= is a separate
+new-task route and is never decoded as an existing =CodexThreadReference=.
+
+The same validated =THREAD_ID= is substituted into the standard Host calls
+below. The renderer never substitutes =CODEX_SESSION_ID=, an Agent path, or a
+rollout filename in its place.
+
+** Standard Host syntax
+
+#+NAME: codex-thread-navigate
+#+BEGIN_SRC codex-thread-management
+mcp__codex_app__navigate_to_codex_page({
+  threadId: "{{{THREAD_ID}}}"
+})
+#+END_SRC
+
+#+NAME: codex-thread-read
+#+BEGIN_SRC codex-thread-management
+mcp__codex_app__read_thread({
+  threadId: "{{{THREAD_ID}}}",
+  turnLimit: 3,
+  includeOutputs: false
+})
+#+END_SRC
+
+#+NAME: codex-thread-send-message
+#+BEGIN_SRC codex-thread-management
+mcp__codex_app__send_message_to_thread({
+  threadId: "{{{THREAD_ID}}}",
+  prompt: {{{MESSAGE}}}
+})
+#+END_SRC
+
+#+NAME: codex-thread-wait
+#+BEGIN_SRC codex-thread-management
+mcp__codex_app__wait_threads({
+  targets: [
+    { threadId: "{{{THREAD_ID}}}", afterCursor: "{{{AFTER_CURSOR}}}" }
+  ],
+  timeoutMs: 60000
+})
+#+END_SRC
+
+Only =send_message_to_thread= appends a parent-authored prompt to another task.
+=read_thread= observes bounded history, =wait_threads= observes progress, and
+=navigate_to_codex_page= changes the visible Desktop task. None is a
+=collaboration.*= Agent lifecycle call. Likewise, =collaboration.*= canonical
+Agent paths such as =/root/asp_testing= are never accepted as thread IDs.
+
+** Typed contracts
+
+The exact reference shape is owned by
+=schemas/codex-thread-reference.v1.schema.json=. The exact operation input is
+owned by =schemas/codex-thread-management-tool-call.v1.schema.json=. Rust
+validates that =deeplink= is derived from the same =threadId=; JSON Schema
+validates the stable wire shape. No DB row, natural-language label, or link text
+may replace the Host ThreadId.

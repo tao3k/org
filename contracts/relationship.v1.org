@@ -1,0 +1,212 @@
+#+TITLE: Contract Relationship v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-08-01T00:00:00-07:00
+#+FILETAGS: :asp:contract:relationship:
+#+PROPERTY: CONTRACT_LIBRARY asp.relationship.contracts
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
+* relationship-document-v1
+:PROPERTIES:
+:CONTRACT_ID: relationship.document.v1
+:CONTRACT_SCOPE: document
+:CONTRACT_KIND: org-elements
+:END:
+
+** Relationship contract identity
+:PROPERTIES:
+:ASSERT_ID: relationship.document.has-id
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :summary (key "RELATIONSHIP_CONTRACT_ID")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship Contract documents must declare one RELATIONSHIP_CONTRACT_ID.
+#+END_SRC
+
+** Relationship schema version
+:PROPERTIES:
+:ASSERT_ID: relationship.document.has-schema-version
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :summary (key "RELATIONSHIP_SCHEMA_VERSION")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship Contract documents must declare one RELATIONSHIP_SCHEMA_VERSION.
+#+END_SRC
+
+** Artifact collection
+:PROPERTIES:
+:ASSERT_ID: relationship.document.has-artifacts
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (headline :summary (title "Artifacts")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship Contract documents must contain one Artifacts collection.
+#+END_SRC
+
+** Relationship collection
+:PROPERTIES:
+:ASSERT_ID: relationship.document.has-relationships
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (headline :summary (title "Relationships")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship Contract documents must contain one Relationships collection.
+#+END_SRC
+
+* relationship-artifact-v1
+:PROPERTIES:
+:CONTRACT_ID: relationship.artifact.v1
+:CONTRACT_SCOPE: subtree
+:CONTRACT_KIND: org-elements
+:END:
+
+** Artifact id
+:PROPERTIES:
+:ASSERT_ID: relationship.artifact.has-id
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "ARTIFACT_ID")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship artifacts must declare one ARTIFACT_ID.
+#+END_SRC
+
+** Artifact kind
+:PROPERTIES:
+:ASSERT_ID: relationship.artifact.has-kind
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "ARTIFACT_KIND")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship artifacts must declare one ARTIFACT_KIND.
+#+END_SRC
+
+** Artifact path
+:PROPERTIES:
+:ASSERT_ID: relationship.artifact.has-path
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "ARTIFACT_PATH")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship artifacts must declare one ARTIFACT_PATH.
+#+END_SRC
+
+** Artifact canonicalization
+:PROPERTIES:
+:ASSERT_ID: relationship.artifact.has-canonicalization
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "CANONICALIZATION")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship artifacts must declare one CANONICALIZATION.
+#+END_SRC
+
+* relationship-edge-v1
+:PROPERTIES:
+:CONTRACT_ID: relationship.edge.v1
+:CONTRACT_SCOPE: subtree
+:CONTRACT_KIND: org-elements
+:END:
+
+** Relationship id
+:PROPERTIES:
+:ASSERT_ID: relationship.edge.has-id
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "RELATIONSHIP_ID")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship edges must declare one RELATIONSHIP_ID.
+#+END_SRC
+
+** Relationship subject
+:PROPERTIES:
+:ASSERT_ID: relationship.edge.has-subject
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "SUBJECT")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship edges must declare one SUBJECT artifact.
+#+END_SRC
+
+** Relationship predicate
+:PROPERTIES:
+:ASSERT_ID: relationship.edge.has-predicate
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "PREDICATE")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship edges must declare one typed PREDICATE.
+#+END_SRC
+
+** Relationship object
+:PROPERTIES:
+:ASSERT_ID: relationship.edge.has-object
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "OBJECT")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship edges must declare one OBJECT artifact.
+#+END_SRC
+
+** Relationship impact
+:PROPERTIES:
+:ASSERT_ID: relationship.edge.has-impact
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :descendant-of $scope :summary (key "IMPACT")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship edges must declare one IMPACT policy.
+#+END_SRC
+
+** Relationship evidence
+:PROPERTIES:
+:ASSERT_ID: relationship.edge.has-evidence-gate
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count >= 1
+  (node-property :descendant-of $scope :summary (key "EVIDENCE_GATE")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+Relationship edges must bind at least one EVIDENCE_GATE.
+#+END_SRC
