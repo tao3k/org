@@ -73,14 +73,14 @@ machine contract used by graph analysis, state replay, and future ranking.
   - =schema:semantic-search-stage-receipt.v1=
   - =rust:SearchStageReceiptWriter=
   - =test:search-stage-receipt-schema=
-- topology: =topology:search-pipe-stage-receipt:v3=
+- topology: =topology:search-playbook-stage-receipt:v3=
 
 ** HowFrame
 - policy facts:
   - =policy:rust.schema-writer.compatible-json-envelope=
   - =policy:rust.async-search-stage.no-blocking-path=
 - scenario facts:
-  - =scenario:source-index-search-pipe-warm-path=
+  - =scenario:source-index-search-playbook-warm-path=
 - prior failures:
   - =failure:schema-renderer-drift=
 
@@ -117,7 +117,7 @@ machine contract used by graph analysis, state replay, and future ranking.
       "test:search-stage-receipt-schema"
     ],
     "topologyIds": [
-      "topology:search-pipe-stage-receipt:v3"
+      "topology:search-playbook-stage-receipt:v3"
     ],
     "evidenceGeneration": "overlay-17"
   },
@@ -127,7 +127,7 @@ machine contract used by graph analysis, state replay, and future ranking.
       "policy:rust.async-search-stage.no-blocking-path"
     ],
     "scenarioIds": [
-      "scenario:source-index-search-pipe-warm-path"
+      "scenario:source-index-search-playbook-warm-path"
     ],
     "priorFailureIds": [
       "failure:schema-renderer-drift"

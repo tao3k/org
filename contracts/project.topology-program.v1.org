@@ -1,0 +1,220 @@
+#+TITLE: Project Topology Program Contract v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-09-06
+#+FILETAGS: :asp:contract:topology:mrr:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
+* project-topology-program-v1
+:PROPERTIES:
+:CONTRACT_ID: project.topology-program.v1
+:CONTRACT_SCOPE: subtree
+:CONTRACT_KIND: org-elements
+:TITLE: MRR-Defined Project Topology Program v1
+:END:
+
+** What This Produces
+
+This contract validates the separately admitted program projection for one
+MRR-defined Project Topology. The stable Git-tracked Project Workspace
+manifest is governed by =project.workspace-manifest.v1= instead. This contract
+is distinct from =agent.topology.v1=, which describes imported project and
+agent-session navigation.
+
+The program projection binds one source snapshot, one standard MRR topology prelude, one
+project Scheme/POO program, one compiled native ABI, one admitted MRR bundle,
+one GitOps Project Workspace binding, and one materialized topology root. It
+does not create an extension catalog, accept a Runtime-generated workspace id,
+or embed a second inference language.
+
+The corresponding machine contract is
+[[file:../../schemas/project-topology-program-binding.v1.schema.json][project-topology-program-binding.v1]].
+
+=REPOSITORY_ALIASES= uses one compact JSON array of unique, lexicographically
+ordered canonical repository locators. The empty set is =[]=. It is property
+data parsed through the native Org boundary, not an executable source block or
+a second manifest grammar.
+
+** program-has-identity
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-identity
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "TOPOLOGY_PROGRAM_ID"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must carry TOPOLOGY_PROGRAM_ID.
+#+END_SRC
+
+** program-has-workspace-binding
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-workspace-binding
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "PROJECT_WORKSPACE_IDENTITY")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "WORKSPACE_ROOT_PATH")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "PORTABILITY")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "REPOSITORY_ALIASES"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must bind the GitOps project workspace identity, repository-relative root, portability, and reviewed aliases.
+#+END_SRC
+
+** program-has-source-binding
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-source-binding
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "SOURCE_SNAPSHOT_DIGEST"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must bind SOURCE_SNAPSHOT_DIGEST.
+#+END_SRC
+
+** program-has-mrr-binding
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-mrr-binding
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "MRR_PRELUDE_DIGEST")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "PROJECT_PROGRAM_DIGEST")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "COMPILED_PROGRAM_ABI_DIGEST")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "MRR_BUNDLE_DIGEST"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must bind the MRR prelude, project program, compiled ABI, and admitted bundle digests.
+#+END_SRC
+
+** program-has-topology-root
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-topology-root
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "TOPOLOGY_ROOT_DIGEST"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must bind TOPOLOGY_ROOT_DIGEST.
+#+END_SRC
+
+** program-has-binding-section
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-binding-section
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (headline :descendant-of program :summary (title "Binding"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must include a Binding section.
+#+END_SRC
+
+** program-has-profiles-section
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-profiles-section
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (headline :descendant-of program :summary (title "Profiles"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must include a Profiles section.
+#+END_SRC
+
+** program-has-program-section
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-program-section
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (headline :descendant-of program :summary (title "Program"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must include a Program section.
+#+END_SRC
+
+** program-has-materialization-section
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-materialization-section
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (headline :descendant-of program :summary (title "Materialization"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must include a Materialization section.
+#+END_SRC
+
+** program-has-admission-section
+:PROPERTIES:
+:ASSERT_ID: project-topology-program.has-admission-section
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program
+       (headline :at $scope)))
+  (assert count >= 1
+    (headline :descendant-of program :summary (title "Admission"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Project Topology program `{{ scope.title }}` must include an Admission section.
+#+END_SRC

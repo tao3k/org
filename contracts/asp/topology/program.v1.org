@@ -1,0 +1,75 @@
+#+TITLE: ASP Topology Program Contract v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-09-09
+#+FILETAGS: :asp:contract:topology:mrr:ascent:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../../basic.template.v1.org][basic.template.v1]]
+:END:
+
+* asp-topology-program-v1
+:PROPERTIES:
+:CONTRACT_ID: asp.topology.program.v1
+:CONTRACT_SCOPE: subtree
+:CONTRACT_KIND: org-elements
+:TITLE: Native Typed Topology Program
+:END:
+
+** Definition
+
+This contract governs a reusable native topology program projected by
+=orgize= into typed MRR relations and Ascent rules. It is distributed as an
+ASP resource for every user. It is not repository-local =.agents= state and it
+is not an executable inference language of its own. Contract evaluation and
+topology loading are read-only projections: this contract does not authorize an
+Agent or LLM to edit the program, promote a proposed relation, or write source
+facts. A changed program enters only through the Git-tracked resource and its
+normal review, digest, and admission path.
+
+The loader selects exact =node-property= records from the orgize element index.
+Only one document-scoped =CONTRACT_ORG=, one top-level
+=TOPOLOGY_PROGRAM_ID= headline, and declarations inside that program subtree
+participate. An inherited, nested-lookalike, or out-of-scope property cannot
+become an MRR rule or expected relation.
+
+** program-identity
+:PROPERTIES:
+:ASSERT_ID: asp-topology-program.program-identity
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "TOPOLOGY_PROGRAM_ID") :summary (value "mrr.topology.standard.v1")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "ENGINE_PROFILE") :summary (value "ascent-seminaive.v1"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Native topology program `{{ scope.title }}` must bind its program and engine profile.
+#+END_SRC
+
+** typed-rule
+:PROPERTIES:
+:ASSERT_ID: asp-topology-program.typed-rule
+:SEVERITY: error
+:END:
+
+#+BEGIN_SRC org-contract
+(let ((program (headline :at $scope)))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "RULE_ID") :summary (value "mrr.topology.domain.depends-on-config.v1")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "HEAD_RELATION") :summary (value "DEPENDS_ON_CONFIG")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "LEFT_RELATION") :summary (value "CALLS")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "RIGHT_RELATION") :summary (value "READS_CONFIG")))
+  (assert count >= 1
+    (node-property :descendant-of program :summary (key "JOIN") :summary (value "left.to=right.from"))))
+#+END_SRC
+
+#+BEGIN_SRC jinja2 :name message
+Native topology program `{{ scope.title }}` must declare a typed rule head, body, and join.
+#+END_SRC

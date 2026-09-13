@@ -158,7 +158,7 @@ surface only facts that materially affect the current edit group.
 - supporting-facts:
   - =policy:rust.async-boundary.no-blocking-search-loop=
   - =scenario:search-stage-receipt.warm-path=
-  - =benchmark:source-index-search-pipe.warm-path=
+  - =benchmark:source-index-search-playbook.warm-path=
 - illegal: =consumer-side fallback for missing receipt writer proof=
 - risk: =schema drift between receipt writer and graph renderer=
 - validate: =scenario:search-stage-receipt.warm-path=, =test:search-stage-receipt-schema=

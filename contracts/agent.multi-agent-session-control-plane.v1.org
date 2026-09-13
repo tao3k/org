@@ -1,78 +1,332 @@
-#+TITLE: Multi-Agent Session Control Plane Contract v1
+#+TITLE: Codex MultiAgentV2 Collaboration Contract (Schema Version 1)
 #+AUTHOR: ASP Maintainers
-#+DATE: 2026-08-05
-#+FILETAGS: :asp:contract:agent:session:
+#+DATE: 2026-08-30
+#+FILETAGS: :asp:contract:agent:collaboration:
 
 :PROPERTIES:
 :CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
 :END:
 
-* multi-agent-session-control-plane-v1
+* codex-multi-agent-v2-collaboration-schema-v1
 :PROPERTIES:
 :CONTRACT_ID: agent.multi-agent-session-control-plane.v1
 :CONTRACT_SCOPE: subtree
 :CONTRACT_KIND: org-elements
 :END:
 
-** Hook-selected registered role choice plane
+** Authority
 
-The deny rule selects a semantic role but the Hook event records only the rule
-identity and generic recovery entrance. =asp session --agents choice-plane=
-reloads the managed rule, resolves its role through the registry-derived
-=agents.placeholders= projection, and opens only that role's pane. It accepts
-neither an agent name, a task payload, nor a client selector. The selected
-profile already defines the subagent's responsibility, while the active host is
-derived from =CODEX_SESSION_ID=, =CODEX_THREAD_ID=, or =CLAUDE_SESSION_ID=.
+*** P0 capability-bound dispatch precedence
 
-Agent Session generation is owned only by native Host lifecycle receipts.
-Workspace and provider generations are downstream capabilities and MUST NOT
-gate ChoicePlane. If no durable namespace exists and the Host lifecycle surface
-is unavailable, the pane enters terminal =host-surface-unavailable= and MUST NOT
-repeat =CREATE_AND_REGISTER=.
+The Runtime-owned AgentSession Registry is the sole durable parent-child
+binding authority.  The Host capability snapshot is the sole authority for
+which lifecycle operations can actually be invoked in the current turn.  The
+renderer MUST bind the semantic operations =followup-task=, =spawn-agent=,
+=observe-host-path=, =wait-agent=, =interrupt-agent=, and
+=send-optional-context= to exact injected tool names.  It MUST NOT infer that
+the whole lifecycle is unavailable merely because a =collaboration.*=
+namespace is absent, and it MUST NOT emit a tool name that is not callable.
 
-The current Codex session id is the namespace join key. A Hook event may select
-a role but is never session authority: a receipt from another root session must
-not be reused. A call/resume action is available only when the current session
-has a live, routable resident-child receipt whose binding exactly matches the
-route and profile. If either the current-session receipt or the callable child
-is absent, the namespace is absent for this session and exposes creation and
-registration. Contract row numbers are internal ordering metadata and are never
-rendered as Agent choices. Rust supplies typed state and bindings; this Org
-contract owns the Agent-facing action language.
+An exact current Registry binding selects =followup-task= immediately.  Host
+path observation is lower priority and is required only when the binding is
+absent or stale and path presence is not already known.  If no path-observation
+operation is injected, the renderer returns
+=host-agent-observation-capability-unavailable=; it does not guess absence and
+does not spawn.  A running empty payload remains pending.  A completed or
+errored empty payload emits exactly one =agent-bootstrap-terminal-missing= and
+repairs the same child.
+
+The =collaboration.*= blocks below are exact syntax for that Host capability
+family only.  A Host may expose the same semantic operations under another
+injected namespace.  Such a binding is typed by the capability snapshot and is
+never implemented by prose substitution.  In particular, any later instruction
+to inspect the Host tree first applies only when the selected disposition is
+=observe-host-path=; it does not precede an exact-bound =followup-task=.
+
+The Host capability snapshot authorizes executable lifecycle operations and
+path/status observation.  The Registry disposition orders those operations;
+neither authority substitutes for the other.
+
+The parent Hook decision knows its exact Host thread id. The spawn message
+therefore carries one explicit command whose =--parent-thread-id= value is
+substituted by Rust before the message is sent. The child runs that command in
+its own Codex process. =CODEX_THREAD_ID= is the current child thread id;
+=CODEX_SESSION_ID= is the root-session identity shared by the entire Agent
+tree. They are equal for the root and distinct in a child. The command keeps
+rootSessionId, parentThreadId, and childThreadId as separate typed facts,
+validates the configured Agent name against the global AgentLoader registry,
+then writes the binding through the Runtime-owned gRPC ClientFrame method to
+the existing AgentSession Registry. The removed raw WorkspaceDb transport is
+not a fallback. The prose only
+explains the command. It is never parsed as identity or permission evidence.
+
+ASP may persist an eventually consistent observation of that Host result for
+diagnostics. The DB projection is not permission to call, resume, interrupt or
+wait for an Agent, and it is never consulted instead of the Host live tree.
+
+The inverse contract is equally strict. A =registered= receipt proves a
+nonzero physical generation, the exact parent/child binding, and
+=grpc-client-frame= transport. A raw WorkspaceDb observation cannot produce
+that receipt. An exact current Registry binding authorizes =followup-task=
+through the corresponding Host capability without first requiring a Host-tree
+snapshot. Path observation is required only by an =observe-host-path=
+disposition and never resurrects an Agent.
+
+The Host =multi_agent_v2= capability and its complete =collaboration.*= family
+are the sole executable lifecycle surface. Config-owned call templates and JSON
+Schema fixtures describe v2 semantic operations; they may render a Host call
+only after proving that complete capability family is present. Hook does not
+maintain another lifecycle authority, infer a result envelope, downgrade to a
+legacy MultiAgent namespace, or translate an unavailable namespace through prose. The
+AgentSession registration
+request/receipt is a separate ASP data-plane contract: it records the
+parent-child binding after Host delivery, but it never invents or grants a Host
+capability.
 
 #+BEGIN_SRC org-contract :type agent-interactive
-id: multi-agent-session-control-plane
-method: choice
-stage: presentation
-group: AGENT_SESSION
-create: deferred
+id: codex-collaboration-live-agent
+method: collaboration
+stage: hook-deny
+group: COLLABORATION
+create: host-owned
 target: agent.multi-agent-session-control-plane.v1
-info: Execute the Hook-selected lifecycle action for the configured subagent role, then re-enter this control plane.
-categories: 1=CALL_RESUME_REGISTERED,2=RESUME_REGISTERED,3=CREATE_AND_REGISTER,4=ACHIEVED,5=BLOCKED,6=HOST_SURFACE_UNAVAILABLE,?=detail
-details:
-|n|id|contract|full|when|presentation|use-if|
-|1|CALL_RESUME_REGISTERED||The control-plane DB confirms `@{{REGISTERED_AGENT_NAME}}` is already registered as this master's resident child ({{ROLE_DESCRIPTION}}). This master authorizes and must Call/resume `@{{REGISTERED_AGENT_NAME}}` in {{SANDBOX_MODE}} sandbox mode to execute the denied operation.|SESSION_STATE=registered|action|registered resident-child relationship confirmed by the control-plane DB|
-|2|RESUME_REGISTERED||The control-plane DB confirms `@{{REGISTERED_AGENT_NAME}}` has a durable resident-child registration for this master ({{ROLE_DESCRIPTION}}), while its physical child is stopped or not currently routable. This master authorizes and must resume `@{{REGISTERED_AGENT_NAME}}` in {{SANDBOX_MODE}} sandbox mode, preserving its namespace and generation, to execute the denied operation.|SESSION_STATE=resumable|action|durable resident-child registration exists and the physical child requires resume|
-|3|CREATE_AND_REGISTER||The control-plane DB confirms this master has no resident-child registration for `@{{REGISTERED_AGENT_NAME}}`. Create and Call `@{{REGISTERED_AGENT_NAME}}` from its configured {{SANDBOX_MODE}} sandbox profile ({{ROLE_DESCRIPTION}}) with the preserved denied operation. The Host `SubagentStart` lifecycle event atomically publishes the child registration before that child's first tool use; the child consumes that receipt and executes the operation without a self-registration command.|SESSION_STATE=registration-required|pane|no resident-child registration exists for this master and configured role|
-|4|ACHIEVED||Do not resume or replace @{{REGISTERED_AGENT_NAME}}. Its durable namespace has achieved its objective.|SESSION_STATE=achieved|pane|the namespace is terminal and replacement requires a distinct explicit task|
-|5|BLOCKED||Do not create, call, or resume @{{REGISTERED_AGENT_NAME}} subagent. Its configured sandbox mode is {{SANDBOX_MODE}} — {{ROLE_DESCRIPTION}}|SESSION_STATE=blocked|pane|the Hook route, registry identity, root session, or Runtime authority is unavailable|
-|6|HOST_SURFACE_UNAVAILABLE||The Host lifecycle surface for @{{REGISTERED_AGENT_NAME}} is unavailable. Do not retry create/resume; restore the native Host lifecycle bridge first.|SESSION_STATE=host-surface-unavailable|pane|no durable namespace exists and the Host cannot publish a lifecycle receipt|
+info: Inspect the current root's live Agent paths, then use exactly one native collaboration operation.
+schema: schemas/codex-collaboration-tool-call.v1.schema.json
+response-schema: schemas/codex-collaboration-live-agents.v1.schema.json
+result-schemas: schemas/codex-collaboration-spawn-result.v1.schema.json,schemas/codex-collaboration-interrupt-result.v1.schema.json,schemas/codex-collaboration-wait-result.v1.schema.json
+states: absent=spawn_agent,present=followup_task
 #+END_SRC
 
-The ChoicePlane resolves exactly one =SESSION_STATE= from durable Host/session
-authority before presentation. The six contract details are transition targets,
-not a menu: exactly one matching row MUST be admitted and rendered; zero or
-multiple matching rows are contract errors.
+** Standard Host syntax
 
-| resolved state | authoritative condition | rendered row |
-| =registered= | durable namespace; live routable child; verified binding exactly matches route/profile | =CALL_RESUME_REGISTERED= (1) |
-| =resumable= | current-session durable namespace with an explicit Host lifecycle receipt that permits reattachment | =RESUME_REGISTERED= (2) |
-| =registration-required= | no durable namespace; native Host lifecycle surface available | =CREATE_AND_REGISTER= (3) |
-| =achieved= | durable namespace terminally achieved its objective | =ACHIEVED= (4) |
-| =blocked= | root, route, registry, binding authority, or another required invariant is invalid | =BLOCKED= (5) |
-| =host-surface-unavailable= | no durable namespace; native Host cannot create/publish lifecycle receipt | =HOST_SURFACE_UNAVAILABLE= (6) |
+The Hook message renderer copies these blocks verbatim and substitutes only
+=AGENT_TYPE=, =AGENT_PATH=, =REGISTRATION_COMMAND=, =PARENT_TASK=, and
+=MESSAGE=. Config validates Agent names and canonical paths before the
+template quotes them. Rust renders =MESSAGE= as one escaped JSON string literal
+because the parent-authored task may contain quotes or newlines. Rust owns typed facts and schema
+validation; it does not own the prose or reconstruct the Host call syntax.
 
-Terminal/invariant states take precedence: =achieved= and =blocked= never fall
-through to create or resume. For an absent namespace,
-=host-surface-unavailable= overrides =registration-required=. Generation is
-reported by the selected state but is not a workspace/provider execution gate.
+#+NAME: collaboration-registration-message
+#+BEGIN_SRC text
+First run `{{{REGISTRATION_COMMAND}}}` exactly once with Host-native authority by setting `sandbox_permissions: "require_escalated"` on that first process launch. The command reads the shared root session id and current child thread id from the Codex process environment and registers them with the explicit parent thread id through the Runtime-owned ASP AgentSession Registry. Do not first launch it inside the child sandbox because that sandbox cannot access the Runtime data plane. Then execute this parent-authored task exactly as written: {{{PARENT_TASK}}}. Return a compact receipt.
+#+END_SRC
+
+#+NAME: collaboration-resume-message
+#+BEGIN_SRC text
+Resume the existing configured Agent at `{{{AGENT_PATH}}}`. Its current parent-child binding already exists in the ASP AgentSession Registry. Do not create another Agent and do not run `asp session register-child` again. Start one new turn and execute this parent-authored task exactly as written: {{{PARENT_TASK}}}. Return a compact receipt.
+#+END_SRC
+
+#+NAME: collaboration-continue-message
+#+BEGIN_SRC text
+Continue the already running configured Agent at `{{{AGENT_PATH}}}`. Its current parent-child binding already exists in the ASP AgentSession Registry. Do not create another Agent, do not start a second turn, and do not run `asp session register-child` again. Treat this parent-authored task only as optional context for the current turn: {{{PARENT_TASK}}}. Return a compact receipt when the current turn completes.
+#+END_SRC
+
+#+NAME: collaboration-list-agents
+#+BEGIN_SRC codex-collaboration
+collaboration.list_agents({
+  path_prefix: "/root"
+})
+#+END_SRC
+
+#+NAME: collaboration-spawn-agent
+#+BEGIN_SRC codex-collaboration
+collaboration.spawn_agent({
+  agent_type: "{{{AGENT_TYPE}}}",
+  task_name: "{{{AGENT_TYPE}}}",
+  message: {{{MESSAGE}}}
+})
+#+END_SRC
+
+#+NAME: collaboration-followup-task
+#+BEGIN_SRC codex-collaboration
+collaboration.followup_task({
+  target: "{{{AGENT_PATH}}}",
+  message: {{{MESSAGE}}}
+})
+#+END_SRC
+
+#+NAME: collaboration-send-message
+#+BEGIN_SRC codex-collaboration
+collaboration.send_message({
+  target: "{{{AGENT_PATH}}}",
+  message: {{{MESSAGE}}}
+})
+#+END_SRC
+
+#+NAME: collaboration-interrupt-agent
+#+BEGIN_SRC codex-collaboration
+collaboration.interrupt_agent({
+  target: "{{{AGENT_PATH}}}"
+})
+#+END_SRC
+
+#+NAME: collaboration-wait-agent
+#+BEGIN_SRC codex-collaboration
+collaboration.wait_agent({
+  timeout_ms: 10000
+})
+#+END_SRC
+
+#+NAME: collaboration-dispatch-message
+#+BEGIN_SRC text
+This operation requires the current Host capability snapshot to contain Codex `multi_agent_v2` and the complete callable `collaboration.*` tool family. Never downgrade to a legacy agent tool family, thread APIs, or prose substitution. If that V2 capability is absent or partial, emit exactly one typed `codex-multi-agent-v2-capability-unavailable` failure and perform no lifecycle action.
+
+Execute exactly one branch selected by the attached typed
+`agent-session-dispatch-disposition` receipt minted from the existing AgentSession Registry.  Do not recompute Registry state
+from Host status, prose, task creation, or empty output.  If the receipt or its
+required Host capability binding is absent, return exactly one typed
+`agent-session-dispatch-disposition-missing` or
+`host-collaboration-capability-unavailable` failure; do not list, spawn, or
+retry.
+
+ASP does not create a second filesystem mirror of the Host Agent tree. A DB row never invents an Agent or grants a permission. `asp clean --day` owns expiry of archived observations; cleanup is not a lifecycle dispatch action.
+
+The disposition's exact canonical Agent path is `{{{AGENT_PATH}}}`.  It is an
+input to the selected branch, never evidence that the Registry binding or Host
+path exists.
+
+For `requiredAction=followup-task`, continue the exact registered child whether the observed status is running, interrupted, completed, or errored:
+
+{{{FOLLOWUP_TASK_CALL}}}
+
+This status-independent follow-up rule prevents a Host snapshot race: if the
+Agent finishes after observation but before dispatch, the required turn still
+starts on the same registered child.
+
+For `requiredAction=register-existing`, the path exists but its receipt is missing or stale. Repair the binding in that same Agent, then execute the denied operation. Never create a replacement child:
+
+{{{FOLLOWUP_REGISTRATION_CALL}}}
+
+For `requiredAction=observe-host-path`, and only for that action, invoke the
+Host-injected path observation operation.  The following syntax is valid only
+when the `collaboration` capability family is injected:
+
+{{{LIST_AGENTS_CALL}}}
+
+For the collaboration capability family, the result is standardized JSON with
+`agents[].agent_name` and `agents[].agent_status`.  It is Host path/status
+evidence only; it does not replace the Registry disposition.
+
+If no path-observation operation is callable, return exactly one typed
+`host-agent-observation-capability-unavailable` failure; do not infer
+that the path is absent and do not spawn.
+
+If path observation proves the configured Agent absent, resolve a new typed
+disposition before taking another action.  Observation itself never authorizes
+spawn or follow-up.
+
+For `requiredAction=spawn-agent`, the Registry binding and Host path are both
+already proven absent.  Create the configured Agent exactly once:
+
+{{{SPAWN_AGENT_CALL}}}
+
+The accepted spawn is `bootstrap-pending`, not registered.  The child runs this
+exact registration command once with Host-native authority by setting
+`sandbox_permissions: "require_escalated"` on that first process launch:
+
+={{{REGISTRATION_COMMAND}}}=
+
+The child reads `rootSessionId` from `CODEX_SESSION_ID` and `childThreadId` from
+its own `CODEX_THREAD_ID`; the explicit parent id remains `parentThreadId`.
+These identities are never coalesced.  Ordinary follow-up is forbidden until a
+typed registration terminal is observed.
+
+For `requiredAction=await-bootstrap-terminal`, use one event-driven wait:
+
+{{{WAIT_AGENT_CALL}}}
+
+Waiting only observes activity; it never
+creates, resumes, registers, interrupts, or authorizes an Agent.
+
+A running `state=empty-payload` remains pending.  A completed or errored empty
+payload emits the typed `agent-bootstrap-terminal-missing` failure exactly once and
+changes the next disposition to `repair-existing`, never `spawn-agent`.
+
+Use this only for an explicit `repair-existing` disposition:
+
+{{{FOLLOWUP_REGISTRATION_CALL}}}
+
+Optional context that is not required to start a turn may use:
+
+{{{SEND_MESSAGE_CALL}}}
+
+It never starts a turn, so it is not a dispatch path. Interrupt is valid only when the parent explicitly cancels obsolete work; interrupt that same canonical Agent path without deleting or recreating it:
+
+{{{INTERRUPT_AGENT_CALL}}}
+
+Every placeholder above must resolve to an exact callable tool from the current
+Host capability snapshot.  `collaboration.*` is one capability family, not a
+universal namespace.  Never emit or execute an unavailable tool spelling.
+Do not invent either session id or an Agent path.
+#+END_SRC
+
+** Host result shape
+
+#+BEGIN_SRC json
+{
+  "agents": [
+    { "agent_name": "/root", "agent_status": "running" },
+    { "agent_name": "/root/asp_testing", "agent_status": { "completed": "hello" } }
+  ]
+}
+#+END_SRC
+
+| observed path/status | operation |
+| absent | =collaboration.spawn_agent= |
+| present in any resumable/running state, receipt current | =collaboration.followup_task= without registration |
+| present in any resumable/running state, receipt missing/stale | =collaboration.followup_task=, then register once |
+
+This status-independent selection prevents a Host snapshot race: if the Agent
+finishes between =list_agents= and dispatch, =followup_task= still starts or
+continues the required turn. =send_message= cannot provide this guarantee and
+therefore carries optional context only.
+
+The remaining native operations are lifecycle controls, not alternate dispatch
+routes:
+
+| operation | exact effect | forbidden interpretation |
+| =collaboration.interrupt_agent= | interrupts the current turn and returns its previous status; the Agent path remains reusable | deletion, unregistration, or permission grant |
+| =collaboration.wait_agent= | waits for mailbox activity, user steering, or timeout | polling, turn creation, resume, or registration |
+| =collaboration.list_agents= | observes canonical paths and statuses | DB reconstruction or permission grant |
+
+** Codex V2 doctor preflight
+
+=asp hook doctor= MUST resolve =$CODEX_HOME/config.toml=, or
+=$HOME/.codex/config.toml= when =CODEX_HOME= is absent, and parse the document as
+TOML.  The V2 configuration prerequisite is exactly a boolean
+=[features].multi_agent_v2 = true=.  A missing file, malformed document,
+missing key, misplaced key, or =false= value is not equivalent to an enabled
+Host capability.
+
+The doctor emits an independent =authority=codex-host-config= result with the
+resolved path, observed enabled state, and a typed reason.  It never edits the
+configuration.  This disk declaration is necessary but not sufficient: every
+dispatch still validates that the current Host capability snapshot contains the
+complete V2 =collaboration.*= family.  A configuration change cannot retrofit
+tools into an already initialized task.
+
+** Host result contracts
+
+The Codex MultiAgentV2 implementation does not return an invented uniform JSON
+envelope. Persist only the typed facts actually emitted by each Host tool:
+
+| tool | Host result |
+| =list_agents= | JSON object with =agents[]=; each item has =agent_name= and =agent_status= |
+| =spawn_agent= | JSON object with canonical =task_name= and optional =nickname= |
+| =interrupt_agent= | JSON object with =previous_status= |
+| =wait_agent= | JSON object with =message= and =timed_out= |
+| =send_message= | successful empty tool output plus Host Agent activity; no result JSON is invented |
+| =followup_task= | successful empty tool output plus Host Agent activity; no result JSON is invented |
+
+Codex App task/thread APIs such as =create_thread=, =wait_threads=, and
+=send_message_to_thread= belong to a separate thread-management surface. They
+must never be substituted for these Agent lifecycle primitives or persisted as
+AgentSession registration evidence.
+
+A Host path-observation operation is called only for
+=requiredAction=observe-host-path= and only when that operation is present in
+the current capability snapshot. It is lower-priority evidence than an exact
+current Registry binding and cannot authorize spawn or follow-up by itself. The
+explicit child registration command records only the durable parent-child
+association; it does not replace the Host tree and it never grants Hook
+permission.

@@ -41,7 +41,7 @@ projection of these declarations.
 :CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.artifact.v1]]
 :ARTIFACT_ID: code.searchloop-scipy-router
 :ARTIFACT_KIND: source-file
-:ARTIFACT_PATH: packages/python/asp_graph_turbo/src/asp_graph_turbo/path_scipy_searchloop.py
+:ARTIFACT_PATH: packages/python/asp_python_graphs/src/asp_python_graphs/path_scipy_searchloop.py
 :CANONICALIZATION: source-raw-lf-utf8-v1
 :END:
 

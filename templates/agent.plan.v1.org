@@ -100,6 +100,6 @@ recovery-ref: PLAN_ID=agent-plan-id
 contract: agent.plan.v1
 status: active
 next-action: continue-from-next-checkpoint
-resume-query: asp org query <PLAN_FILE> agent-plan-id recovery evidence next-action
+resume-query: asp search playbook --documents org --rg -n -e agent-plan-id -e recovery -e evidence -e next-action <PLAN_FILE> --tantivy 'title:recovery^2 OR body:next-action'
 archive-target: artifacts/org/flow/plans/archive/agent-plan-id.org
 #+end_src
