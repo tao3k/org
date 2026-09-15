@@ -1,0 +1,423 @@
+#+TITLE: Contract RFC SearchLoop SciPy Bounded Lexicographic Routing v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-08-01T00:00:00-07:00
+#+FILETAGS: :asp:contract:rfc:searchloop:
+#+PROPERTY: CONTRACT_LIBRARY asp.rfc.contracts
+
+:PROPERTIES:
+:CONTRACT_ORG: [[./basic.template.v1.org][basic.template.v1]]
+:END:
+
+* relationship-searchloop-scipy-bounded-lexicographic-routing-v1
+:PROPERTIES:
+:CONTRACT_ID: relationship.searchloop.scipy-bounded-lexicographic-routing.v1
+:CONTRACT_SCOPE: document
+:CONTRACT_KIND: org-elements
+:END:
+
+** Definition
+
+This query/assertion contract validates the parser-visible structure that the
+RFC 10.05.64 semantic commitment consumes. It does not prescribe an outline
+template and does not duplicate clause prose. Each assertion queries the Org
+element graph for an exact normative heading and its stable clause marker.
+
+Semantic source digests and dependency-frontier digests remain receipt-layer
+facts. This contract establishes that those digests are taken from the intended
+Org structure rather than from an unvalidated section with a coincidental path.
+
+** Document contract binding
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.declares-contract
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (node-property :summary (key "CONTRACT_ORG")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+RFC 10.05.64 must declare exactly one governing CONTRACT_ORG property.
+#+END_SRC
+
+** Document title
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.has-title
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (keyword :summary (key "title")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+RFC 10.05.64 must have one document title.
+#+END_SRC
+
+** Normative contract root
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.has-normative-root
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 1
+  (headline :summary (title "Normative contract")))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+RFC 10.05.64 must have one Normative contract root.
+#+END_SRC
+
+** Cost vector heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.cost-vector-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "Cost vector"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Cost vector clause.
+#+END_SRC
+
+** Cost vector marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.cost-vector-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Cost vector"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-COST-VECTOR"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Cost vector clause must contain its exact RFC marker.
+#+END_SRC
+
+** Objective order heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.objective-order-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "Objective order"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Objective order clause.
+#+END_SRC
+
+** Objective order marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.objective-order-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Objective order"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-LEXICOGRAPHIC-ORDER"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Objective order clause must contain its exact RFC marker.
+#+END_SRC
+
+** Bounded scalarization heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.bounded-scalarization-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "Bounded scalarization"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Bounded scalarization clause.
+#+END_SRC
+
+** Bounded scalarization marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.bounded-scalarization-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Bounded scalarization"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-BOUNDED-RADIX"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Bounded scalarization clause must contain its exact RFC marker.
+#+END_SRC
+
+** Exact float transport heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.float-transport-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "Exact float transport"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Exact float transport clause.
+#+END_SRC
+
+** Exact float transport marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.float-transport-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Exact float transport"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-FLOAT64-EXACTNESS"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Exact float transport clause must contain its exact RFC marker.
+#+END_SRC
+
+** No hidden fallback heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.no-fallback-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "No hidden fallback"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one No hidden fallback clause.
+#+END_SRC
+
+** No hidden fallback marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.no-fallback-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "No hidden fallback"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-NO-FALLBACK"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The No hidden fallback clause must contain its exact RFC marker.
+#+END_SRC
+
+** Audited reconstruction heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.audited-reconstruction-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "Audited reconstruction"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Audited reconstruction clause.
+#+END_SRC
+
+** Audited reconstruction marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.audited-reconstruction-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Audited reconstruction"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-AUDITED-RECONSTRUCTION"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Audited reconstruction clause must contain its exact RFC marker.
+#+END_SRC
+
+** Python Lean subagent conformance heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.conformance-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative
+      :summary (title "Python-Lean-subagent conformance"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Python-Lean-subagent conformance clause.
+#+END_SRC
+
+** Python Lean subagent conformance marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.conformance-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Python-Lean-subagent conformance"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-PYTHON-LEAN-CONFORMANCE"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Python-Lean-subagent conformance clause must contain its exact RFC marker.
+#+END_SRC
+
+** Delegated triad admission heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.triad-admission-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative
+      :summary (title "Delegated subagent triad admission"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Delegated subagent triad admission clause.
+#+END_SRC
+
+** Delegated triad admission marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.triad-admission-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Delegated subagent triad admission"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-SUBAGENT-TRIAD-ADMISSION"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Delegated subagent triad admission clause must contain its exact RFC marker.
+#+END_SRC
+
+** Authenticated handoff identity heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.handoff-identity-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative
+      :summary (title "Authenticated handoff identity"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Authenticated handoff identity clause.
+#+END_SRC
+
+** Authenticated handoff identity marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.handoff-identity-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Authenticated handoff identity"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-TRIAD-HANDOFF-IDENTITY"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Authenticated handoff identity clause must contain its exact RFC marker.
+#+END_SRC
+
+** Preflight validity heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.preflight-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "Preflight validity"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Preflight validity clause.
+#+END_SRC
+
+** Preflight validity marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.preflight-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Preflight validity"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-TRIAD-PREFLIGHT-VALIDITY"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Preflight validity clause must contain its exact RFC marker.
+#+END_SRC
+
+** Relationship contract heading
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.relationship-contract-heading
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((normative
+       (headline :summary (title "Normative contract"))))
+  (assert count == 1
+    (headline :child-of normative :summary (title "Relationship contract binding"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The normative contract must have exactly one Relationship contract binding clause.
+#+END_SRC
+
+** Relationship contract marker
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.relationship-contract-marker
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(let ((clause
+       (headline :summary (title "Relationship contract binding"))))
+  (assert count == 1
+    (verbatim :descendant-of clause
+      :summary (value "ASP-RFC-10.05.64-RELATIONSHIP-CONTRACT"))))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+The Relationship contract binding clause must contain its exact RFC marker.
+#+END_SRC
+
+** Typst mathematical sources
+:PROPERTIES:
+:ASSERT_ID: rfc-searchloop.typst-block-count
+:SEVERITY: error
+:END:
+#+BEGIN_SRC org-contract
+(assert count == 8
+  (src-block :language "typst"))
+#+END_SRC
+#+BEGIN_SRC jinja2 :name message
+RFC 10.05.64 must retain exactly eight parser-visible Typst source blocks.
+#+END_SRC

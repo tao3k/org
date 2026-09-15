@@ -1,0 +1,69 @@
+#+TITLE: Project Topology Program Projection v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-09-06
+#+FILETAGS: :asp:topology:mrr:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/project.topology-program.v1.org][project.topology-program.v1]]
+:END:
+
+* Project Topology Program
+:PROPERTIES:
+:TOPOLOGY_PROGRAM_ID: project-topology-program-example
+:PROJECT_WORKSPACE_IDENTITY: git+https://github.com/tao3k/agent-semantic-protocols.git#workspace/root
+:WORKSPACE_ROOT_PATH: .
+:PORTABILITY: cross-machine
+:REPOSITORY_ALIASES: []
+:SOURCE_SNAPSHOT_DIGEST: blake3-256:1111111111111111111111111111111111111111111111111111111111111111
+:MRR_PRELUDE_DIGEST: blake3-256:4444444444444444444444444444444444444444444444444444444444444444
+:PROJECT_PROGRAM_DIGEST: blake3-256:5555555555555555555555555555555555555555555555555555555555555555
+:COMPILED_PROGRAM_ABI_DIGEST: blake3-256:7777777777777777777777777777777777777777777777777777777777777777
+:MRR_BUNDLE_DIGEST: blake3-256:8888888888888888888888888888888888888888888888888888888888888888
+:TOPOLOGY_ROOT_DIGEST: blake3-256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+:END:
+
+** Binding
+
+This program projection binds one GitOps Project Workspace and one source snapshot to one
+compiled and admitted MRR program. The machine-readable binding is stored in
+the corresponding typed receipt; these properties are the reviewable Org
+projection. A Runtime-generated workspace id is not project identity.
+
+** Profiles
+
+| Profile | Source | Operation |
+|-
+| mrr.topology.workspace.v1 | MRR prelude | import |
+| mrr.topology.engineering.v1 | MRR prelude | import |
+| mrr.topology.domain.v1 | MRR prelude | import |
+| mrr.topology.file.v1 | MRR prelude | import |
+| mrr.topology.structure.v1 | MRR prelude | import |
+| mrr.topology.reference.v1 | MRR prelude | import |
+| project.runtime-authority.v1 | programs/project.org | refine |
+
+** Program
+
+The project program is declared through the MRR-owned Scheme/POO grammar and
+compiled ahead of time through =build.ss=. This manifest links the admitted
+program; it does not embed a parallel extension language.
+
+| Module | Owner namespace | Operation | Imports |
+|-
+| project.runtime-authority.v1 | project.runtime-authority | refine | mrr.topology.engineering.v1 |
+
+** Materialization
+
+| Field | Value |
+|-
+| root | .agents/asp/topology |
+| manifest | .agents/asp/topology/manifest.org |
+| program | .agents/asp/topology/programs/project.org |
+| self input | excluded |
+| cache input | excluded |
+| Git metadata input | excluded |
+
+** Admission
+
+The topology is publishable only after the Scheme program, compiled ABI, MRR
+bundle, source binding, transition, proof dependencies, and fixed-point
+terminal are jointly admitted. GQL is a projection of that admitted result.

@@ -42,7 +42,8 @@ or Org contract validation.
 ASP materializes the Org resource tree when project runtime state is installed
 or synchronized. Start by resolving the writable artifact root, then ask the
 provider what Org facts exist and let the result shape the next action. The
-provider exposes =asp org query= for semantic AST facts. The provider exposes
+Search Playbook discovers semantic Org facts and returns canonical selectors;
+Query Playbook materializes only those exact selectors. The provider exposes
 =asp org contract trace= for contract validation.
 
 Use =asp org recall plans= before creating a new plan so the current agent session can resume related tasks, checklist state, and properties before branching new work.
@@ -52,14 +53,10 @@ asp paths --get orgArtifacts
 ORG_ARTIFACTS="$(asp paths --get orgArtifacts)"
 asp org recall plans
 asp org recall plans --checkpoint-sync
-asp agent session register --name asp-main-explore --role main
-asp agent session register --name asp-explore-code --session-id <child-session-id> --root-session-id <root-session-id> --parent-session-id <parent-session-id> --role code
-asp agent session list
-asp org guide
-asp org query --kind task --field todo=TODO --workspace . --view metadata
-asp org query --kind checklistItem --field checked=false --workspace . --view metadata
-asp org query --kind property --field key=<KEY> --workspace . --view metadata
-asp org query --kind property --field key=GOVERNING_CONTRACT --workspace . --view metadata
+asp session --agents choice-plane
+asp search playbook '(search (producers (documents org)) (intersect (rg "-n" "-g" "*.org" "-e" "TODO|\\[ \\]|GOVERNING_CONTRACT" ".") (tantivy "title:\"active plan\"^2 OR body:GOVERNING_CONTRACT")))'
+# Materialize a selector returned by Search Playbook:
+asp query playbook '(query (producers (documents org)) (select (selectors "org://flow/plans/<plan>.org#item/heading/<heading>") (projection source)))'
 #+end_src
 
 ASP resolves the Org resource root from the State Core v2 layout. Use
@@ -93,12 +90,13 @@ State layout after ASP install/sync: Flow records are relative to the
 
 Archive lane:
 - Resolve the writable artifact root with =asp paths --get orgArtifacts= before archiving from a non-root working directory.
-- Agent session state is owned by =asp agent session=, not by Org. A root task session has one root/main session id and may have many child or subagent session ids. Register durable session-tree edges with =asp agent session register= so consumers can resolve names, roles, model hints, parent edges, and root session membership from the SQLite-backed agent registry.
-- Before creating a new plan or task branch, recall candidate plans for the current agent session with =asp org recall plans=. Supported current-session envs are =CODEX_THREAD_ID=, =CLAUDE_CODE_SESSION_ID=, and =CLAUDE_CODE_REMOTE_SESSION_ID=; the active agent platform is expected to expose one non-empty value. There is no generic =AGENT_SESSION_ID= or =SESSION_ID= fallback. Use explicit =--session= only for cross-session lookup. Codex subagents have their own =CODEX_THREAD_ID=; parent prompts should register the spawned child with =asp agent session register --session-id <child> --root-session-id <root> --parent-session-id <parent>= or set =ASP_ROOT_SESSION_ID= before child recall. =asp org recall plans= consumes the agent registry to resolve a registered child session back to its root task session. Keep =SESSION_ID= as the root/main task session in Org properties, and record branch edges with =ROOT_SESSION_ID=, =PARENT_SESSION_ID=, =CHILD_SESSION_ID=, or =SUBAGENT_SESSION_ID= when a plan spans child agent threads. Recall output is the reasoning tree entry point: text output starts with compact =|next=, =|why=, =|query=, =|evidence=, and =|candidate= rows. The =|why= row is the memory/graph selection receipt: session match, selected sources, task hits, checkpoint hits, alternatives, and memory transport. The executable resume surface is the single =|query= row, normally =asp org query <agent-plan-id> recovery evidence next-action=. JSON keeps full scores and per-plan =selectionReceipt= for tooling. Ordinary recall is read-only; add =--checkpoint-sync= only when you intend to persist a durable checkpoint into the SQLite-backed memory index.
-- Query active Org facts first, such as =asp org query --kind task --field todo=DONE --workspace . --view metadata=, then inspect the returned selector before moving content.
+- Agent session state is owned by the Runtime Server. Host-native =SubagentStart= and =SubagentStop= events update the lifecycle registry; agents must not reconstruct or register session-tree identities through CLI flags. Configured Agents are loaded only by the Agents Loader and called by the main Agent through their native symbols.
+- Enter the Org-owned lifecycle window with =asp session --agents choice-plane=. Its admitted action uses the platform profile's exact =@name= and lets the Host call, resume, create, or archive the subagent. The platform is detected from =CODEX_SESSION_ID= or =CODEX_THREAD_ID= for Codex, and =CLAUDE_CODE_SESSION_ID= or =CLAUDE_CODE_REMOTE_SESSION_ID= for Claude Code.
+- Before creating a new plan or task branch, recall candidate plans for the current agent session with =asp org recall plans=. =asp org recall plans= consumes the Runtime Server lifecycle projection to resolve a registered child session back to its root task session. Keep =SESSION_ID= as the root/main task session in Org properties, and record branch edges with =ROOT_SESSION_ID=, =PARENT_SESSION_ID=, =CHILD_SESSION_ID=, or =SUBAGENT_SESSION_ID= when a plan spans child agent threads. Recall output is the reasoning tree entry point: text output starts with compact =|next=, =|why=, =|query=, =|evidence=, and =|candidate= rows. The =|why= row is the memory/graph selection receipt: session match, selected sources, task hits, checkpoint hits, alternatives, and memory transport. The executable resume surface is the single =|query= row, which is a complete =asp search playbook --documents org= command. JSON keeps full scores and per-plan =selectionReceipt= for tooling. Ordinary recall is read-only; add =--checkpoint-sync= only when you intend to persist a durable checkpoint into the memory index.
+- Run =asp org archive done --dry-run= to review parser-selected DONE records before moving content.
 - Preserve active layout under =archives= when possible.
 - Add archive metadata such as =ARCHIVED_FROM= and =ARCHIVE_REASON= on the destination record instead of encoding archive status as a hidden search/query side effect.
-- Do not archive by deleting AST facts discovered through =asp org query= without writing the destination archive record first.
+- Do not archive by deleting AST facts discovered through Search Playbook without writing the destination archive record first.
 
 Before creating or updating a Plan, ExecPlan, or governing specification family,
 read the matching contract's =Definition= section. For =agent.plan.v1=, also
@@ -106,7 +104,7 @@ read =Specification Choice Reasoning= so the agent can decide whether SDD, BDD,
 TDD, BDR, or none applies before writing the plan.
 
 #+begin_src shell
-asp org search owner "$(asp paths --get orgStateRoot)/contracts/agent.plan.v1.org" items --query "Specification Choice Reasoning SDD BDD TDD BDR" --workspace . --view seeds
+asp search playbook '(search (producers (documents org)) (intersect (rg "-n" "-g" "*.org" "-e" "Specification Choice Reasoning|SDD|BDD|TDD|BDR" ".") (tantivy "title:\"Specification Choice Reasoning\"^2 OR body:SDD")))'
 #+end_src
 
 *** Contract Capture
@@ -177,24 +175,24 @@ info: Select the narrowest ASP search route justified by current evidence. This 
 categories: 1=KNOWN_SELECTOR,2=KNOWN_OWNER,3=KNOWN_SYMBOL,4=KNOWN_DEPENDENCY,5=FAILURE_FRONTIER,6=BROAD_QUERY,7=UNKNOWN_WORKSPACE,8=NO_ASP,?=detail
 details:
 |n|id|contract|full|use-if|
-|1|KNOWN_SELECTOR|semantic-search-packet.v1#routeGraph|Known structural selector|structuralSelector/nativeFactId exists|
-|2|KNOWN_OWNER|semantic-search-packet.v1#routeGraph|Known owner path|owner path/file exists|
-|3|KNOWN_SYMBOL|semantic-search-packet.v1#routeGraph|Known symbol|function/type/API symbol exists|
-|4|KNOWN_DEPENDENCY|semantic-search-packet.v1#routeGraph|Known dependency|dependency/API package exists|
-|5|FAILURE_FRONTIER|semantic-search-packet.v1#routeGraph|Failure frontier|failure/test/policy diagnostic exists|
-|6|BROAD_QUERY|semantic-search-packet.v1#routeGraph|Broad query refinement|terms exist but no stable anchor|
-|7|UNKNOWN_WORKSPACE|semantic-search-packet.v1#routeGraph|Unknown workspace topology|no reliable anchor exists|
-|8|NO_ASP|semantic-search-packet.v1#routeGraph|No ASP route|non-repo/prose task|
+|1|KNOWN_SELECTOR|search-topology-settlement.v1|Known structural selector|structuralSelector/nativeFactId exists|
+|2|KNOWN_OWNER|search-topology-settlement.v1|Known owner path|owner path/file exists|
+|3|KNOWN_SYMBOL|search-topology-settlement.v1|Known symbol|function/type/API symbol exists|
+|4|KNOWN_DEPENDENCY|search-topology-settlement.v1|Known dependency|dependency/API package exists|
+|5|FAILURE_FRONTIER|search-topology-settlement.v1|Failure frontier|failure/test/policy diagnostic exists|
+|6|BROAD_QUERY|search-topology-settlement.v1|Broad query refinement|terms exist but no stable anchor|
+|7|UNKNOWN_WORKSPACE|search-topology-settlement.v1|Unknown workspace topology|no reliable anchor exists|
+|8|NO_ASP|search-topology-settlement.v1|No ASP route|non-repo/prose task|
 #+END_SRC
 
 | Choice | Use if | First route | Avoid |
-| KNOWN_SELECTOR | structuralSelector/nativeFactId exists | syntax-outline; query-code only if exact code is needed | prime, line-range selector |
-| KNOWN_OWNER | owner path/file exists | owner-skeleton or owner-items | prime unless owner is stale |
-| KNOWN_SYMBOL | function/type/API symbol exists | syntax query or owner-items | broad rg before syntax |
-| KNOWN_DEPENDENCY | dependency/API package exists | dependency-topology/import-usage | workspace prime |
-| FAILURE_FRONTIER | failure/test/policy diagnostic exists | failure-frontier/test-selection | raw read loop |
-| BROAD_QUERY | terms but no stable anchor | search pipe | repeated prime/lexical |
-| UNKNOWN_WORKSPACE | no reliable anchor | search prime/project topology | pretending anchors exist |
+| KNOWN_SELECTOR | structuralSelector/nativeFactId exists | query the exact selector | broad line-range read |
+| KNOWN_OWNER | owner path/file exists | Search Playbook owner axis, then exact query | stale owner assumption |
+| KNOWN_SYMBOL | function/type/API symbol exists | Search Playbook symbol axis, then exact query | broad rg before syntax |
+| KNOWN_DEPENDENCY | dependency/API package exists | Search Playbook dependency axis, then exact query | workspace-wide guesses |
+| FAILURE_FRONTIER | failure/test/policy diagnostic exists | Search Playbook test/policy axis, then exact query | raw read loop |
+| BROAD_QUERY | terms but no stable anchor | Search Playbook fan-out/fan-in | repeated broad search |
+| UNKNOWN_WORKSPACE | no reliable anchor | Search Playbook project topology | pretending anchors exist |
 | NO_ASP | non-repo/prose task | no ASP | unnecessary search |
 
 *** Search Packet Consumption
@@ -407,9 +405,9 @@ ASP Org skills must expose the archive directory under =$(asp paths --get orgArt
 ASP Org skills must include an Archive lane that queries active Org facts before moving state into archives.
 #+END_SRC
 
-*** skill-has-query-command
+*** skill-has-search-playbook-command
 :PROPERTIES:
-:ASSERT_ID: skill-has-query-command
+:ASSERT_ID: skill-has-search-playbook-command
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
@@ -417,10 +415,10 @@ ASP Org skills must include an Archive lane that queries active Org facts before
   (src-block
     :descendant-of $scope
     :language "shell"
-    :summary-contains (value "asp org query")))
+    :summary-contains (value "asp search playbook '(search")))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP Org skills must expose semantic AST queries through asp org query.
+ASP Org skills must expose semantic discovery through one Search Playbook Scheme expression.
 #+END_SRC
 
 *** asp-skill-has-memory-recall-command
@@ -627,19 +625,18 @@ ASP skill adversarial criteria must require an evidence loop for evidence-backed
   (plain-text :descendant-of $scope :summary-contains (value "Do not create Org plan")))
 #+END_SRC
 
-*** skill-template-filename-contract
+*** skill-artifact-filename-contract
 :PROPERTIES:
-:ASSERT_ID: skill-template-filename-contract
+:ASSERT_ID: skill-artifact-filename-contract
 :SEVERITY: error
 :END:
 #+BEGIN_SRC org-contract
 (assert exists
   (headline
     :at $scope
-    :path-contains "languages/org/templates/"
-    :filename-suffix "_SKILL.org"
+    :filename-suffix "SKILL.org"
     :filename-stem-uppercase t))
 #+END_SRC
 #+BEGIN_SRC jinja2 :name message
-ASP Org skill templates must live under languages/org/templates and use an uppercase filename ending in _SKILL.org.
+Generated ASP Org skill artifacts must use an uppercase filename ending in SKILL.org.
 #+END_SRC

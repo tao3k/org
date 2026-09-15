@@ -1,0 +1,135 @@
+#+TITLE: SearchLoop SciPy Triad Relationship Contract v1
+#+AUTHOR: ASP Maintainers
+#+DATE: 2026-08-01T00:00:00-07:00
+#+FILETAGS: :asp:relationship:searchloop:scipy:proof:
+
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.document.v1]]
+:RELATIONSHIP_CONTRACT_ID: searchloop.scipy-triad.v1
+:RELATIONSHIP_SCHEMA_VERSION: 1
+:END:
+
+* SearchLoop SciPy Triad Relationship Contract v1
+
+This document is the human authority for the cross-artifact relationships in
+the SearchLoop SciPy triad. The V1 JSON handoff is a digest-bound executable
+projection of these declarations.
+
+** Artifacts
+
+*** Relationship protocol
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.artifact.v1]]
+:ARTIFACT_ID: doc.relationship-contract-rfc
+:ARTIFACT_KIND: org-document
+:ARTIFACT_PATH: docs/10-19-rfcs/10.25.02-org-native-relationship-contracts.org
+:CANONICALIZATION: org-source-raw-lf-utf8-v1
+:END:
+
+*** SearchLoop routing requirement
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.artifact.v1]]
+:ARTIFACT_ID: doc.searchloop-relationship-binding
+:ARTIFACT_KIND: org-section
+:ARTIFACT_PATH: docs/10-19-rfcs/10.05-interactive-graph-first-progressive-searchloop/10.05.64-scipy-bounded-lexicographic-routing.org
+:ARTIFACT_SELECTOR: Normative contract / Relationship contract binding
+:CANONICALIZATION: orgize-section-source-raw-lf-utf8-v1
+:END:
+
+*** SearchLoop Python realization
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.artifact.v1]]
+:ARTIFACT_ID: code.searchloop-scipy-router
+:ARTIFACT_KIND: source-file
+:ARTIFACT_PATH: packages/python/asp_python_graphs/src/asp_python_graphs/path_scipy_searchloop.py
+:CANONICALIZATION: source-raw-lf-utf8-v1
+:END:
+
+*** Relationship Lean proof
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.artifact.v1]]
+:ARTIFACT_ID: proof.searchloop-triad-relationship
+:ARTIFACT_KIND: proof-module
+:ARTIFACT_PATH: packages/proofs/ASPProof/SearchRouteTriadRelationshipContract.lean
+:CANONICALIZATION: source-raw-lf-utf8-v1
+:END:
+
+*** Relationship Lean audit receipt
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.artifact.v1]]
+:ARTIFACT_ID: receipt.searchloop-triad-relationship-audit
+:ARTIFACT_KIND: receipt
+:ARTIFACT_PATH: packages/proofs/receipts/searchroute-triad-relationship-contract-audit-v1.json
+:CANONICALIZATION: json-sort-keys-compact-utf8-v1
+:END:
+
+*** SearchLoop Org application contract
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.artifact.v1]]
+:ARTIFACT_ID: contract.searchloop-scipy-routing
+:ARTIFACT_KIND: org-contract
+:ARTIFACT_PATH: org/contracts/relationship.searchloop.scipy-bounded-lexicographic-routing.v1.org
+:CANONICALIZATION: org-source-raw-lf-utf8-v1
+:END:
+
+** Relationships
+
+*** Application conforms to the general relationship protocol
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.edge.v1]]
+:RELATIONSHIP_ID: searchloop-relationship-conforms-v1
+:SUBJECT: doc.searchloop-relationship-binding
+:PREDICATE: conforms-to
+:OBJECT: doc.relationship-contract-rfc
+:IMPACT: invalidates-subject
+:EVIDENCE_GATE: relationship-schema-and-org-contract
+:END:
+
+*** Org contract governs the SearchLoop requirement
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.edge.v1]]
+:RELATIONSHIP_ID: searchloop-requirement-governed-v1
+:SUBJECT: doc.searchloop-relationship-binding
+:PREDICATE: governed-by
+:OBJECT: contract.searchloop-scipy-routing
+:IMPACT: invalidates-subject
+:EVIDENCE_GATE: org-contract-trace
+:END:
+
+*** Python realizes the SearchLoop requirement
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.edge.v1]]
+:RELATIONSHIP_ID: searchloop-python-realizes-v1
+:SUBJECT: code.searchloop-scipy-router
+:PREDICATE: realizes
+:OBJECT: doc.searchloop-relationship-binding
+:IMPACT: invalidates-subject
+:EVIDENCE_GATE: python-scipy-conformance
+:END:
+
+*** Lean proves relationship admission
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.edge.v1]]
+:RELATIONSHIP_ID: searchloop-lean-proves-v1
+:SUBJECT: proof.searchloop-triad-relationship
+:PREDICATE: proves
+:OBJECT: doc.searchloop-relationship-binding
+:IMPACT: invalidates-subject
+:EVIDENCE_GATE: lean-axiom-audit
+:END:
+
+*** Normalized receipt audits the Lean proof
+:PROPERTIES:
+:CONTRACT_ORG: [[../contracts/relationship.v1.org][relationship.edge.v1]]
+:RELATIONSHIP_ID: searchloop-receipt-audits-v1
+:SUBJECT: receipt.searchloop-triad-relationship-audit
+:PREDICATE: audits
+:OBJECT: proof.searchloop-triad-relationship
+:IMPACT: invalidates-subject
+:EVIDENCE_GATE: normalized-lean-audit
+:END:
+
+** Validation
+
+Admission requires exact agreement between this Org authority, the projected V1
+relationship graph, artifact observations, and all five evidence gates.
