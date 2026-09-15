@@ -153,7 +153,7 @@ contract: agent.plan.v1
 status: active
 next-action: continue-from-next-checkpoint
 action: resume active plan from agent session
-resume-query: asp search playbook --documents org --rg -n -e agent-plan-id -e recovery -e evidence -e next-action . --tantivy 'title:recovery^2 OR body:next-action'
+resume-query: asp search playbook '(search (producers (documents org)) (intersect (rg "-n" "-e" "agent-plan-id" "-e" "recovery" "-e" "evidence" "-e" "next-action" ".") (tantivy "title:recovery^2 OR body:next-action")))'
 archive-target: resolved-by-asp-org-archive-defaults
 #+end_src
 
